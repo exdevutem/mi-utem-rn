@@ -1,4 +1,4 @@
-package com.mi-utem;
+package com.miutem;
 
 import android.app.Application;
 
