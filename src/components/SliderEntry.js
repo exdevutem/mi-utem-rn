@@ -14,16 +14,16 @@ export default class SliderEntry extends Component {
     };
 
     get image () {
-        const { data: { illustration }, parallax, parallaxProps, even } = this.props;
+        const { data: { illustration }, parallax, parallaxProps } = this.props;
 
         return parallax ? (
             <ParallaxImage
               source={{ uri: illustration }}
-              containerStyle={[styles.imageContainer, even ? styles.imageContainerEven : {}]}
+              containerStyle={ styles.imageContainer }
               style={styles.image}
               parallaxFactor={0.35}
               showSpinner={true}
-              spinnerColor={even ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.25)'}
+              spinnerColor='rgba(255, 255, 255, 0.4)'
               {...parallaxProps}
             />
         ) : (
@@ -35,13 +35,12 @@ export default class SliderEntry extends Component {
     }
 
     render () {
-        const { data: { title, subtitle }, even } = this.props;
+        const { data: { title, subtitle } } = this.props;
 
         const uppercaseTitle = title ? (
             <Text
-              style={[styles.title, even ? styles.titleEven : {}]}
-              numberOfLines={2}
-            >
+              style={ styles.title }
+              numberOfLines={2}>
                 { title.toUpperCase() }
             </Text>
         ) : false;
@@ -50,19 +49,17 @@ export default class SliderEntry extends Component {
             <TouchableOpacity
               activeOpacity={1}
               style={styles.slideInnerContainer}
-              onPress={() => { alert(`You've clicked '${title}'`); }}
-              >
+              onPress={() => { alert(`You've clicked '${title}'`); }}>
                 <View style={styles.shadow} />
-                <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
+                <View style={ styles.imageContainer }>
                     { this.image }
-                    <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
+                    <View style={ styles.radiusMask } />
                 </View>
-                <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
+                <View style={ styles.textContainer }>
                     { uppercaseTitle }
                     <Text
-                      style={[styles.subtitle, even ? styles.subtitleEven : {}]}
-                      numberOfLines={2}
-                    >
+                      style={ styles.subtitle }
+                      numberOfLines={1} >
                         { subtitle }
                     </Text>
                 </View>
