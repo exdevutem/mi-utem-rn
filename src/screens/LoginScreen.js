@@ -15,10 +15,10 @@ export default class LoginScreen extends Component {
 
     comprobacion = () => {
         if(this.state.correo != '' && this.state.clave != ''){
-            if(this.state.correo.endsWith('@utem.cl') && this.state.correo == correoPrueba){
-                if(this.state.clave == clavePrueba){
+            if(this.state.correo.endsWith('@utem.cl')){
+                //if(this.state.correo == correoPrueba && this.state.clave == clavePrueba){
                     this.props.navigation.navigate('Main');
-                }
+                //}
             }
         }
     }
@@ -29,19 +29,25 @@ export default class LoginScreen extends Component {
                 <Image source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Logo_UTEM.png/250px-Logo_UTEM.png'}}
                     style={styles.logo} />
                 <Text style={styles.texto}>Correo</Text>
-                <TextInput style={styles.textoPlaceHolder} placeholder='correo@utem.cl'
+                <TextInput style={styles.textoPlaceHolder} 
+                    keyboardType='email-address'
+                    placeholder='correo@utem.cl'
+                    autoCapitalize='none'
+                    textContentType='emailAddress'
                     onChangeText={
                         (text) => this.setState(previousState => (
                             { correo: text, clave: previousState.clave }
                     ))}></TextInput>
                 <Text style={styles.texto}>Contraseña</Text>
-                <TextInput style={styles.textoPlaceHolder} placeholder='correo@utem.cl'
+                <TextInput style={styles.textoPlaceHolder} placeholder='••••••••••'
+                    secureTextEntry={true}
+                    textContentType='password'
                     onChangeText={
                         (text) => this.setState(previousState => (
                             { correo: previousState.correo, clave: text}
                     ))}></TextInput>
                 <TouchableHighlight onPress={() => this.comprobacion()} style={styles.boton}>
-                <Text style={styles.textoBoton}>Login</Text>
+                    <Text style={styles.textoBoton}>Entrar</Text>
                 </TouchableHighlight>
             </View>
         );

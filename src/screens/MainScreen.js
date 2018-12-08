@@ -20,51 +20,56 @@ export default class MainScreen extends Component {
         headerTitleStyle: {
             fontWeight: 'bold',
         },
-    };
+    }
 
     constructor (props) {
         super(props);
+        this._renderNoticiaItem = this._renderNoticiaItem.bind(this);
         this.state = {
             datos: [],
             activeSlide: SLIDER_1_FIRST_ITEM
         };
     }
-    
-    getNoticias = () => {
-        fetch(postUrl)
-            .then(response => response.json())
-            .then(noticias => {
-                var noticiasPromises = noticias.map((noticia) => {
-                    return new Promise((resolve, reject) => {
-                        var excerpt = noticia.excerpt.rendered.replace(/<\/?[^>]+(>|$)/g, "").trim();
-                        var content = noticia.content.rendered.replace(/<\/?[^>]+(>|$)/g, "").trim();
-                        fetch(mediaUrl + noticia.featured_media)
-                            .then(response => response.json())
-                            .then(media => {
-                                var noticiaParseada = {
-                                    title: noticia.title.rendered,
-                                    subtitle: excerpt != "" ? excerpt : content,
-                                    illustration: media.guid.rendered
-                                }
-                                resolve(noticiaParseada);
-                            });
-                    });
+
+    getNoticias = async () => {
+        var noticias = await fetch(postUrl).then(response => response.json());
+
+        var noticiasPromises = noticias.map((noticia) => {
+            return new Promise(async (resolve, reject) => {
+                var excerpt = noticia.excerpt.rendered.replace(/<\/?[^>]+(>|$)/g, "").trim();
+                var content = noticia.content.rendered.replace(/<\/?[^>]+(>|$)/g, "").trim();
+                var media = await fetch(mediaUrl + noticia.featured_media).then(response => response.json())
+                
+                resolve({
+                    id: noticia.id,
+                    title: noticia.title.rendered,
+                    subtitle: excerpt != "" ? excerpt : content,
+                    illustration: media.guid.rendered
                 });
-              
-                Promise.all(noticiasPromises).then((noticias) => {
-                    this.setState(previousState => ({
-                        datos: noticias,
-                        activeSlide: previousState.activeSlide 
-                    }))
-                });
-            }).done();
+            });
+        });
+      
+        Promise.all(noticiasPromises).then((noticias) => {
+            this.setState(previousState => ({
+                datos: noticias,
+                activeSlide: previousState.activeSlide 
+            }))
+        });
+    }
+
+    _onPress = (id, titulo) => {
+        this.props.navigation.navigate('Noticia', {title: titulo, id: id});
+        //alert("asdsadsad")
     }
 
     _renderNoticiaItem ({item, index}, parallaxProps) {
+        //this._onPress.bind(this);
+
         return (
             <SliderEntry
               data={item}
               parallax={true}
+              onPress={this._onPress}
               parallaxProps={parallaxProps}/>
         );
     }
@@ -72,7 +77,6 @@ export default class MainScreen extends Component {
 
     _renderNoticiasCarousel = () => {
         const { activeSlide, datos } = this.state;
-        this.getNoticias();
         return (
             <View>
                 <Carousel
@@ -85,7 +89,6 @@ export default class MainScreen extends Component {
                     firstItem={SLIDER_1_FIRST_ITEM}
                     inactiveSlideScale={0.94}
                     inactiveSlideOpacity={0.7}
-                    // inactiveSlideShift={20}
                     containerCustomStyle={styles.slider}
                     contentContainerCustomStyle={styles.sliderContentContainer}
                     loop={true}
@@ -98,6 +101,10 @@ export default class MainScreen extends Component {
                     ))}/>
             </View>
         );
+    }
+
+    componentWillMount() {
+        this.getNoticias();
     }
   
     render() {
