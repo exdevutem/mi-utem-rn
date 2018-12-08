@@ -108,6 +108,7 @@ export default class MainScreen extends Component {
                 <View>
                     { noticiasCarousel }
                     <Button onPress={() => this.props.navigation.navigate('Malla')} title="Ir a Malla"></Button>
+                    <Button onPress={() => this.props.navigation.navigate('Perfil')} title="Ir a Perfil"></Button>
                 </View>
             </SafeAreaView>
         );

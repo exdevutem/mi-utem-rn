@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Text, View, TextInput, StyleSheet, Image, TouchableHighlight, Alert} from 'react-native';
 
-const correoPrueba = 'javiera.vergaran@utem.cl';
-const clavePrueba = 'uwu';
+//const correoPrueba = 'uwu@utem.cl';
+//const clavePrueba = 'uwu';
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -14,13 +14,14 @@ export default class LoginScreen extends Component {
     }
 
     comprobacion = () => {
-        if(this.state.correo != '' && this.state.clave != ''){
+        /*if(this.state.correo != '' && this.state.clave != ''){
             if(this.state.correo.endsWith('@utem.cl') && this.state.correo == correoPrueba){
                 if(this.state.clave == clavePrueba){
                     this.props.navigation.navigate('Main');
                 }
             }
-        }
+        }*/
+        this.props.navigation.navigate('Main');
     }
 
     render() {
