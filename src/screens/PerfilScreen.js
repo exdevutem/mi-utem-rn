@@ -8,31 +8,31 @@ export default class PerfilScreen extends Component {
                 <View style={styles.container}>
                     <Image source={{uri: 'https://t4.ftcdn.net/jpg/00/97/00/09/160_F_97000908_wwH2goIihwrMoeV9QF3BW6HtpsVFaNVM.jpg'}}
                         style={styles.logo} />
-                    <Text editable={false} style={styles.texto}>Nombre</Text>
+                    <Text style={styles.texto}>Nombre</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Nombre completo'></TextInput>
-                    <Text editable={false} style={styles.texto}>RUT</Text>
+                    <Text style={styles.texto}>RUT</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='RUT'></TextInput>
-                    <Text editable={false} style={styles.texto}>Edad</Text>
+                    <Text style={styles.texto}>Edad</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Edad'></TextInput>
-                    <Text editable={false} style={styles.texto}>Puntaje</Text>
+                    <Text style={styles.texto}>Puntaje</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Puntaje PSU'></TextInput>
-                    <Text editable={false} style={styles.texto}>Cel</Text>
+                    <Text style={styles.texto}>Cel</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Celular'></TextInput>
-                    <Text editable={false} style={styles.texto}>CelCasa</Text>
+                    <Text style={styles.texto}>CelCasa</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Telefono casa'></TextInput>
-                    <Text editable={false} style={styles.texto}>CorreoIn</Text>
+                    <Text style={styles.texto}>CorreoIn</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Correo Institucional'></TextInput>
-                    <Text editable={false} style={styles.texto}>Sexo</Text>
+                    <Text style={styles.texto}>Sexo</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Sexo'></TextInput>
-                    <Text editable={false} style={styles.texto}>Nacionalidad</Text>
+                    <Text style={styles.texto}>Nacionalidad</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Nacionalidad'></TextInput>
-                    <Text editable={false} style={styles.texto}>Comuna</Text>
+                    <Text style={styles.texto}>Comuna</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Comuna'></TextInput>
-                    <Text editable={false} style={styles.texto}>Direccion</Text>
+                    <Text style={styles.texto}>Direccion</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Dirección'></TextInput>
-                    <Text editable={false} style={styles.texto}>Correo</Text>
+                    <Text style={styles.texto}>Correo</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Correo personal'></TextInput>
-                    <Text editable={false} style={styles.texto}>Carnet</Text>
+                    <Text style={styles.texto}>Carnet</Text>
                     <TextInput style={styles.textoPlaceHolder} placeholder='Carnet de identidad'></TextInput>
 
                 </View>

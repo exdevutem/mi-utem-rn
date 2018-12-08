@@ -8,12 +8,12 @@ export default class SliderEntry extends Component {
 
     static propTypes = {
         data: PropTypes.object.isRequired,
-        even: PropTypes.bool,
+        onPress: PropTypes.func,
         parallax: PropTypes.bool,
         parallaxProps: PropTypes.object
     };
 
-    get image () {
+    get image() {
         const { data: { illustration }, parallax, parallaxProps } = this.props;
 
         return parallax ? (
@@ -35,7 +35,7 @@ export default class SliderEntry extends Component {
     }
 
     render () {
-        const { data: { title, subtitle } } = this.props;
+        const { data: { id, title, subtitle } } = this.props;
 
         const uppercaseTitle = title ? (
             <Text
@@ -49,7 +49,7 @@ export default class SliderEntry extends Component {
             <TouchableOpacity
               activeOpacity={1}
               style={styles.slideInnerContainer}
-              onPress={() => { alert(`You've clicked '${title}'`); }}>
+              onPress={() => { this.props.onPress(id, title) }}>
                 <View style={styles.shadow} />
                 <View style={ styles.imageContainer }>
                     { this.image }
