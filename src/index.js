@@ -26,7 +26,7 @@ const AsignaturaNavigator = Platform.select({
 
 const AppNavigator = createSwitchNavigator({
   //Login: LoginScreen,
-  Main: AsignaturaNavigator
+  Main: MainDrawer,
 });
 
 export default createAppContainer(AppNavigator);
