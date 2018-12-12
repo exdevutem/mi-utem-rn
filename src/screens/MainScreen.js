@@ -11,18 +11,8 @@ const mediaUrl = 'https://www.utem.cl/wp-json/wp/v2/media/';
 const SLIDER_1_FIRST_ITEM = 1;
 
 export default class MainScreen extends Component {
-    static navigationOptions = {
-        title: 'Inicio',
-        headerStyle: {
-            //backgroundColor: '#f4511e',
-        },
-        //headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-        },
-    }
 
-    constructor (props) {
+    constructor(props) {
         super(props);
         this._renderNoticiaItem = this._renderNoticiaItem.bind(this);
         this.state = {
@@ -114,8 +104,7 @@ export default class MainScreen extends Component {
                 <Text style={styles.titulo}>Noticias</Text>
                 <View>
                     { noticiasCarousel }
-                    <Button onPress={() => this.props.navigation.navigate('Malla')} title="Ir a Malla"></Button>
-                    <Button onPress={() => this.props.navigation.navigate('Perfil')} title="Ir a Perfil"></Button>
+                    <Button onPress={() => this.props.navigation.navigate('Horario')} title="Ir a Malla"></Button>
                 </View>
             </SafeAreaView>
         );

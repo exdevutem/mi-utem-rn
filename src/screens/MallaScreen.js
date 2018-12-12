@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView, Text, SectionList } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, SectionList } from 'react-native';
 import { malla } from '../static/carrera';
 
 import ListItem from '../components/ListItem';
 
 const Header = () => (
     <View style={styles.list}>
-        <Text style={styles.header}>Nivel</Text>
+        <Text style={styles.header}>{"Semestre " + this.props.nombre}</Text>
     </View>
 );
   
@@ -16,21 +16,6 @@ export default class MallaScreen extends Component {
         this.state = { 
             datos: []
         };
-    }
-
-    parseMalla = (objeto) => {
-        var malla = [];
-        objeto.malla.forEach(semestre => {
-            var asignaturas = [];
-            semestre.asignaturas.forEach(asignatura => {
-                asignaturas.push(asignatura.nombre);
-            });
-            malla.push({
-                title: semestre.nivel,
-                data: asignaturas
-            });
-        });
-        return malla;
     }
 
     getMalla() {
@@ -52,11 +37,11 @@ export default class MallaScreen extends Component {
     }
 
     _renderItem = (item) => {
-        return <ListItem nombre={item.title} />
+        return <ListItem nombre={item} />
     }
 
     _renderSectionHeader = (object) => {
-        return <Header nombre={object.email}/>
+        return <Header nombre={object}/>
     }
 
     componentWillMount() {
@@ -64,17 +49,22 @@ export default class MallaScreen extends Component {
     }
 
     render() {
-        
-        
         return (
-            <SectionList
-                renderItem={({item, index, section}) => <Text key={index}>{item}</Text>}
-                renderSectionHeader={({section: {title}}) => (
-                    <Text style={{fontWeight: 'bold'}}>{title}</Text>
-                )}
-                sections={this.state.datos}
-                keyExtractor={(item, index) => item + index}
-                />
+            <SafeAreaView style={ styles.container }>
+                <SectionList
+                    sections={ this.state.datos }
+                    stickySectionHeadersEnabled={ true }
+                    renderSectionHeader={({section: {title}}) => (
+                        <View style={styles.list}>
+                            <Text style={styles.header}>{"Semestre " + title}</Text>
+                        </View>
+                    )}
+                    renderItem={({item, index, section}) => (
+                        <ListItem style={styles.list} nombre={item}/>
+                    )}
+                    keyExtractor={ (item, index) => item + index }/>
+            </SafeAreaView>
+            
         );
     }
 }
@@ -101,4 +91,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         margin: 20,
     },
+    contentContainer: {
+        height: 1000,
+        width: 1000,
+      },
 });
