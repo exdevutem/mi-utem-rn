@@ -1,12 +1,210 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-native';
+import {Text, View, TextInput, StyleSheet, Image,ScrollView,FlatList,TouchableHighlight} from 'react-native';
+import {estudiante} from '../static/estudiantes';
 
-export default class PerfilScreen extends Component {
-    render() {
-        return (
-            <SafeAreaView>
-                
-            </SafeAreaView>
+class CampoPerfil extends Component {
+    constructor(props) {
+        super(props);
+
+    }
+
+    render(){
+        return(
+            <View>
+                <Text style={styles.texto}>{this.props.etiqueta}</Text>
+                <TextInput value={this.props.valor}></TextInput>
+            </View>
         );
     }
 }
+
+
+export default class PerfilScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            datos:[]
+
+        }
+    }
+
+    GetPerfil(){
+        var datos=[]
+
+        if(estudiante.nombre!=null){
+            datos.push({
+                etiqueta: "Nombre",
+                valor: estudiante.nombre
+            })
+        }
+        else{
+            datos.push({
+                etiqueta: "Nombre",
+                valor:"Nombre no asignado"
+            })
+        }
+        if(estudiante.rut!=null){
+            datos.push({
+                etiqueta: "RUT",
+                valor:estudiante.rut.toString()
+            })
+        }
+        else{
+            datos.push({
+                etiqueta: "RUT",
+                valor: "No tiene Rut asignado"
+            })
+        }
+        if(estudiante.edad!=null){//Sacar la edad de la fecha de nacimiento
+            datos.push({
+                etiqueta: "Edad",
+                valor: estudiante.edad.toString()
+            })
+        }
+        else{
+            datos.push({
+                etiqueta: "Edad",
+                valor: "No tiene Edad asignada"
+            })
+        }
+        if(estudiante.telefonoMovil!=null){
+            datos.push({
+                etiqueta: "Celular",
+                valor:estudiante.telefonoMovil.toString()
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Celular",
+                valor:"No hay telefono asignado"
+            })
+        }
+        if(estudiante.telefonoFijo){
+            datos.push({
+                etiqueta: "Telefono fijo",
+                valor:estudiante.telefonoFijo.toString()
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Telefono fijo",
+                valor: "No hay telefono asignado"
+            })
+        }
+        if(estudiante.correoUtem!=null){
+            datos.push({
+                etiqueta:"Correo institucional",
+                valor:estudiante.correoUtem
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Correo institucional",
+                valor:"No hay registro de un correo institucional"
+            })
+        }
+        if(estudiante.correoPersonal!=null){
+            datos.push({
+                etiqueta:"Correo personal",
+                valor:estudiante.correoPersonal
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Correo personal",
+                valor:"No hay registro de correo personal"
+            })
+        }
+        if(estudiante.sexo.sexo!=null){
+            datos.push({
+               etiqueta:"Sexo",
+               valor:estudiante.sexo.sexo
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Sexo",
+                valor:"No hay registro de su sexo"
+            })
+        }
+        if(estudiante.nacionalidad.nacionalidad!=null){
+            datos.push({
+                etiqueta:"Nacionalidad",
+                valor:estudiante.nacionalidad.nacionalidad
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Nacionalidad",
+                valor:"No hay registro de nacionalidad"
+            })
+        }
+        if(estudiante.direccion.comuna.comuna!=null){
+            datos.push({
+                etiqueta:"Comuna",
+                valor:estudiante.direccion.comuna.comuna
+            })
+        }
+        else{
+            datos.push({
+                etiqueta:"Comuna",
+                valor:"No hay comuna registrada"
+            })
+        }
+        if(estudiante.direccion.direccion){
+            datos.push({
+                etiqueta:"Dirección",
+                valor:estudiante.direccion.direccion
+            })
+        }
+        else{
+            datos,push({
+                etiqueta:"Dirección",
+                valor:"No hay dirección registrada"
+            })
+        }
+        this.setState(previousState => ({
+            datos: datos,
+        }))
+    }
+
+    componentWillMount() {
+        this.GetPerfil();
+    }
+
+    render(){
+        return (
+            <ScrollView>
+                <View style={styles.container}>
+                    <Image source={{uri:estudiante.fotoUrl}} style={styles.foto} />
+                </View>
+                
+                <FlatList
+                    data={this.state.datos}
+                    style={styles.lista}
+                    renderItem={({item}) => 
+                        <CampoPerfil etiqueta={item.etiqueta} valor={item.valor}></CampoPerfil>
+                    }/>
+            </ScrollView>
+        );
+
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex:1,
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    foto: {
+        height: 150,
+        width: 150,
+        borderRadius: 75,
+        
+    },
+    lista: {
+        padding: 0
+    }
+});
