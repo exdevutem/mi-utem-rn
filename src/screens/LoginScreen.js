@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Text, View, TextInput, StyleSheet, Image, TouchableHighlight, Alert} from 'react-native';
 
-const correoPrueba = 'javiera.vergaran@utem.cl';
-const clavePrueba = 'uwu';
+const correoPrueba = '@utem.cl';
+const clavePrueba = 'A';
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ export default class LoginScreen extends Component {
                             { correo: text, clave: previousState.clave }
                     ))}></TextInput>
                 <Text style={styles.texto}>Contraseña</Text>
-                <TextInput style={styles.textoPlaceHolder} placeholder='correo@utem.cl'
+                <TextInput style={styles.textoPlaceHolder} placeholder='clave correo'
                     onChangeText={
                         (text) => this.setState(previousState => (
                             { correo: previousState.correo, clave: text}
