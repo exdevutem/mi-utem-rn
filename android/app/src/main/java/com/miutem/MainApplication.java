@@ -3,7 +3,11 @@ package com.miutem;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.rnds.DirectedScrollViewPackage;
+=======
+import com.oblador.vectoricons.VectorIconsPackage;
+>>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -26,7 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+<<<<<<< HEAD
             new DirectedScrollViewPackage(),
+=======
+            new VectorIconsPackage(),
+>>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
             new LinearGradientPackage(),
             new RNGestureHandlerPackage()
       );

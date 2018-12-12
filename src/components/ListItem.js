@@ -16,7 +16,7 @@ class ListItem extends Component {
         if (Platform.OS === 'android') {
             return (
             <TouchableNativeFeedback
-                    onPress={this.onPress}
+                    onPress={this.onPress} style={this.props.style}
                     background={TouchableNativeFeedback.SelectableBackground()}>
                 <View>
                     <Text style={{margin: 20}}>{this.props.nombre}</Text>
@@ -26,7 +26,7 @@ class ListItem extends Component {
         } else {
             return (
                 <TouchableHighlight onPress={this.onPress}
-                        underlayColor='#E0E0E0'>
+                        underlayColor='#E0E0E0' style={this.props.style}>
                     <View>
                         <Text style={{margin: 20}}>{this.props.nombre}</Text>
                     </View>
