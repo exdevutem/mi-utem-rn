@@ -137,11 +137,8 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
     compile project(':react-native-directed-scrollview')
-=======
     compile project(':react-native-vector-icons')
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
     compile project(':react-native-linear-gradient')
     compile project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])

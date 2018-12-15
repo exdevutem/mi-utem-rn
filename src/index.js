@@ -45,7 +45,9 @@ const AsignaturaNavigator = createStackNavigator({
 });
 
 const MainStack = createStackNavigator({
-  Main: MainScreen
+  Main: MainScreen,
+  Horario: HorarioScreen,
+  Malla: MallaScreen
 },
 {
   defaultNavigationOptions: {
