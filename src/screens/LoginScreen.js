@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Text, View, TextInput, StyleSheet, Image, TouchableHighlight, Alert} from 'react-native';
 
-const correoPrueba = 'javiera.vergaran@utem.cl';
-const clavePrueba = 'uwu';
+const correoPrueba = '@utem.cl';
+const clavePrueba = 'A';
 
 export default class LoginScreen extends Component {
     constructor(props) {

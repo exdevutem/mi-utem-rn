@@ -104,7 +104,6 @@ export default class MainScreen extends Component {
                 <Text style={styles.titulo}>Noticias</Text>
                 <View>
                     { noticiasCarousel }
-                    <Button onPress={() => this.props.navigation.navigate('Asignatura')} title="Ir a Malla"></Button>
                 </View>
             </SafeAreaView>
         );

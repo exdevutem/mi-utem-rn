@@ -112,6 +112,12 @@ const MainStack = createStackNavigator({
       title: 'Carrera'
     }
   },
+  Horario: {
+    screen: HorarioScreen,
+    navigationOptions: {
+      title: 'Horario'
+    }
+  }
 },
 {
   defaultNavigationOptions: {
@@ -202,6 +208,8 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'ios-book';
         } else if (routeName === 'Carrera') {
           nombreIcono = 'ios-school';
+        } else if (routeName === 'Horario') {
+          nombreIcono = 'ios-time';
         }
         return <Ionicons name={nombreIcono} size={horizontal ? 20 : 25} color={tintColor} />;
       } else {
@@ -213,6 +221,8 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'book';
         } else if (routeName === 'Carrera') {
           nombreIcono = 'school';
+        } else if (routeName === 'Horario') {
+          nombreIcono = 'access-time';
         }
         return <MaterialIcons name={nombreIcono} size={horizontal ? 20 : 25 } color={tintColor}/>
       }
