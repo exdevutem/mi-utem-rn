@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, StyleSheet, Image,ScrollView,FlatList,TouchableHighlight} from 'react-native';
+import {Text, View, TextInput, StyleSheet, Image, FlatList, SafeAreaView} from 'react-native';
 import {estudiante} from '../static/estudiantes';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class CampoPerfil extends Component {
     constructor(props) {
         super(props);
-
     }
 
     render(){
-        return(
-            <View>
+        return (
+            <View style={styles.elementoLista}>
                 <Text style={styles.texto}>{this.props.etiqueta}</Text>
                 <TextInput value={this.props.valor}></TextInput>
             </View>
@@ -18,13 +18,13 @@ class CampoPerfil extends Component {
     }
 }
 
-
 export default class PerfilScreen extends Component {
+    
     constructor(props) {
         super(props);
-        this.state={
+        
+        this.state = {
             datos:[]
-
         }
     }
 
@@ -52,7 +52,7 @@ export default class PerfilScreen extends Component {
         else{
             datos.push({
                 etiqueta: "RUT",
-                valor: "No tiene Rut asignado"
+                valor: "No tiene RUT asignado"
             })
         }
         if(estudiante.edad!=null){//Sacar la edad de la fecha de nacimiento
@@ -64,43 +64,43 @@ export default class PerfilScreen extends Component {
         else{
             datos.push({
                 etiqueta: "Edad",
-                valor: "No tiene Edad asignada"
+                valor: "No tiene edad asignada"
             })
         }
         if(estudiante.telefonoMovil!=null){
             datos.push({
-                etiqueta: "Celular",
+                etiqueta: "Teléfono móvil",
                 valor:estudiante.telefonoMovil.toString()
             })
         }
         else{
             datos.push({
-                etiqueta:"Celular",
-                valor:"No hay telefono asignado"
+                etiqueta:"Teléfono móvil",
+                valor:"No hay telefono móvil asignado"
             })
         }
         if(estudiante.telefonoFijo){
             datos.push({
-                etiqueta: "Telefono fijo",
+                etiqueta: "Teléfono fijo",
                 valor:estudiante.telefonoFijo.toString()
             })
         }
         else{
             datos.push({
-                etiqueta:"Telefono fijo",
-                valor: "No hay telefono asignado"
+                etiqueta:"Teléfono fijo",
+                valor: "No hay teléfono fijo asignado"
             })
         }
-        if(estudiante.correoUtem!=null){
+        if (estudiante.correoUtem!=null){
             datos.push({
-                etiqueta:"Correo institucional",
+                etiqueta:"Correo UTEM",
                 valor:estudiante.correoUtem
             })
         }
         else{
             datos.push({
-                etiqueta:"Correo institucional",
-                valor:"No hay registro de un correo institucional"
+                etiqueta:"Correo UTEM",
+                valor:"No hay registro de un correo UTEM"
             })
         }
         if(estudiante.correoPersonal!=null){
@@ -112,7 +112,7 @@ export default class PerfilScreen extends Component {
         else{
             datos.push({
                 etiqueta:"Correo personal",
-                valor:"No hay registro de correo personal"
+                valor:"No hay registro de un correo personal"
             })
         }
         if(estudiante.sexo.sexo!=null){
@@ -172,16 +172,14 @@ export default class PerfilScreen extends Component {
         this.GetPerfil();
     }
 
-    render(){
+    render() {
         return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <Image source={{uri:estudiante.fotoUrl}} style={styles.foto} />
-                </View>
+            <ScrollView style={ styles.container }>
+                <Image source={{ uri:estudiante.fotoUrl }} style={ styles.foto } />
                 
                 <FlatList
-                    data={this.state.datos}
-                    style={styles.lista}
+                    data={ this.state.datos }
+                    style={ styles.lista }
                     renderItem={({item}) => 
                         <CampoPerfil etiqueta={item.etiqueta} valor={item.valor}></CampoPerfil>
                     }/>
@@ -193,18 +191,22 @@ export default class PerfilScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
-        backgroundColor: '#FFFFFF',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: '#FFFFFF'
     },
     foto: {
-        height: 150,
-        width: 150,
-        borderRadius: 75,
-        
+        height: 120,
+        width: 120,
+        borderRadius: 60,
+        alignSelf: 'center',
+        marginTop: 20
     },
     lista: {
         padding: 0
+    },
+    elementoLista: {
+        paddingHorizontal: 20,
+        paddingVertical: 10
     }
 });

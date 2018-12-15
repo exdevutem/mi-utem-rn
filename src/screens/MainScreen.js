@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Platform, Text, StyleSheet, Button, View, SafeAreaView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
@@ -104,7 +104,7 @@ export default class MainScreen extends Component {
                 <Text style={styles.titulo}>Noticias</Text>
                 <View>
                     { noticiasCarousel }
-                    <Button onPress={() => this.props.navigation.navigate('Horario')} title="Ir a Malla"></Button>
+                    <Button onPress={() => this.props.navigation.navigate('Asignatura')} title="Ir a Malla"></Button>
                 </View>
             </SafeAreaView>
         );

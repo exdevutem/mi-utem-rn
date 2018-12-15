@@ -7,7 +7,7 @@ export const estudiante = {
     ],
     "correoUtem": "acartes@utem.cl",
     "correoPersonal": "alejandra1999129@gmail.com",
-    "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=20301517&sexo=2&t_usu=1",
+    "fotoUrl": "https://raw.githubusercontent.com/mapacheverdugo/android-utem/master/app/src/main/res/drawable/profile.jpeg",
     "nacimiento": "19-01-2018",
     "puntajePsu": null,
     "telefonoMovil": 995456748,
