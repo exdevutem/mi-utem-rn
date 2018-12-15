@@ -5,8 +5,10 @@ import Carousel from 'react-native-snap-carousel';
 import SliderEntry from '../components/SliderEntry';
 import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
 
-const postUrl = 'https://www.utem.cl/wp-json/wp/v2/posts/';
-const mediaUrl = 'https://www.utem.cl/wp-json/wp/v2/media/';
+const ES_IOS = Platform.OS === 'ios';
+
+const postUrl = 'http' + (ES_IOS ? 's' : '') + '://www.utem.cl/wp-json/wp/v2/posts/';
+const mediaUrl = 'http' + (ES_IOS ? 's' : '') + '://www.utem.cl/wp-json/wp/v2/media/';
 
 const SLIDER_1_FIRST_ITEM = 1;
 
