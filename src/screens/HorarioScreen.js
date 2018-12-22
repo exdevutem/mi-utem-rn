@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, AsyncStorage } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import GridContent from '../components/GridContent';
 import RowLabels from '../components/RowLabels';
 import ColumnLabels from '../components/ColumnLabels';
-import {horario} from '../static/estudiantes';
-
-
-
-/*const datos = [
-  ['A','B','C','D','E','F'],
-  ['uwu','awa','owo','ewe','iwi','ywy'],
-  ['A','B','C','D','E','F'],
-  ['uwu','awa','owo','ewe','iwi','ywy'],
-  ['A','B','C','D','E','F'],
-  ['uwu','awa','owo','ewe','iwi','ywy'],
-  ['A','B','C','D','E','F'],
-  ['uwu','awa','owo','ewe','iwi','ywy'],
-  ['1','2','3','4','5','6']
-];*/
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+const API_URL = 'https://api-utem.herokuapp.com/';
 
 export default class HorarioScreen extends Component {
   constructor(props) {
@@ -32,7 +18,7 @@ export default class HorarioScreen extends Component {
     }
   }
 
-  _horario(){
+  _horario(horario){
     var datos=[];
     var dia=[];
 
@@ -80,7 +66,18 @@ export default class HorarioScreen extends Component {
   }
 
   componentWillMount(){
-    this._horario();
+    this.getHorario();
+  }
+
+  getHorario = async() => {
+    var rut = await AsyncStorage.getItem('rut');
+    var token = await AsyncStorage.getItem('userToken');
+    var horario = await fetch(API_URL + "estudiantes/" + rut + "/horarios", {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }).then(response => response.json());
+    this._horario(horario);
   }
 
   render() {
