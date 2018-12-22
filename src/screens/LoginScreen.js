@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage} from 'react-native';
+import {Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar} from 'react-native';
+import Video from 'react-native-video';
 
-const correoPrueba = '@utem.cl';
-const clavePrueba = 'A';
+import loginBackground from '../assets/videos/login-background.mp4';
+
 const API_URL = 'https://api-utem.herokuapp.com/';
 
 export default class LoginScreen extends Component {
@@ -30,12 +31,9 @@ export default class LoginScreen extends Component {
     };
 
     comprobacion = () => {
-        if(this.state.correo != '' && this.state.clave != ''){
-            if(this.state.correo.endsWith('@utem.cl')){
-                //if(this.state.correo == correoPrueba && this.state.clave == clavePrueba){
-                    this._loginAsync(this.state.correo, this.state.clave)
-                    //this.props.navigation.navigate('Main');
-                //}
+        if (this.state.correo != '' && this.state.clave != ''){
+            if (this.state.correo.endsWith('@utem.cl')){
+                this._loginAsync(this.state.correo, this.state.clave)
             }
         }
     }
@@ -43,29 +41,57 @@ export default class LoginScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Logo_UTEM.png/250px-Logo_UTEM.png'}}
-                    style={styles.logo} />
-                <Text style={styles.texto}>Correo</Text>
-                <TextInput style={styles.textoPlaceHolder} 
-                    keyboardType='email-address'
-                    placeholder='correo@utem.cl'
-                    autoCapitalize='none'
-                    textContentType='emailAddress'
-                    onChangeText={
-                        (text) => this.setState(previousState => (
-                            { correo: text, clave: previousState.clave }
-                    ))}></TextInput>
-                <Text style={styles.texto}>Contraseña</Text>
-                <TextInput style={styles.textoPlaceHolder} placeholder='••••••••••'
-                    secureTextEntry={true}
-                    textContentType='password'
-                    onChangeText={
-                        (text) => this.setState(previousState => (
-                            { correo: previousState.correo, clave: text}
-                    ))}></TextInput>
-                <TouchableHighlight onPress={() => this.comprobacion()} style={styles.boton}>
-                    <Text style={styles.textoBoton}>Entrar</Text>
-                </TouchableHighlight>
+                <StatusBar
+                    barStyle="light-content"
+                />
+                <Video 
+                    repeat
+                    source={loginBackground}
+                    resizeMode="cover" style={StyleSheet.absoluteFill} />
+                
+                <SafeAreaView style={styles.contentContainer}>
+                    <Image 
+                        source={require('../assets/images/utem-negativo.png')}
+                        resizeMode="contain"
+                        style={styles.logo} />
+
+                    <View style={styles.formContainer}>
+                        <Text style={styles.texto}>Correo</Text>
+                        <TextInput
+                            style={styles.textInput} 
+                            keyboardType='email-address'
+                            placeholder='correo@utem.cl'
+                            placeholderTextColor='white'
+                            selectionColor='#009d9b'
+                            autoCapitalize='none'
+                            textContentType='emailAddress'
+                            onChangeText={ (text) => 
+                                this.setState(previousState => (
+                                    { correo: text, clave: previousState.clave }
+                                )
+                            )} />
+                        <Text style={styles.texto}>Contraseña</Text>
+                        <TextInput 
+                            style={styles.textInput} 
+                            placeholder='••••••••••'
+                            secureTextEntry={true}
+                            textContentType='password'
+                            placeholderTextColor='white'
+                            selectionColor='#009d9b'
+                            onChangeText={ (text) => 
+                                this.setState(previousState => (
+                                    { correo: previousState.correo, clave: text}
+                                )
+                            ) } />
+                        <TouchableHighlight 
+                            onPress={() => this.comprobacion()} 
+                            style={styles.boton}>
+                            <Text style={styles.textoBoton}>Entrar</Text>
+                        </TouchableHighlight>
+                    </View>
+                    
+                    
+                </SafeAreaView>
             </View>
         );
     }
@@ -73,41 +99,48 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1
+    },
+    contentContainer: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        margin: 20
     },
     logo: {
-        width: 200,
-        height: 200,
-        left: 75,
-        top: 40
+        flex: 1,
+        margin: 40,
+        alignSelf: 'stretch',
+        width: undefined,
+        height: undefined
+    },
+    formContainer: {
+        flex: 2,
+        margin: 10
     },
     texto: {
-        color: '#05657E',
-        left: 30,
-        top: 60
+        color: 'white',
+        marginLeft: 5,
+        marginBottom: 10,
+        fontWeight: 'bold'
     },
-    textoPlaceHolder: {
-        color: '#05657E',
-        backgroundColor: '#EEEEEE',
-        top: 60,
-        left: 20,
-        height: 35,
-        width: 310,
-        marginBottom: 15
+    textInput: {
+        color: 'white',
+        padding: 10,
+        marginBottom: 15,
+        borderRadius: 19,
+        borderWidth: 1.5,
+        borderColor: 'white'
     },
     boton: {
-        backgroundColor: '#05657E',
-        maxWidth: 200,
-        height: 40,
-        left: 80,
-        top: 80,
+        backgroundColor: '#009d9b',
+        padding: 10,
+        margin: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 8
+        borderRadius: 20
     },
     textoBoton: {
-        color: '#FFFFFF',
-        height: 16
+        color: 'white'
     }
 });
