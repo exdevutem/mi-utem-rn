@@ -7,7 +7,7 @@ export default class GridContent extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         { this.props.data.map((row, index) => this._renderRow(row, index)) }
       </View>
     );
@@ -37,15 +37,20 @@ export default class GridContent extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: 30,
+    paddingLeft: 50
+  },
   rowContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   cellContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 100,
     width: 100,
-    margin: 10,
-    backgroundColor: colors.lightGray,
+    margin: 5,
+    borderRadius: 5,
+    backgroundColor: '#9b59b6',
   },
 });

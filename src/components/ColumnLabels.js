@@ -25,20 +25,20 @@ export default class ColumnLabels extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#bdbdbd',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingLeft: 50
   },
   columnLabel: {
-    width: 120,
+    width: 110,
     justifyContent: 'center',
     alignItems: 'center',
   },
   columnTitle: {
-    backgroundColor: colors.lightGreen,
     paddingVertical: 4,
     paddingHorizontal: 10,
-    color: colors.white,
     fontWeight: '500',
     fontSize: 16,
   },

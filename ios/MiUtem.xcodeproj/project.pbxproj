@@ -39,9 +39,7 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B4687EC41A164A809BBE5CEE /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C815F74EB374F61A4754628 /* libRNGestureHandler.a */; };
 		338865BEE3C94A7995C84C23 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BD4D88374C48EEB0E2BCE0 /* libBVLinearGradient.a */; };
-<<<<<<< HEAD
 		B5844E4AEF1745B2BFBE5ADC /* libRCTDirectedScrollView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4EF3EFA1FE43FAAF359AF1 /* libRCTDirectedScrollView.a */; };
-=======
 		315E54F0284E4AD6A7547C8E /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA6CE47C6334EF2BB58234A /* libRNVectorIcons.a */; };
 		9B2684D097124168AB428553 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4ABFB52B34A487BA4874203 /* libRNVectorIcons-tvOS.a */; };
 		EF4AC6052890499F8B7CB5A4 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8491A1A1DB1D494E94AAE648 /* AntDesign.ttf */; };
@@ -59,7 +57,6 @@
 		67ABC4B1A9CE4E05A67C5F81 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 998951914308493D9F527CA8 /* Octicons.ttf */; };
 		8170265A967D408A97FE6471 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CCB1FEF052342F5BE011DC3 /* SimpleLineIcons.ttf */; };
 		56E940C78A094940984CBA1F /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02CE15A68DEB46DF9F5AA931 /* Zocial.ttf */; };
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -369,10 +366,8 @@
 		1C815F74EB374F61A4754628 /* libRNGestureHandler.a */ = {isa = PBXFileReference; name = "libRNGestureHandler.a"; path = "libRNGestureHandler.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		544D4165F68D41A7937140F2 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		54BD4D88374C48EEB0E2BCE0 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-<<<<<<< HEAD
 		99990C75D6434C8088B13F2D /* RCTDirectedScrollView.xcodeproj */ = {isa = PBXFileReference; name = "RCTDirectedScrollView.xcodeproj"; path = "../node_modules/react-native-directed-scrollview/ios/RCTDirectedScrollView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		1A4EF3EFA1FE43FAAF359AF1 /* libRCTDirectedScrollView.a */ = {isa = PBXFileReference; name = "libRCTDirectedScrollView.a"; path = "libRCTDirectedScrollView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-=======
 		A606A709AAFC49F3BF94F0C8 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; name = "RNVectorIcons.xcodeproj"; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		EFA6CE47C6334EF2BB58234A /* libRNVectorIcons.a */ = {isa = PBXFileReference; name = "libRNVectorIcons.a"; path = "libRNVectorIcons.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		E4ABFB52B34A487BA4874203 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; name = "libRNVectorIcons-tvOS.a"; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
@@ -391,7 +386,6 @@
 		998951914308493D9F527CA8 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		3CCB1FEF052342F5BE011DC3 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		02CE15A68DEB46DF9F5AA931 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -421,11 +415,8 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				B4687EC41A164A809BBE5CEE /* libRNGestureHandler.a in Frameworks */,
 				338865BEE3C94A7995C84C23 /* libBVLinearGradient.a in Frameworks */,
-<<<<<<< HEAD
 				B5844E4AEF1745B2BFBE5ADC /* libRCTDirectedScrollView.a in Frameworks */,
-=======
 				315E54F0284E4AD6A7547C8E /* libRNVectorIcons.a in Frameworks */,
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,11 +606,8 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				2397766AA7224EA38663B6C4 /* RNGestureHandler.xcodeproj */,
 				544D4165F68D41A7937140F2 /* BVLinearGradient.xcodeproj */,
-<<<<<<< HEAD
 				99990C75D6434C8088B13F2D /* RCTDirectedScrollView.xcodeproj */,
-=======
 				A606A709AAFC49F3BF94F0C8 /* RNVectorIcons.xcodeproj */,
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1289,20 +1277,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-<<<<<<< HEAD
-=======
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Debug;
@@ -1327,20 +1309,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-<<<<<<< HEAD
-=======
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Release;
@@ -1365,11 +1341,8 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Debug;
@@ -1393,11 +1366,8 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Release;
@@ -1430,20 +1400,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-<<<<<<< HEAD
-=======
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Debug;
@@ -1476,20 +1440,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-<<<<<<< HEAD
-=======
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Release;
@@ -1521,20 +1479,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-<<<<<<< HEAD
-=======
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Debug;
@@ -1566,20 +1518,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-<<<<<<< HEAD
-=======
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-directed-scrollview\ios\RCTDirectedScrollView",
-=======
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
->>>>>>> a4cf17212d44d50e3e6dbddbd7dc626d5c51b6e0
 				);
 			};
 			name = Release;

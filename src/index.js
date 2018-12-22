@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, Text, SegmentedControlIOS, View } from 'react-native';
+import { Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {createStackNavigator, createDrawerNavigator, createBottomTabNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
 
 import SegmentedTab from './components/SegmentedTab';
 
+//import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import MainScreen from './screens/MainScreen';
 
@@ -25,12 +26,23 @@ const ES_IOS = Platform.OS === 'ios';
 
 const colors = {
   principal: '#009d9b',
+  verde: '#8BC34A',
+  azul: '#3F51B5',
+  rojo: '#EF5350',
+  amarillo: '#FFD600',
+  utem: {
+    azul: '#06607a',
+    verde: '#1d8e5c',
+  },
+  ios: {
+    azul: '#007AFF'
+  },
   azulIos: '#007AFF'
 }
 
 const AsignaturaTabs = createMaterialTopTabNavigator({
   Teoria: {
-    screen: AsignaturaScreen,
+    screen: MallaScreen,
     title: 'Teoría'
   },
   Taller: {
@@ -56,8 +68,8 @@ const AsignaturaTabs = createMaterialTopTabNavigator({
         );
       },
     }
-  })
-  ,
+  }),
+  
   swipeEnabled: !ES_IOS,
   tabBarOptions: {
     style: {
@@ -236,6 +248,7 @@ const MainDrawer = createDrawerNavigator({
 });
 
 const AppNavigator = createSwitchNavigator({
+  //Splash: SplashScreen,
   //Login: LoginScreen,
   Main: MainDrawer
 });

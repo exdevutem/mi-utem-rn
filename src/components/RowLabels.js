@@ -28,17 +28,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    backgroundColor: '#bdbdbd',
+    width: 50,
+    paddingTop: 30
   },
   rowLabel: {
-    height: 120,    
+    height: 110,    
     justifyContent: 'center',
     alignItems: 'center',    
   },
   rowTitle: {
-    backgroundColor: colors.darkPurple,
     paddingVertical: 4,
     paddingHorizontal: 10,
-    color: colors.white,
     fontWeight: '500',
     fontSize: 16,
   },

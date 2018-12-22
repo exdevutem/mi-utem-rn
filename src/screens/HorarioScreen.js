@@ -30,10 +30,8 @@ export default class HorarioScreen extends Component {
 
     return (
       <ScrollView
-        bounces={true}
-        bouncesZoom={true}
-        maximumZoomScale={1.5}
-        minimumZoomScale={0.75}
+        bounces={false}
+        bouncesZoom={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
@@ -58,21 +56,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    height: 1080,
-    width: 720,
+    height: 990,
+    width: 710
   },
   rowLabelsContainer: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: 100,
+    width: 100
   },
   columnLabelsContainer: {
     position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
     height: 30,
   },
 })
