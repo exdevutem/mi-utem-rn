@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-//import type { Row, Cell } from '../static/data';
 import colors from '../colors';
 
 export default class GridContent extends Component {
@@ -22,13 +21,23 @@ export default class GridContent extends Component {
   }
 
   _renderCell(celda, indexF, indexC) {
+    if(celda != null){
     return (
       <TouchableOpacity
         style={styles.cellContainer}
         onPress={() => { this._onCellPressed(indexF, indexC); }}
       >
+      <Text>{celda.nombre}</Text>
+      <Text>{celda.sala}</Text>
+      <Text>{celda.codigo}/{celda.seccion}</Text>
       </TouchableOpacity>
-    );
+    );}
+    else{
+      return(
+        <TouchableOpacity
+        style={styles.noCell}></TouchableOpacity>
+      )
+    }
   }
 
   _onCellPressed(i, j) {
@@ -51,6 +60,15 @@ const styles = StyleSheet.create({
     width: 100,
     margin: 5,
     borderRadius: 5,
-    backgroundColor: '#9b59b6',
+    backgroundColor: 'cyan',
   },
+  noCell: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
+    width: 100,
+    margin: 5,
+    borderRadius: 5,
+    backgroundColor: 'white',
+  }
 });
