@@ -24,6 +24,7 @@ export default class LoginScreen extends Component {
         }).then(response => response.json());
         
         await AsyncStorage.setItem('userToken', token.token);
+        await AsyncStorage.setItem('rut', token.rut.toString());
         this.props.navigation.navigate('Main');
       };
 

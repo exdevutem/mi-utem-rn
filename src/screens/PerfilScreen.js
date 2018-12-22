@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, StyleSheet, Image, FlatList, SafeAreaView} from 'react-native';
-import {estudiante} from '../static/estudiantes';
-import { ScrollView } from 'react-native-gesture-handler';
+import {Text, View, TextInput, StyleSheet, Image,ScrollView,FlatList,TouchableHighlight,AsyncStorage} from 'react-native';
+
+var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+var today  = new Date();
+const API_URL = 'https://api-utem.herokuapp.com/';
 
 class CampoPerfil extends Component {
     constructor(props) {
         super(props);
+        this.getPerfil = this.getPerfil.bind(this);
     }
+    
 
     render(){
-        return (
-            <View style={styles.elementoLista}>
+        return(
+            <View>
                 <Text style={styles.texto}>{this.props.etiqueta}</Text>
                 <TextInput value={this.props.valor}></TextInput>
             </View>
@@ -19,16 +23,26 @@ class CampoPerfil extends Component {
 }
 
 export default class PerfilScreen extends Component {
-    
     constructor(props) {
         super(props);
-        
-        this.state = {
+        this.state={
             datos:[]
+
         }
     }
+    getPerfil = async () => {
+        var rut=await AsyncStorage.getItem('rut');
+        var token=await AsyncStorage.getItem('userToken');
+        var perfil = await fetch(API_URL+"estudiantes/"+rut, {
+            headers:{
+                Authorization:"Bearer "+token  
+            }
+        }).then(response => response.json());
 
-    GetPerfil(){
+        this.renderPerfil(perfil);
+    }
+
+    renderPerfil (estudiante){
         var datos=[]
 
         if(estudiante.nombre!=null){
@@ -52,7 +66,7 @@ export default class PerfilScreen extends Component {
         else{
             datos.push({
                 etiqueta: "RUT",
-                valor: "No tiene RUT asignado"
+                valor: "No tiene Rut asignado"
             })
         }
         if(estudiante.edad!=null){//Sacar la edad de la fecha de nacimiento
@@ -64,43 +78,43 @@ export default class PerfilScreen extends Component {
         else{
             datos.push({
                 etiqueta: "Edad",
-                valor: "No tiene edad asignada"
+                valor: "No tiene Edad asignada"
             })
         }
         if(estudiante.telefonoMovil!=null){
             datos.push({
-                etiqueta: "Teléfono móvil",
+                etiqueta: "Celular",
                 valor:estudiante.telefonoMovil.toString()
             })
         }
         else{
             datos.push({
-                etiqueta:"Teléfono móvil",
-                valor:"No hay telefono móvil asignado"
+                etiqueta:"Celular",
+                valor:"No hay telefono asignado"
             })
         }
         if(estudiante.telefonoFijo){
             datos.push({
-                etiqueta: "Teléfono fijo",
+                etiqueta: "Telefono fijo",
                 valor:estudiante.telefonoFijo.toString()
             })
         }
         else{
             datos.push({
-                etiqueta:"Teléfono fijo",
-                valor: "No hay teléfono fijo asignado"
+                etiqueta:"Telefono fijo",
+                valor: "No hay telefono asignado"
             })
         }
-        if (estudiante.correoUtem!=null){
+        if(estudiante.correoUtem!=null){
             datos.push({
-                etiqueta:"Correo UTEM",
+                etiqueta:"Correo institucional",
                 valor:estudiante.correoUtem
             })
         }
         else{
             datos.push({
-                etiqueta:"Correo UTEM",
-                valor:"No hay registro de un correo UTEM"
+                etiqueta:"Correo institucional",
+                valor:"No hay registro de un correo institucional"
             })
         }
         if(estudiante.correoPersonal!=null){
@@ -112,7 +126,7 @@ export default class PerfilScreen extends Component {
         else{
             datos.push({
                 etiqueta:"Correo personal",
-                valor:"No hay registro de un correo personal"
+                valor:"No hay registro de correo personal"
             })
         }
         if(estudiante.sexo.sexo!=null){
@@ -169,17 +183,19 @@ export default class PerfilScreen extends Component {
     }
 
     componentWillMount() {
-        this.GetPerfil();
+        this.getPerfil();
     }
 
-    render() {
+    render(){
         return (
-            <ScrollView style={ styles.container }>
-                <Image source={{ uri:estudiante.fotoUrl }} style={ styles.foto } />
+            <ScrollView>
+                <View style={styles.container}>
+                    <Image source={{uri: 'https://raw.githubusercontent.com/mapacheverdugo/android-utem/master/app/src/main/res/drawable/profile.jpeg'}} style={styles.foto} />
+                </View>
                 
                 <FlatList
-                    data={ this.state.datos }
-                    style={ styles.lista }
+                    data={this.state.datos}
+                    style={styles.lista}
                     renderItem={({item}) => 
                         <CampoPerfil etiqueta={item.etiqueta} valor={item.valor}></CampoPerfil>
                     }/>
@@ -191,22 +207,18 @@ export default class PerfilScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#FFFFFF'
+        flex:1,
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     foto: {
-        height: 120,
-        width: 120,
-        borderRadius: 60,
-        alignSelf: 'center',
-        marginTop: 20
+        height: 150,
+        width: 150,
+        borderRadius: 75,
+        
     },
     lista: {
         padding: 0
-    },
-    elementoLista: {
-        paddingHorizontal: 20,
-        paddingVertical: 10
     }
 });
