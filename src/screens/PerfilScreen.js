@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {Text, View, TextInput, StyleSheet, Image,ScrollView,FlatList,TouchableHighlight,AsyncStorage} from 'react-native';
 
-var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-var today  = new Date();
 const API_URL = 'https://api-utem.herokuapp.com/';
 
 class CampoPerfil extends Component {
     constructor(props) {
         super(props);
-        this.getPerfil = this.getPerfil.bind(this);
+        
     }
     
 
@@ -25,6 +23,7 @@ class CampoPerfil extends Component {
 export default class PerfilScreen extends Component {
     constructor(props) {
         super(props);
+        this.getPerfil = this.getPerfil.bind(this);
         this.state={
             datos:[]
 
@@ -39,16 +38,20 @@ export default class PerfilScreen extends Component {
             }
         }).then(response => response.json());
 
-        this.renderPerfil(perfil);
+        console.log(perfil)
+
+        this.RenderPerfil(perfil)
     }
 
-    renderPerfil (estudiante){
+    RenderPerfil (estudiante){
         var datos=[]
+
+        
 
         if(estudiante.nombre!=null){
             datos.push({
-                etiqueta: "Nombre",
-                valor: estudiante.nombre
+                etiqueta: "Nombre Completo",
+                valor: estudiante.nombre.nombres +" "+ estudiante.nombre.apellidos
             })
         }
         else{
@@ -69,10 +72,17 @@ export default class PerfilScreen extends Component {
                 valor: "No tiene Rut asignado"
             })
         }
-        if(estudiante.edad!=null){//Sacar la edad de la fecha de nacimiento
+        if(estudiante.nacimiento!=null){//Sacar la edad de la fecha de nacimiento
+            var s=estudiante.nacimiento
+            var d=new Date();
+            d.setFullYear(s.substr(6,4),s.substr(3,2)-1,s.substr(0,2));
+            var hoy= new Date();
+            var Edad = new Date(hoy-d)
+
+
             datos.push({
                 etiqueta: "Edad",
-                valor: estudiante.edad.toString()
+                valor: Edad.getFullYear().toString()
             })
         }
         else{
@@ -172,7 +182,7 @@ export default class PerfilScreen extends Component {
             })
         }
         else{
-            datos,push({
+            datos.push({
                 etiqueta:"Dirección",
                 valor:"No hay dirección registrada"
             })
