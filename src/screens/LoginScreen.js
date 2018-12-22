@@ -24,8 +24,10 @@ export default class LoginScreen extends Component {
         }).then(response => response.json());
         
         await AsyncStorage.setItem('userToken', token.token);
+        await AsyncStorage.setItem('rut', token.rut.toString());
+        await AsyncStorage.setItem('correo', token.correo);
         this.props.navigation.navigate('Main');
-      };
+    };
 
     comprobacion = () => {
         if(this.state.correo != '' && this.state.clave != ''){
