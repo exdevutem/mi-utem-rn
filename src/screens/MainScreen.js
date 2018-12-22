@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Platform, Text, StyleSheet, Button, View, SafeAreaView } from 'react-native';
+import { Platform, Text, StyleSheet, AsyncStorage, View, SafeAreaView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
 import SliderEntry from '../components/SliderEntry';

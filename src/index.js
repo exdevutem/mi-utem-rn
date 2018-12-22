@@ -6,7 +6,7 @@ import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigat
 
 import SegmentedTab from './components/SegmentedTab';
 
-//import SplashScreen from './screens/SplashScreen';
+import AuthLoadingScreen from './screens/AuthLoadingScreen';
 import LoginScreen from './screens/LoginScreen';
 import MainScreen from './screens/MainScreen';
 
@@ -248,8 +248,10 @@ const MainDrawer = createDrawerNavigator({
 });
 
 const AppNavigator = createSwitchNavigator({
+  
   //Splash: SplashScreen,
-  //Login: LoginScreen,
+  AuthLoading: AuthLoadingScreen,
+  Login: LoginScreen,
   Main: MainDrawer
 });
 

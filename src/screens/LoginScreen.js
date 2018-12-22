@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, StyleSheet, Image, TouchableHighlight, Alert} from 'react-native';
+import {Text, View, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage} from 'react-native';
 
 const correoPrueba = '@utem.cl';
 const clavePrueba = 'A';
+const API_URL = 'https://api-utem.herokuapp.com/';
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -13,11 +14,25 @@ export default class LoginScreen extends Component {
         };
     }
 
+    _loginAsync = async (correo, contrasenia) => {
+        var token = await fetch(API_URL + 'token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
+        }).then(response => response.json());
+        
+        await AsyncStorage.setItem('userToken', token.token);
+        this.props.navigation.navigate('Main');
+      };
+
     comprobacion = () => {
         if(this.state.correo != '' && this.state.clave != ''){
             if(this.state.correo.endsWith('@utem.cl')){
                 //if(this.state.correo == correoPrueba && this.state.clave == clavePrueba){
-                    this.props.navigation.navigate('Main');
+                    this._loginAsync(this.state.correo, this.state.clave)
+                    //this.props.navigation.navigate('Main');
                 //}
             }
         }
