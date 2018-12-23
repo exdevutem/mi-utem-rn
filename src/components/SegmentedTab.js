@@ -14,6 +14,7 @@ export default class SegmentedTab extends Component {
                 <SegmentedControlIOS
                     values={ values }
                     selectedIndex={ selectedIndex }
+                    tintColor='#009d9b'
                     onChange={(event) => {
                         navigation.navigate(routes[event.nativeEvent.selectedSegmentIndex]);
                     }}

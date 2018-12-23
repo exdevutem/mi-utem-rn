@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "install": "^0.12.2",
+    "lottie-react-native": "^2.5.11",
     "react": "16.6.1",
     "react-native": "0.57.5",
     "react-native-directed-scrollview": "^2.0.0",

@@ -6,7 +6,7 @@ import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigat
 
 import SegmentedTab from './components/SegmentedTab';
 
-import AuthScreen from './screens/AuthScreen';
+import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import MainScreen from './screens/MainScreen';
 
@@ -94,7 +94,7 @@ const MainStack = createStackNavigator({
       title: 'Inicio',
       headerLeft: () => {
         if (ES_IOS)
-          return <Ionicons name={'ios-menu'} style={{fontSize: 24, padding: 12, color: colors.azulIos}} onPress={ () => { navigation.toggleDrawer() }}/>
+          return <Ionicons name={'ios-menu'} style={{fontSize: 24, padding: 12, color: colors.principal}} onPress={ () => { navigation.toggleDrawer() }}/>
         else
           return <MaterialIcons name={'menu'} style={{fontSize: 24, padding: 12, color: 'white'}} onPress={ () => { navigation.toggleDrawer() } }  />
       }
@@ -136,9 +136,12 @@ const MainStack = createStackNavigator({
       headerStyle: {
           backgroundColor: ES_IOS ? 'white' : colors.principal,
       },
-      headerTintColor: (ES_IOS) ? '' : 'white',
+      headerTitleStyle: {
+        color: ES_IOS ? 'black' : 'white'
+      },
+      headerTintColor: ES_IOS ? colors.principal : 'white',
       headerBackTitleStyle: {
-        color: colors.azulIos
+        color: colors.principal
       }
   }
 });
@@ -243,14 +246,13 @@ const MainDrawer = createDrawerNavigator({
   }),
   drawerType: ES_IOS ? 'slide' : 'front',
   contentOptions: {
-    activeTintColor: ES_IOS ? colors.azulIos : colors.principal,
+    activeTintColor: colors.principal,
   },
 });
 
 const AppNavigator = createSwitchNavigator({
   
   //Splash: SplashScreen,
-  AuthLoading: AuthScreen,
   Login: LoginScreen,
   Main: MainDrawer
 });

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar} from 'react-native';
+import {Dimensions, Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar, Linking} from 'react-native';
 import Video from 'react-native-video';
+
+const win = Dimensions.get('window');
 
 const API_URL = 'https://api-utem.herokuapp.com/';
 
@@ -23,8 +25,6 @@ export default class LoginScreen extends Component {
             },
             body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
         }).then(response => response.json());
-        
-        console.log(respuesta);
 
         await AsyncStorage.setItem('userToken', respuesta.token);
         await AsyncStorage.setItem('rut', respuesta.rut.toString());
@@ -76,13 +76,31 @@ export default class LoginScreen extends Component {
         }));
     }
 
+    _goToURL() {
+        const url = "https://pasaporte.utem.cl/reset";
+        Linking.canOpenURL(url).then(supported => {
+          if (supported) {
+            Linking.openURL(url);
+          } else {
+            console.log('Don\'t know how to open URI: ' + url);
+          }
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <StatusBar
                     barStyle="light-content" />
+
+                <Image
+                    source={require('../assets/images/login-background.png')}
+                    resizeMode='cover'
+                    style={styles.poster} />
+                
                 <Video 
                     repeat
+                    muted
                     source={require('../assets/videos/login-background.mp4')}
                     resizeMode="cover"
                     style={StyleSheet.absoluteFill} />
@@ -102,7 +120,7 @@ export default class LoginScreen extends Component {
                             keyboardType='email-address'
                             placeholder='correo@utem.cl'
                             autoCorrect={false}
-                            placeholderTextColor='rgba(255, 255, 255, 0.5)'
+                            placeholderTextColor='rgba(255, 255, 255, 0.7)'
                             selectionColor='#009d9b'
                             autoCapitalize='none'
                             textContentType='emailAddress'
@@ -123,7 +141,7 @@ export default class LoginScreen extends Component {
                             autoCorrect={false}
                             secureTextEntry={true}
                             textContentType='password'
-                            placeholderTextColor='rgba(255, 255, 255, 0.5)'
+                            placeholderTextColor='rgba(255, 255, 255, 0.7)'
                             selectionColor='#009d9b'
                             onFocus={this._onContraseniaFocus}
                             onBlur={this._onContraseniaBlur}
@@ -135,13 +153,18 @@ export default class LoginScreen extends Component {
                                     contrasenia: texto
                                 })
                             )} />
+                        
+                        <Text
+                            style={[styles.texto, styles.url]}
+                            onPress={this._goToURL}> 
+                            ¿Olvidaste tu contraseña?
+                        </Text>
                         <TouchableHighlight 
                             onPress={() => this._onSubmitPress()} 
                             style={styles.boton}>
                             <Text style={styles.textoBoton}>Entrar</Text>
                         </TouchableHighlight>
                     </View>
-                    
                     
                 </SafeAreaView>
             </View>
@@ -151,17 +174,25 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'black'
+    },
+    poster: {
+        position: 'absolute',
+        alignSelf: 'center',
+        width: win.width,
+        height: win.height,
     },
     overlay: {
         ...StyleSheet.absoluteFill,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)'
+        backgroundColor: 'rgba(0, 0, 0, 0.6)'
     },
     contentContainer: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'space-between',
-        margin: 20
+        margin: 20,
+        zIndex: 10
     },
     logo: {
         flex: 1,
@@ -180,23 +211,30 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontWeight: 'bold'
     },
+    url: {
+        textDecorationLine: 'underline'
+    },
     textInput: {
         color: 'white',
         paddingHorizontal: 15,
-        paddingVertical: 5,
+        padding: 10,
         marginBottom: 15,
         borderRadius: 26,
-        borderWidth: 1.5
+        borderWidth: 1.5,
+        maxHeight: 40
     },
     boton: {
         backgroundColor: '#009d9b',
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 40,
         margin: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 20
+        borderRadius: 20,
+        alignSelf: 'center'
     },
     textoBoton: {
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold'
     }
 });

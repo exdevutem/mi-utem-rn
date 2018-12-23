@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bdbdbd',
     width: 50,
-    paddingTop: 30
+    paddingTop: 35
   },
   rowLabel: {
     height: 110,    

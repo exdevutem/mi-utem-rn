@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    paddingLeft: 50
+    paddingLeft: 55
   },
   columnLabel: {
     width: 130,

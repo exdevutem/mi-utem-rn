@@ -60,8 +60,8 @@ export default class GridContent extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
-    paddingLeft: 50
+    paddingTop: 35,
+    paddingLeft: 55
   },
   rowContainer: {
     flexDirection: 'row'
