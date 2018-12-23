@@ -12,7 +12,7 @@
     "react-native": "0.57.5",
     "react-native-directed-scrollview": "^2.0.0",
     "react-native-gesture-handler": "^1.0.9",
-    "react-native-linear-gradient": "^2.5.2",
+    "react-native-linear-gradient": "^2.5.3",
     "react-native-render-html": "^3.10.0",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-vector-icons": "^6.1.0",

@@ -10,9 +10,11 @@ const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 const API_URL = 'https://api-utem.herokuapp.com/';
 
 export default class HorarioScreen extends Component {
+  
+
   constructor(props) {
     super(props);
-    
+    this.horarioScroll;
     this.state = {
         datos:[]
     }
@@ -62,7 +64,7 @@ export default class HorarioScreen extends Component {
 
     this.setState({
       datos: aux
-  })
+    });
   }
 
   componentWillMount(){
@@ -84,12 +86,16 @@ export default class HorarioScreen extends Component {
 
     return (
       <ScrollView
+        ref={component => this.horarioScroll = component}
         bounces={false}
         bouncesZoom={false}
+        maximumZoomScale={2.0}
+        minimumZoomScale={0.5}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
         style={styles.container}>
+        
 
         <ScrollViewChild scrollDirection={'both'}>
           <GridContent data={this.state.datos}/>
@@ -103,6 +109,7 @@ export default class HorarioScreen extends Component {
       </ScrollView>
     );
   }
+
 }
  
 const styles = StyleSheet.create({

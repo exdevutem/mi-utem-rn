@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-//import type { Row, Cell } from '../static/data';
-import colors from '../colors';
 
 export default class RowLabels extends Component {
   render() {

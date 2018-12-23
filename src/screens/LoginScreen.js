@@ -7,14 +7,16 @@ const API_URL = 'https://api-utem.herokuapp.com/';
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            correo: '',
-            clave: ''
+        this.state = {
+            correoIsFocused: false,
+            contraseniaIsFocused: false,
+            correo: "",
+            contrasenia: ""
         };
     }
 
     _loginAsync = async (correo, contrasenia) => {
-        var token = await fetch(API_URL + 'token', {
+        var respuesta = await fetch(API_URL + 'token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -22,18 +24,56 @@ export default class LoginScreen extends Component {
             body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
         }).then(response => response.json());
         
-        await AsyncStorage.setItem('userToken', token.token);
-        await AsyncStorage.setItem('rut', token.rut.toString());
-        await AsyncStorage.setItem('correo', token.correo);
+        console.log(respuesta);
+
+        await AsyncStorage.setItem('userToken', respuesta.token);
+        await AsyncStorage.setItem('rut', respuesta.rut.toString());
+        await AsyncStorage.setItem('correo', respuesta.correo);
         this.props.navigation.navigate('Main');
     };
 
-    comprobacion = () => {
-        if (this.state.correo != '' && this.state.clave != ''){
+    _onSubmitPress = () => {
+        if (this.state.correo != '' && this.state.contrasenia != ''){
             if (this.state.correo.endsWith('@utem.cl')){
-                this._loginAsync(this.state.correo, this.state.clave)
+                this._loginAsync(this.state.correo, this.state.contrasenia)
             }
         }
+    }
+
+    _onCorreoFocus = () => {
+        this.setState(previousState => ({
+            correoIsFocused: true,
+            contraseniaIsFocused: previousState.contraseniaIsFocused,
+            correo: previousState.correo,
+            contrasenia: previousState.contrasenia
+        }));
+    }
+
+    _onContraseniaFocus = () => {
+        this.setState(previousState => ({
+            correoIsFocused: previousState.correoIsFocused,
+            contraseniaIsFocused: true,
+            correo: previousState.correo,
+            contrasenia: previousState.contrasenia
+        }));
+    }
+
+    _onCorreoBlur = () => {
+        this.setState(previousState => ({
+            correoIsFocused: false,
+            contraseniaIsFocused: previousState.contraseniaIsFocused,
+            correo: previousState.correo,
+            contrasenia: previousState.contrasenia
+        }));
+    }
+
+    _onContraseniaBlur = () => {
+        this.setState(previousState => ({
+            correoIsFocused: previousState.correoIsFocused,
+            contraseniaIsFocused: false,
+            correo: previousState.correo,
+            contrasenia: previousState.contrasenia
+        }));
     }
 
     render() {
@@ -51,40 +91,52 @@ export default class LoginScreen extends Component {
                 
                 <SafeAreaView style={styles.contentContainer}>
                     <Image 
-                        source={require('../assets/images/utem-negativo.png')}
+                        source={require('../assets/images/utem-logo-color-blanco.png')}
                         resizeMode="contain"
                         style={styles.logo} />
 
                     <View style={styles.formContainer}>
                         <Text style={styles.texto}>Correo</Text>
                         <TextInput
-                            style={styles.textInput} 
+                            style={[styles.textInput, {borderColor: this.state.correoIsFocused ? '#009d9b' : 'white'}]} 
                             keyboardType='email-address'
                             placeholder='correo@utem.cl'
-                            placeholderTextColor='white'
+                            autoCorrect={false}
+                            placeholderTextColor='rgba(255, 255, 255, 0.5)'
                             selectionColor='#009d9b'
                             autoCapitalize='none'
                             textContentType='emailAddress'
-                            onChangeText={ (text) => 
-                                this.setState(previousState => (
-                                    { correo: text, clave: previousState.clave }
-                                )
+                            onFocus={this._onCorreoFocus}
+                            onBlur={this._onCorreoBlur}
+                            onChangeText={(texto) => 
+                                this.setState(previousState => ({
+                                    correoIsFocused: previousState.correoIsFocused,
+                                    contraseniaIsFocused: previousState.contraseniaIsFocused,
+                                    correo: texto,
+                                    contrasenia: previousState.contrasenia
+                                })
                             )} />
                         <Text style={styles.texto}>Contraseña</Text>
                         <TextInput 
-                            style={styles.textInput} 
+                            style={[styles.textInput, {borderColor: this.state.contraseniaIsFocused ? '#009d9b' : 'white'}]} 
                             placeholder='••••••••••'
+                            autoCorrect={false}
                             secureTextEntry={true}
                             textContentType='password'
-                            placeholderTextColor='white'
+                            placeholderTextColor='rgba(255, 255, 255, 0.5)'
                             selectionColor='#009d9b'
-                            onChangeText={ (text) => 
-                                this.setState(previousState => (
-                                    { correo: previousState.correo, clave: text}
-                                )
-                            ) } />
+                            onFocus={this._onContraseniaFocus}
+                            onBlur={this._onContraseniaBlur}
+                            onChangeText={(texto) => 
+                                this.setState(previousState => ({
+                                    correoIsFocused: previousState.correoIsFocused,
+                                    contraseniaIsFocused: previousState.contraseniaIsFocused,
+                                    correo: previousState.correo,
+                                    contrasenia: texto
+                                })
+                            )} />
                         <TouchableHighlight 
-                            onPress={() => this.comprobacion()} 
+                            onPress={() => this._onSubmitPress()} 
                             style={styles.boton}>
                             <Text style={styles.textoBoton}>Entrar</Text>
                         </TouchableHighlight>
@@ -134,8 +186,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         marginBottom: 15,
         borderRadius: 26,
-        borderWidth: 1.5,
-        borderColor: 'white'
+        borderWidth: 1.5
     },
     boton: {
         backgroundColor: '#009d9b',
