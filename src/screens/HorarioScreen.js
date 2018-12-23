@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: 990,
-    width: 710
+    width: 810
   },
   rowLabelsContainer: {
     position: 'absolute',

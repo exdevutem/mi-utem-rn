@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import {Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar} from 'react-native';
 import Video from 'react-native-video';
 
-import loginBackground from '../assets/videos/login-background.mp4';
-
 const API_URL = 'https://api-utem.herokuapp.com/';
 
 export default class LoginScreen extends Component {
@@ -42,12 +40,14 @@ export default class LoginScreen extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar
-                    barStyle="light-content"
-                />
+                    barStyle="light-content" />
                 <Video 
                     repeat
-                    source={loginBackground}
-                    resizeMode="cover" style={StyleSheet.absoluteFill} />
+                    source={require('../assets/videos/login-background.mp4')}
+                    resizeMode="cover"
+                    style={StyleSheet.absoluteFill} />
+                
+                <View style={styles.overlay} />
                 
                 <SafeAreaView style={styles.contentContainer}>
                     <Image 
@@ -101,6 +101,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    overlay: {
+        ...StyleSheet.absoluteFill,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)'
+    },
     contentContainer: {
         flex: 1,
         flexDirection: 'column',
@@ -126,9 +130,10 @@ const styles = StyleSheet.create({
     },
     textInput: {
         color: 'white',
-        padding: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 5,
         marginBottom: 15,
-        borderRadius: 19,
+        borderRadius: 26,
         borderWidth: 1.5,
         borderColor: 'white'
     },

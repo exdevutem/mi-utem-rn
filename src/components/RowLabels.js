@@ -28,7 +28,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor: '#bdbdbd',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#bdbdbd',
     width: 50,
     paddingTop: 30
   },
@@ -42,5 +44,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontWeight: '500',
     fontSize: 16,
+    color: 'grey'
   },
 });

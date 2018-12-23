@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import colors from '../colors';
+
+const colors = [
+  '#2ecc71',
+  '#3498db',
+  '#9b59b6',
+  '#34495e',
+  '#f39c12',
+  '#e74c3c',
+  '#d35400'
+]
 
 export default class GridContent extends Component {
 
@@ -25,22 +34,26 @@ export default class GridContent extends Component {
     return (
       <TouchableOpacity
         style={styles.cellContainer}
-        onPress={() => { this._onCellPressed(indexF, indexC); }}
-      >
-      <Text>{celda.nombre}</Text>
-      <Text>{celda.sala}</Text>
-      <Text>{celda.codigo}/{celda.seccion}</Text>
+        onPress={() => { this._onCellPressed(celda, indexF, indexC); }}>
+        <Text style={styles.textoLargo} numberOfLines={1}>
+          {celda.codigo}/{celda.seccion}
+        </Text>
+        <Text style={styles.textoNombre} numberOfLines={2}>
+          {celda.nombre}
+        </Text>
+        <Text style={celda.sala.length < 8 ? styles.textoSala : styles.textoLargo} numberOfLines={2}>
+          {celda.sala}
+        </Text>
       </TouchableOpacity>
     );}
     else{
       return(
-        <TouchableOpacity
-        style={styles.noCell}></TouchableOpacity>
+        <TouchableOpacity style={styles.noCell}></TouchableOpacity>
       )
     }
   }
 
-  _onCellPressed(i, j) {
+  _onCellPressed(celda, i, j) {
     Alert.alert(`Pressed (${i}, ${j})`);
   }
 }
@@ -55,20 +68,36 @@ const styles = StyleSheet.create({
   },
   cellContainer: {
     justifyContent: 'center',
+    padding: 10,
     alignItems: 'center',
     height: 100,
-    width: 100,
+    width: 120,
     margin: 5,
     borderRadius: 5,
-    backgroundColor: 'cyan',
+    backgroundColor: colors[Math.floor((Math.random() * 7))],
   },
   noCell: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 100,
-    width: 100,
+    padding: 10,
+    width: 120,
     margin: 5,
     borderRadius: 5,
     backgroundColor: 'white',
+  },
+  textoNombre: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  textoSala: {
+    color: 'white',
+    textAlign: 'center'
+  },
+  textoLargo: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 12
   }
 });

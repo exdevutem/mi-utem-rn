@@ -119,7 +119,7 @@ const MainStack = createStackNavigator({
     }
   },
   Carrera: {
-    screen: CarreraScreen,
+    screen: MallaScreen,
     navigationOptions: {
       title: 'Carrera'
     }
@@ -181,7 +181,7 @@ const MainDrawer = createDrawerNavigator({
   },
   */
   Carrera: {
-    screen: CarreraScreen,
+    screen: MallaScreen,
     navigationOptions: {
       title: 'Carrera'
     }
