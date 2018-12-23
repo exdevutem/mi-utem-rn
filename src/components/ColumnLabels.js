@@ -25,14 +25,16 @@ export default class ColumnLabels extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#bdbdbd',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#bdbdbd',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     paddingLeft: 50
   },
   columnLabel: {
-    width: 110,
+    width: 130,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -41,5 +43,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontWeight: '500',
     fontSize: 16,
+    color: 'grey'
   },
 });

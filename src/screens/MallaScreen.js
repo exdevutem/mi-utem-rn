@@ -2,13 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, SafeAreaView, Text, SectionList } from 'react-native';
 import { malla } from '../static/carrera';
 
-import ListItem from '../components/ListItem';
-
-const Header = () => (
-    <View style={styles.list}>
-        <Text style={styles.header}>{"Semestre " + this.props.nombre}</Text>
-    </View>
-);
+import AsignaturaItem from '../components/AsignaturaItem';
   
 export default class MallaScreen extends Component {
     constructor(props) {
@@ -18,7 +12,7 @@ export default class MallaScreen extends Component {
         };
     }
 
-    getMalla() {
+    _parseMalla() {
         var mallaParseada = [];
         malla.malla.forEach(semestre => {
             var asignaturas = [];
@@ -31,13 +25,15 @@ export default class MallaScreen extends Component {
             });
         });
 
+        console.log(malla);
+
         this.setState({
             datos: mallaParseada
         });
     }
 
     _renderItem = (item) => {
-        return <ListItem nombre={item} />
+        return <AsignaturaItem nombre={item} />
     }
 
     _renderSectionHeader = (object) => {
@@ -45,7 +41,7 @@ export default class MallaScreen extends Component {
     }
 
     componentWillMount() {
-        this.getMalla();
+        this._parseMalla();
     }
 
     render() {
@@ -55,13 +51,17 @@ export default class MallaScreen extends Component {
                     sections={ this.state.datos }
                     stickySectionHeadersEnabled={ true }
                     renderSectionHeader={({section: {title}}) => (
-                        <View style={styles.list}>
-                            <Text style={styles.header}>{"Semestre " + title}</Text>
+                        <View style={styles.header}>
+                            <Text style={styles.headerText}>{"Semestre " + title}</Text>
                         </View>
                     )}
                     renderItem={({item, index, section}) => (
-                        <ListItem style={styles.list} nombre={item}/>
+                        <AsignaturaItem nombre={item}/>
                     )}
+                    SectionSeparatorComponent={({ trailingItem, section }) =>
+                        trailingItem ? null : (<View style={{padding: 5}} />)
+                    }
+                    ItemSeparatorComponent={() => (<View style={{borderBottomWidth: 1, borderColor: '#dcdcdc'}} />)}
                     keyExtractor={ (item, index) => item + index }/>
             </SafeAreaView>
             
@@ -74,25 +74,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#EEEEEE',
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
-    list: {
-        backgroundColor: 'white',
-    },
-    header: {
+    headerText: {
         fontWeight: 'bold',
         margin: 20,
     },
-    contentContainer: {
-        height: 1000,
-        width: 1000,
-      },
+    header: {
+        backgroundColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 1,
+    }
 });
