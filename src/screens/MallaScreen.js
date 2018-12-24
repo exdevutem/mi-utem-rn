@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, SectionList } from 'react-native';
+import { StyleSheet, View, SafeAreaView, AsyncStorage, SectionList } from 'react-native';
 import { malla } from '../static/carrera';
 
-import AsignaturaItem from '../components/AsignaturaItem';
+import MallaItem from '../components/MallaItem';
+import MallaHeader from '../components/MallaHeader';
+
+const API_URL = 'https://api-utem.herokuapp.com/';
   
 export default class MallaScreen extends Component {
     constructor(props) {
@@ -12,36 +15,42 @@ export default class MallaScreen extends Component {
         };
     }
 
-    _parseMalla() {
-        var mallaParseada = [];
-        malla.malla.forEach(semestre => {
-            var asignaturas = [];
-            semestre.asignaturas.forEach(asignatura => {
-                asignaturas.push(asignatura.nombre);
-            });
-            mallaParseada.push({
-                title: semestre.nivel,
-                data: asignaturas
+    _getMalla = async () => {
+        const rut = await AsyncStorage.getItem('rut');
+        const token = await AsyncStorage.getItem('userToken');
+        const respuesta = await fetch(API_URL + "estudiantes/" + rut + "/carreras/" + 55978 + "/malla", {
+            headers: {
+                Authorization: "Bearer " + token  
+            }
+        }).then(response => response.json());
+
+        this._parseMalla(respuesta)
+    }
+
+    _parseMalla = (json) => {
+        var malla = [];
+        json.malla.forEach(semestre => {
+            malla.push({
+                titulo: semestre.nivel,
+                data: semestre.asignaturas
             });
         });
-
-        console.log(malla);
 
         this.setState({
-            datos: mallaParseada
+            datos: malla
         });
     }
 
-    _renderItem = (item) => {
-        return <AsignaturaItem nombre={item} />
+    _renderItem = (asignatura, index) => {
+        return <MallaItem asignatura={asignatura} />
     }
 
-    _renderSectionHeader = (object) => {
-        return <Header nombre={object}/>
+    _renderSectionHeader = (nivel) => {
+        return <MallaHeader nivel={nivel}/>
     }
 
     componentWillMount() {
-        this._parseMalla();
+        this._getMalla();
     }
 
     render() {
@@ -50,14 +59,8 @@ export default class MallaScreen extends Component {
                 <SectionList
                     sections={ this.state.datos }
                     stickySectionHeadersEnabled={ true }
-                    renderSectionHeader={({section: {title}}) => (
-                        <View style={styles.header}>
-                            <Text style={styles.headerText}>{"Semestre " + title}</Text>
-                        </View>
-                    )}
-                    renderItem={({item, index, section}) => (
-                        <AsignaturaItem nombre={item}/>
-                    )}
+                    renderSectionHeader={({section: {titulo}}) => this._renderSectionHeader(titulo)}
+                    renderItem={({item, index, section}) => this._renderItem(item, index)}
                     SectionSeparatorComponent={({ trailingItem, section }) =>
                         trailingItem ? null : (<View style={{padding: 5}} />)
                     }
@@ -73,17 +76,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#EEEEEE',
-    },
-    headerText: {
-        fontWeight: 'bold',
-        margin: 20,
-    },
-    header: {
-        backgroundColor: 'white',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-        elevation: 1,
     }
 });
