@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 const colors = [
-  '#2ecc71',
-  '#3498db',
-  '#9b59b6',
-  '#34495e',
-  '#f39c12',
-  '#e74c3c',
-  '#d35400'
+  '#EC407A',
+  '#AB47BC',
+  '#42A5F5',
+  '#CDDC39',
+  '#FFA726',
+  '#FF7043',
+  '#66BB6A'
 ]
+
+var arreglo = [];
 
 export default class GridContent extends Component {
 
@@ -30,10 +32,44 @@ export default class GridContent extends Component {
   }
 
   _renderCell(celda, indexF, indexC) {
+    var objeto={};
+    var coloresAux = colors;
+
     if(celda != null){
+      var codigoAux = celda.codigo;
+      var aux = coloresAux[Math.floor((Math.random() * (coloresAux.length)))];
+
+      if(arreglo == null){
+        objeto = {
+          codigo: codigoAux,
+          color: aux
+        }
+        arreglo.push(objeto);
+        coloresAux.splice(coloresAux.indexOf(aux),1);
+      }
+      else{
+        var cont = 0;
+        for(var i=0; i < arreglo.length; i++){
+          if(arreglo[i].codigo != codigoAux){
+            cont++;
+          }
+          else{
+            aux = arreglo[i].color;
+          }
+        }
+        if(cont == arreglo.length){
+          objeto = {
+            codigo: codigoAux,
+            color: aux
+          }
+          arreglo.push(objeto);
+          coloresAux.splice(coloresAux.indexOf(aux),1);
+        }
+      }
+
     return (
       <TouchableOpacity
-        style={styles.cellContainer}
+        style={[styles.cellContainer, {backgroundColor: aux}]}
         onPress={() => { this._onCellPressed(celda, indexF, indexC); }}>
         <Text style={styles.textoLargo} numberOfLines={1}>
           {celda.codigo}/{celda.seccion}
@@ -74,7 +110,6 @@ const styles = StyleSheet.create({
     width: 120,
     margin: 5,
     borderRadius: 5,
-    backgroundColor: colors[Math.floor((Math.random() * 7))],
   },
   noCell: {
     justifyContent: 'center',
