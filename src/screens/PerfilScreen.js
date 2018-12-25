@@ -6,7 +6,6 @@ const API_URL = 'https://api-utem.herokuapp.com/';
 class CampoPerfil extends Component {
     constructor(props) {
         super(props);
-        
     }
     
 
@@ -45,8 +44,6 @@ export default class PerfilScreen extends Component {
 
     RenderPerfil (estudiante){
         var datos=[]
-
-        
 
         if(estudiante.nombre!=null){
             datos.push({

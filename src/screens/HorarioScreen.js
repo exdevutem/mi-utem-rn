@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, AsyncStorage } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
+import { Cache } from "react-native-cache";
+
 import GridContent from '../components/GridContent';
 import RowLabels from '../components/RowLabels';
 import ColumnLabels from '../components/ColumnLabels';
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
-const API_URL = 'https://api-utem.herokuapp.com/';
+
+var cache = new Cache({
+  namespace: "estudiantes",
+  policy: {
+      maxEntries: 50000
+  },
+  backend: AsyncStorage
+});
 
 export default class HorarioScreen extends Component {
-  
-
   constructor(props) {
     super(props);
     this.horarioScroll;
@@ -68,18 +75,15 @@ export default class HorarioScreen extends Component {
   }
 
   componentWillMount(){
-    this.getHorario();
+    this._getHorario();
   }
 
-  getHorario = async() => {
+  _getHorario = async() => {
     var rut = await AsyncStorage.getItem('rut');
-    var token = await AsyncStorage.getItem('userToken');
-    var horario = await fetch(API_URL + "estudiantes/" + rut + "/horarios", {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    }).then(response => response.json());
-    this._horario(horario);
+    cache.getItem(rut + 'horarios', (err, value) => {
+      if (err) console.error(err);
+      this._horario(value);
+    });
   }
 
   render() {

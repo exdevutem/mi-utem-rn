@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, SafeAreaView, AsyncStorage, SectionList } from 'react-native';
-import { malla } from '../static/carrera';
 
 import MallaItem from '../components/MallaItem';
 import MallaHeader from '../components/MallaHeader';
@@ -16,9 +15,10 @@ export default class MallaScreen extends Component {
     }
 
     _getMalla = async () => {
+        const carreraId = this.props.navigation.getParam('id', null);
         const rut = await AsyncStorage.getItem('rut');
         const token = await AsyncStorage.getItem('userToken');
-        const respuesta = await fetch(API_URL + "estudiantes/" + rut + "/carreras/" + 55978 + "/malla", {
+        const respuesta = await fetch(API_URL + "estudiantes/" + rut + "/carreras/" + carreraId + "/malla", {
             headers: {
                 Authorization: "Bearer " + token  
             }

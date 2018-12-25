@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {DrawerItems, createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
 
 import SegmentedTab from './components/SegmentedTab';
+import Drawer from './components/Drawer';
+
+import colors from './colors';
 
 import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -14,6 +17,7 @@ import NoticiaScreen from './screens/NoticiaScreen';
 import PerfilScreen from './screens/PerfilScreen';
 import HorarioScreen from './screens/HorarioScreen';
 
+import CarrerasScreen from './screens/CarrerasScreen';
 import CarreraScreen from './screens/CarreraScreen';
 import BoletinScreen from './screens/BoletinScreen';
 import MallaScreen from './screens/MallaScreen';
@@ -22,23 +26,8 @@ import AsignaturaScreen from './screens/AsignaturaScreen';
 import NotasScreen from './screens/NotasScreen';
 import BitacoraScreen from './screens/BitacoraScreen';
 
-const ES_IOS = Platform.OS === 'ios';
 
-const colors = {
-  principal: '#009d9b',
-  verde: '#8BC34A',
-  azul: '#3F51B5',
-  rojo: '#EF5350',
-  amarillo: '#FFD600',
-  utem: {
-    azul: '#06607a',
-    verde: '#1d8e5c',
-  },
-  ios: {
-    azul: '#007AFF'
-  },
-  azulIos: '#007AFF'
-}
+const ES_IOS = Platform.OS === 'ios';
 
 const AsignaturaTabs = createMaterialTopTabNavigator({
   Teoria: {
@@ -73,7 +62,7 @@ const AsignaturaTabs = createMaterialTopTabNavigator({
   swipeEnabled: !ES_IOS,
   tabBarOptions: {
     style: {
-        backgroundColor: colors.principal,
+        backgroundColor: colors.primario,
     },
     indicatorStyle: {
       backgroundColor: 'white',
@@ -94,7 +83,7 @@ const MainStack = createStackNavigator({
       title: 'Inicio',
       headerLeft: () => {
         if (ES_IOS)
-          return <Ionicons name={'ios-menu'} style={{fontSize: 24, padding: 12, color: colors.principal}} onPress={ () => { navigation.toggleDrawer() }}/>
+          return <Ionicons name={'ios-menu'} style={{fontSize: 24, padding: 12, color: colors.primario}} onPress={ () => { navigation.toggleDrawer() }}/>
         else
           return <MaterialIcons name={'menu'} style={{fontSize: 24, padding: 12, color: 'white'}} onPress={ () => { navigation.toggleDrawer() } }  />
       }
@@ -114,14 +103,44 @@ const MainStack = createStackNavigator({
       headerStyle: {
         elevation: 0,
         borderBottomWidth: 0,
-        backgroundColor: ES_IOS ? 'white' : colors.principal
+        backgroundColor: ES_IOS ? 'white' : colors.primario
       }
     }
   },
+  Notas: {
+    screen: NotasScreen,
+    navigationOptions: {
+      title: 'Notas'
+    }
+  },
+  Bitacora: {
+    screen: BitacoraScreen,
+    navigationOptions: {
+      title: 'Bitácora'
+    }
+  },
+  Carreras: {
+    screen: CarrerasScreen,
+    navigationOptions: {
+      title: 'Carreras'
+    }
+  },
   Carrera: {
-    screen: MallaScreen,
+    screen: CarreraScreen,
     navigationOptions: {
       title: 'Carrera'
+    }
+  },
+  Malla: {
+    screen: MallaScreen,
+    navigationOptions: {
+      title: 'Malla'
+    }
+  },
+  Boletin: {
+    screen: BoletinScreen,
+    navigationOptions: {
+      title: 'Boletín'
     }
   },
   Horario: {
@@ -134,14 +153,14 @@ const MainStack = createStackNavigator({
 {
   defaultNavigationOptions: {
       headerStyle: {
-          backgroundColor: ES_IOS ? 'white' : colors.principal,
+          backgroundColor: ES_IOS ? 'white' : colors.primario,
       },
       headerTitleStyle: {
         color: ES_IOS ? 'black' : 'white'
       },
-      headerTintColor: ES_IOS ? colors.principal : 'white',
+      headerTintColor: ES_IOS ? colors.primario : 'white',
       headerBackTitleStyle: {
-        color: colors.principal
+        color: colors.primario
       }
   }
 });
@@ -169,24 +188,10 @@ const MainDrawer = createDrawerNavigator({
       }
     }
   },
-  /*
-  Notas: {
-    screen: NotasScreen,
+  Carreras: {
+    screen: CarrerasScreen,
     navigationOptions: {
-      title: 'Notas'
-    }
-  },
-  Bitacora: {
-    screen: BitacoraScreen,
-    navigationOptions: {
-      title: 'Bitácora'
-    }
-  },
-  */
-  Carrera: {
-    screen: MallaScreen,
-    navigationOptions: {
-      title: 'Carrera'
+      title: 'Carreras'
     }
   },
   Horario: {
@@ -195,19 +200,6 @@ const MainDrawer = createDrawerNavigator({
       title: 'Horario'
     }
   }
-  /*
-  Malla: {
-    screen: MallaScreen,
-    navigationOptions: {
-      title: 'Malla'
-    }
-  },
-  Boletin: {
-    screen: BoletinScreen,
-    navigationOptions: {
-      title: 'Boletín'
-    }
-  }*/
 },
 {
   defaultNavigationOptions: ({ navigation }) => ({
@@ -221,7 +213,7 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'ios-contact';
         } else if (routeName === 'Asignatura') {
           nombreIcono = 'ios-book';
-        } else if (routeName === 'Carrera') {
+        } else if (routeName === 'Carreras') {
           nombreIcono = 'ios-school';
         } else if (routeName === 'Horario') {
           nombreIcono = 'ios-time';
@@ -245,8 +237,9 @@ const MainDrawer = createDrawerNavigator({
     }
   }),
   drawerType: ES_IOS ? 'slide' : 'front',
+  contentComponent: props => (<Drawer items={props}/>),
   contentOptions: {
-    activeTintColor: colors.principal,
+    activeTintColor: colors.primario
   },
 });
 

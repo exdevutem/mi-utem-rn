@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Platform, Text, StyleSheet, AsyncStorage, View, SafeAreaView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import { Cache } from "react-native-cache";
 
 import SliderEntry from '../components/SliderEntry';
 import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
@@ -11,6 +12,14 @@ const postUrl = 'http' + (ES_IOS ? 's' : '') + '://www.utem.cl/wp-json/wp/v2/pos
 const mediaUrl = 'http' + (ES_IOS ? 's' : '') + '://www.utem.cl/wp-json/wp/v2/media/';
 
 const SLIDER_1_FIRST_ITEM = 1;
+
+var cache = new Cache({
+    namespace: "estudiantes",
+    policy: {
+        maxEntries: 50000
+    },
+    backend: AsyncStorage
+});
 
 export default class MainScreen extends Component {
 

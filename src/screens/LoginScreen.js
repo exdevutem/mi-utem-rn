@@ -1,15 +1,29 @@
 import React, { Component } from 'react';
-import {Dimensions, Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar, Linking} from 'react-native';
+import {Dimensions, Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar, Linking, Animated, ActivityIndicator} from 'react-native';
 import Video from 'react-native-video';
+import { Cache } from "react-native-cache";
+
+import ApiUtem from '../ApiUtem';
+import colors from '../colors';
+
+var cache = new Cache({
+    namespace: "estudiantes",
+    policy: {
+        maxEntries: 50000
+    },
+    backend: AsyncStorage
+});
+var apiUtem = new ApiUtem();
 
 const win = Dimensions.get('window');
-
-const API_URL = 'https://api-utem.herokuapp.com/';
 
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            anchoMaximoBoton: 0,
+            animationAnchoBoton: new Animated.Value(),
+            estaCargando: false,
             correoIsFocused: false,
             contraseniaIsFocused: false,
             correo: "",
@@ -17,63 +31,64 @@ export default class LoginScreen extends Component {
         };
     }
 
-    _loginAsync = async (correo, contrasenia) => {
-        var respuesta = await fetch(API_URL + 'token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
-        }).then(response => response.json());
+    _login = async (correo, contrasenia) => {
+        try {
+            var respuesta = await apiUtem.getToken(correo, contrasenia);
 
-        await AsyncStorage.setItem('userToken', respuesta.token);
-        await AsyncStorage.setItem('rut', respuesta.rut.toString());
-        await AsyncStorage.setItem('correo', respuesta.correo);
-        this.props.navigation.navigate('Main');
+            await AsyncStorage.setItem('userToken', respuesta.token);
+            await AsyncStorage.setItem('rut', respuesta.rut.toString());
+            await AsyncStorage.setItem('correo', respuesta.correo);
+
+            const perfil = await apiUtem.getPerfil(respuesta.token, respuesta.rut.toString());
+            const horarios = await apiUtem.getHorarios(respuesta.token, respuesta.rut.toString());
+            const carreras = await apiUtem.getCarreras(respuesta.token, respuesta.rut.toString());
+
+            cache.setItem(respuesta.rut.toString(), perfil, async (err) => {
+                cache.setItem(respuesta.rut.toString() + 'carreras', carreras, async (err) => {
+                    if (err) console.error(err);
+                    cache.setItem(respuesta.rut.toString() + 'horarios', horarios, async (err) => {
+                        if (err) console.error(err);
+                        this.props.navigation.navigate('Main');
+                    });
+                });
+            });
+        } catch (error) {
+            console.error(error);
+            
+        }
     };
 
     _onSubmitPress = () => {
         if (this.state.correo != '' && this.state.contrasenia != ''){
-            if (this.state.correo.endsWith('@utem.cl')){
-                this._loginAsync(this.state.correo, this.state.contrasenia)
+            if (this.state.correo.endsWith('@utem.cl')) {
+                this._toggleCargando();
+                this._login(this.state.correo, this.state.contrasenia);
             }
         }
     }
 
     _onCorreoFocus = () => {
-        this.setState(previousState => ({
-            correoIsFocused: true,
-            contraseniaIsFocused: previousState.contraseniaIsFocused,
-            correo: previousState.correo,
-            contrasenia: previousState.contrasenia
-        }));
+        this.setState({
+            correoIsFocused: true
+        });
     }
 
     _onContraseniaFocus = () => {
-        this.setState(previousState => ({
-            correoIsFocused: previousState.correoIsFocused,
-            contraseniaIsFocused: true,
-            correo: previousState.correo,
-            contrasenia: previousState.contrasenia
-        }));
+        this.setState({
+            contraseniaIsFocused: true
+        });
     }
 
     _onCorreoBlur = () => {
-        this.setState(previousState => ({
-            correoIsFocused: false,
-            contraseniaIsFocused: previousState.contraseniaIsFocused,
-            correo: previousState.correo,
-            contrasenia: previousState.contrasenia
-        }));
+        this.setState({
+            correoIsFocused: false
+        });
     }
 
     _onContraseniaBlur = () => {
-        this.setState(previousState => ({
-            correoIsFocused: previousState.correoIsFocused,
-            contraseniaIsFocused: false,
-            correo: previousState.correo,
-            contrasenia: previousState.contrasenia
-        }));
+        this.setState({
+            contraseniaIsFocused: false
+        });
     }
 
     _goToURL() {
@@ -82,9 +97,31 @@ export default class LoginScreen extends Component {
           if (supported) {
             Linking.openURL(url);
           } else {
-            console.log('Don\'t know how to open URI: ' + url);
+            console.log("Don't know how to open URI: " + url);
           }
         });
+    }
+
+    _setDimensionesBoton(event){
+        this.setState({
+            anchoMaximoBoton: event.nativeEvent.layout.width,
+            altoBoton: event.nativeEvent.layout.height
+        });
+    }
+
+    _toggleCargando() {
+        let valorInicial = this.state.estaCargando ? this.state.altoBoton : this.state.anchoMaximoBoton;
+        let valorFinal = this.state.estaCargando ? this.state.anchoMaximoBoton : this.state.altoBoton;
+
+        this.setState({
+            estaCargando: !this.state.estaCargando
+        });
+
+        this.state.animationAnchoBoton.setValue(valorInicial);
+        Animated.timing(this.state.animationAnchoBoton, {
+            toValue: valorFinal,
+            duration: 500
+        }).start();
     }
 
     render() {
@@ -120,6 +157,7 @@ export default class LoginScreen extends Component {
                             keyboardType='email-address'
                             placeholder='correo@utem.cl'
                             autoCorrect={false}
+                            editable={!this.state.estaCargando}
                             placeholderTextColor='rgba(255, 255, 255, 0.7)'
                             selectionColor='#009d9b'
                             autoCapitalize='none'
@@ -127,18 +165,16 @@ export default class LoginScreen extends Component {
                             onFocus={this._onCorreoFocus}
                             onBlur={this._onCorreoBlur}
                             onChangeText={(texto) => 
-                                this.setState(previousState => ({
-                                    correoIsFocused: previousState.correoIsFocused,
-                                    contraseniaIsFocused: previousState.contraseniaIsFocused,
-                                    correo: texto,
-                                    contrasenia: previousState.contrasenia
+                                this.setState({
+                                    correo: texto
                                 })
-                            )} />
+                            } />
                         <Text style={styles.texto}>Contraseña</Text>
                         <TextInput 
                             style={[styles.textInput, {borderColor: this.state.contraseniaIsFocused ? '#009d9b' : 'white'}]} 
                             placeholder='••••••••••'
                             autoCorrect={false}
+                            editable={!this.state.estaCargando}
                             secureTextEntry={true}
                             textContentType='password'
                             placeholderTextColor='rgba(255, 255, 255, 0.7)'
@@ -146,24 +182,29 @@ export default class LoginScreen extends Component {
                             onFocus={this._onContraseniaFocus}
                             onBlur={this._onContraseniaBlur}
                             onChangeText={(texto) => 
-                                this.setState(previousState => ({
-                                    correoIsFocused: previousState.correoIsFocused,
-                                    contraseniaIsFocused: previousState.contraseniaIsFocused,
-                                    correo: previousState.correo,
+                                this.setState({
                                     contrasenia: texto
                                 })
-                            )} />
+                            } />
                         
                         <Text
                             style={[styles.texto, styles.url]}
                             onPress={this._goToURL}> 
                             ¿Olvidaste tu contraseña?
                         </Text>
-                        <TouchableHighlight 
-                            onPress={() => this._onSubmitPress()} 
-                            style={styles.boton}>
-                            <Text style={styles.textoBoton}>Entrar</Text>
-                        </TouchableHighlight>
+                        <Animated.View
+                            style={[styles.botonContainer, {width: this.state.animationAnchoBoton, height: this.state.altoBoton}]}>
+                            <TouchableHighlight 
+                                onPress={this.state.estaCargando ? null : this._onSubmitPress}
+                                style={styles.boton}
+                                underlayColor={colors.primarioOscuro}
+                                onLayout={this._setDimensionesBoton.bind(this)} >
+                                <View>
+                                    <ActivityIndicator size="small" color="white" style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+                                    <Text style={[styles.textoBoton, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>Entrar</Text>
+                                </View>
+                            </TouchableHighlight>
+                        </Animated.View>
                     </View>
                     
                 </SafeAreaView>
@@ -220,21 +261,33 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 15,
         borderRadius: 26,
-        borderWidth: 1.5,
+        borderWidth: 2,
         maxHeight: 40
     },
-    boton: {
-        backgroundColor: '#009d9b',
-        paddingVertical: 10,
-        paddingHorizontal: 40,
+    botonContainer: {
         margin: 20,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 20,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        overflow: 'hidden'
+    },
+    boton: {
+        backgroundColor: '#009d9b',
+        height: 40
     },
     textoBoton: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingVertical: 10,
+        paddingHorizontal: 40
+    },
+    cargando: {
+        position: 'absolute',
+        alignSelf: 'center',
+        top: 0, 
+        left: 0,
+        bottom: 0,
+        right: 0
     }
 });
