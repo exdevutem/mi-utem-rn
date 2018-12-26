@@ -31,7 +31,7 @@ export default class LoginScreen extends Component {
         };
     }
 
-    _login = async (correo, contrasenia) => {
+     _login = async function(correo, contrasenia) {
         try {
             var respuesta = await apiUtem.getToken(correo, contrasenia);
 
@@ -39,16 +39,25 @@ export default class LoginScreen extends Component {
             await AsyncStorage.setItem('rut', respuesta.rut.toString());
             await AsyncStorage.setItem('correo', respuesta.correo);
 
-            const perfil = await apiUtem.getPerfil(respuesta.token, respuesta.rut.toString());
-            const horarios = await apiUtem.getHorarios(respuesta.token, respuesta.rut.toString());
-            const carreras = await apiUtem.getCarreras(respuesta.token, respuesta.rut.toString());
+            var perfil = await apiUtem.getPerfil(respuesta.token, respuesta.rut.toString());
+            var horarios = await apiUtem.getHorarios(respuesta.token, respuesta.rut.toString());
+            var carreras = await apiUtem.getCarreras(respuesta.token, respuesta.rut.toString());
+            const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
+            const fotoUrl = perfil.fotoUrl;
+            const correoUtem = perfil.correoUtem;
+            var navigation = this.props.navigation;
 
-            cache.setItem(respuesta.rut.toString(), perfil, async (err) => {
-                cache.setItem(respuesta.rut.toString() + 'carreras', carreras, async (err) => {
+            cache.setItem(respuesta.rut.toString(), perfil, function(err) {
+                if (err) console.error(err);
+                cache.setItem(respuesta.rut.toString() + 'carreras', carreras, function(err) {
                     if (err) console.error(err);
-                    cache.setItem(respuesta.rut.toString() + 'horarios', horarios, async (err) => {
+                    cache.setItem(respuesta.rut.toString() + 'horarios', horarios, function(err) {
                         if (err) console.error(err);
-                        this.props.navigation.navigate('Main');
+                        navigation.navigate('Main', {
+                            nombre: nombre,
+                            foto: fotoUrl,
+                            correo: correoUtem
+                        });
                     });
                 });
             });
@@ -273,8 +282,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     boton: {
-        backgroundColor: '#009d9b',
-        height: 40
+        backgroundColor: '#009d9b'
     },
     textoBoton: {
         color: 'white',

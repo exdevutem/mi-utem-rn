@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Platform, Text, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {DrawerItems, createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
 
 import SegmentedTab from './components/SegmentedTab';
 import Drawer from './components/Drawer';
@@ -237,9 +237,10 @@ const MainDrawer = createDrawerNavigator({
     }
   }),
   drawerType: ES_IOS ? 'slide' : 'front',
-  contentComponent: props => (<Drawer items={props}/>),
+  contentComponent: props => <Drawer items={props}/>,
   contentOptions: {
-    activeTintColor: colors.primario
+    activeTintColor: colors.primario,
+    inactiveTintColor: colors.material.grey['600']
   },
 });
 

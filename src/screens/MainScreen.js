@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Platform, Text, StyleSheet, AsyncStorage, View, SafeAreaView } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { Cache } from "react-native-cache";
 
 import SliderEntry from '../components/SliderEntry';
 import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
@@ -13,15 +12,8 @@ const mediaUrl = 'http' + (ES_IOS ? 's' : '') + '://www.utem.cl/wp-json/wp/v2/me
 
 const SLIDER_1_FIRST_ITEM = 1;
 
-var cache = new Cache({
-    namespace: "estudiantes",
-    policy: {
-        maxEntries: 50000
-    },
-    backend: AsyncStorage
-});
-
 export default class MainScreen extends Component {
+    static contentComponent = props => <Drawer items={props}/>;
 
     constructor(props) {
         super(props);
@@ -32,7 +24,11 @@ export default class MainScreen extends Component {
         };
     }
 
-    getNoticias = async () => {
+    _onLogoutPress = () => {
+        this.props.items.navigation.navigate('Login');
+    }
+
+    _getNoticias = async () => {
         var noticias = await fetch(postUrl).then(response => response.json());
 
         var noticiasPromises = noticias.map((noticia) => {
@@ -105,7 +101,7 @@ export default class MainScreen extends Component {
     }
 
     componentWillMount() {
-        this.getNoticias();
+        this._getNoticias();
     }
   
     render() {

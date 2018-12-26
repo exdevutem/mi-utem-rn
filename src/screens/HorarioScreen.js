@@ -78,11 +78,14 @@ export default class HorarioScreen extends Component {
     this._getHorario();
   }
 
-  _getHorario = async() => {
+  _getHorario = async () => {
     var rut = await AsyncStorage.getItem('rut');
     cache.getItem(rut + 'horarios', (err, value) => {
-      if (err) console.error(err);
-      this._horario(value);
+      if (err) {
+        console.error(err);
+      } else {
+        this._horario(value);
+      }
     });
   }
 

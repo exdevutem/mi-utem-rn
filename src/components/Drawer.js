@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
-import { Platform, View, SafeAreaView, Text, ScrollView, Image, TouchableHighlight, StyleSheet } from 'react-native';
+import { Platform, View, SafeAreaView, Text, ScrollView, Image, TouchableHighlight, StyleSheet, AsyncStorage } from 'react-native';
 import { DrawerItems } from 'react-navigation';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import colors from '../colors';
+
+const ES_IOS = Platform.OS === 'ios';
 
 export default class Drawer extends Component {
     constructor(props) {
         super(props);
     }
 
-    _onLogoutPress = () => {
-        //this.props.navigation.navigate('Login')
+    _onLogoutPress = async () => {
+        console.log(this.props);
+        
+        await AsyncStorage.setItem('userToken', respuesta.token);
+        await AsyncStorage.setItem('rut', respuesta.rut.toString());
+        await AsyncStorage.setItem('correo', respuesta.correo);
+        this.props.items.navigation.navigate('Login');
     }
 
     render() {
@@ -19,9 +27,9 @@ export default class Drawer extends Component {
         return (
             <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
                 <View style={styles.header}>
-                    <Image source={{uri: 'https://raw.githubusercontent.com/mapacheverdugo/android-utem/master/app/src/main/res/drawable/profile.jpeg'}} style={styles.foto} />
-                    <Text style={styles.nombreText}>Jorge Verdugo Chacon</Text>
-                    <Text style={styles.correoText}>jorge.verdugoc@utem.cl</Text>
+                    <Image source={{uri: items.navigation.getParam("foto")}} style={styles.foto} />
+                    <Text style={styles.nombreText}>{items.navigation.getParam("nombre")}</Text>
+                    <Text style={styles.correoText}>{items.navigation.getParam("correo")}</Text>
                 </View>
                 <ScrollView>
                     <DrawerItems {...items} />
@@ -29,7 +37,11 @@ export default class Drawer extends Component {
                 <View style={styles.footer}>
                     <TouchableHighlight
                         onPress={() => this._onLogoutPress()} >
-                        <MaterialIcons name="logout" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/>
+                        {
+                            ES_IOS ? <MaterialCommunityIcons name="logout" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/> :
+                            <Ionicons name="ios-log-out" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/>
+                        }
+                        
                     </TouchableHighlight>
                 </View>
             </SafeAreaView>

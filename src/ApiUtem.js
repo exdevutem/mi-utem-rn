@@ -1,49 +1,58 @@
 const BASE_URL = 'https://api-utem.herokuapp.com/';
 
 export default class ApiUtem {
-    getToken = async (correo, contrasenia) => {
+    getToken = (correo, contrasenia) => {
         return new Promise(async function(resolve, reject) {
-            var respuesta = await fetch(BASE_URL + 'token', {
+            fetch(BASE_URL + 'token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
-            }).then(response => response.json());
-            resolve(respuesta);
+            }).then(response => {
+                var json = response.json();
+                resolve(json);
+            });
         });   
     }
     
-    getPerfil = async (token, rut) => {
+    getPerfil = (token, rut) => {
         return new Promise(async function(resolve, reject) {
-            var respuesta = await fetch(BASE_URL + "estudiantes/" + rut, {
+            fetch(BASE_URL + "estudiantes/" + rut, {
                 headers: {
                     Authorization: "Bearer " + token  
                 }
-            }).then(response => response.json());
-            resolve(respuesta);
+            }).then(response => {
+                var json = response.json();
+                resolve(json);
+            });
         });
     }
 
-    getHorarios = async (token, rut) => {
+    getHorarios = (token, rut) => {
         return new Promise(async function(resolve, reject) {
-            var respuesta = await fetch(BASE_URL + "estudiantes/" + rut + "/horarios", {
+            fetch(BASE_URL + "estudiantes/" + rut + "/horarios", {
                 headers: {
                     Authorization: 'Bearer ' + token
                 }
-            }).then(response => response.json());
-            resolve(respuesta);
+            }).then(response => {
+                var json = response.json();
+                resolve(json);
+            });
+            
         });
     }
 
     getCarreras = async (token, rut) => {
         return new Promise(async function(resolve, reject) {
-            var respuesta = await fetch(BASE_URL + "estudiantes/" + rut + "/carreras", {
+            fetch(BASE_URL + "estudiantes/" + rut + "/carreras", {
                 headers: {
                     Authorization: "Bearer " + token  
                 }
-            }).then(response => response.json());
-            resolve(respuesta);
+            }).then(response => {
+                var json = response.json();
+                resolve(json);
+            });
         });
     }
 }
