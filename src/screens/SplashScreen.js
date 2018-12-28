@@ -2,8 +2,18 @@ import React, { Component } from 'react';
 import {Text, AsyncStorage, StatusBar, StyleSheet, Animated} from 'react-native';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { Cache } from "react-native-cache";
 
-const API_URL = 'https://api-utem.herokuapp.com/';
+import ApiUtem from '../ApiUtem';
+
+var cache = new Cache({
+    namespace: "estudiantes",
+    policy: {
+        maxEntries: 50000
+    },
+    backend: AsyncStorage
+});
+var apiUtem = new ApiUtem();
 
 export default class SplashScreen extends Component {
     constructor(props) {
@@ -19,11 +29,38 @@ export default class SplashScreen extends Component {
         Animated.timing(this.state.progress, {
             toValue: 1,
             duration: 8000
-        }).start(({ finished }) => {
+        }).start(async ({ finished }) => {
             if (finished) {
                 if (this.state.esValido != null) {
                     if (this.state.esValido) {
-                        this.props.navigation.navigate('Login');
+                        const rut = await AsyncStorage.getItem('rut');
+                        const token = await AsyncStorage.getItem('userToken');
+                        const navigation = this.props.navigation;
+                        cache.getItem(rut, async (err, cachePerfil) => {
+                            if (err) {
+                                const perfil = await apiUtem.getPerfil(token, rut);
+                                const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
+                                const fotoUrl = perfil.fotoUrl;
+                                const correoUtem = perfil.correoUtem;
+
+                                navigation.navigate('Main', {
+                                    nombre: nombre,
+                                    foto: fotoUrl,
+                                    correo: correoUtem
+                                });
+                            } else {
+                                const nombre = cachePerfil.nombre.completo ? cachePerfil.nombre.completo : (cachePerfil.nombre.apellidos ? cachePerfil.nombre.nombres + " " + cachePerfil.nombre.apellidos : cachePerfil.nombre);
+                                const fotoUrl = cachePerfil.fotoUrl;
+                                const correoUtem = cachePerfil.correoUtem;
+
+                                navigation.navigate('Main', {
+                                    nombre: nombre,
+                                    foto: fotoUrl,
+                                    correo: correoUtem
+                                });
+                            }
+
+                        });
                     } else {
                         this.props.navigation.navigate('Login');
                     } 
@@ -31,7 +68,6 @@ export default class SplashScreen extends Component {
             }
         });
     }
-
 
     _bootstrapAsync = async () => {
         const userToken = await AsyncStorage.getItem('userToken');

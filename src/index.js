@@ -226,7 +226,7 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'account-circle';
         } else if (routeName === 'Asignatura') {
           nombreIcono = 'book';
-        } else if (routeName === 'Carrera') {
+        } else if (routeName === 'Carreras') {
           nombreIcono = 'school';
         } else if (routeName === 'Horario') {
           nombreIcono = 'access-time';
@@ -245,7 +245,6 @@ const MainDrawer = createDrawerNavigator({
 });
 
 const AppNavigator = createSwitchNavigator({
-  
   //Splash: SplashScreen,
   Login: LoginScreen,
   Main: MainDrawer

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, SafeAreaView, AsyncStorage, FlatList, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, AsyncStorage, FlatList, RefreshControl } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import ApiUtem from '../ApiUtem';
+import CarrerasItem from '../components/CarrerasItem';
+import colors from '../colors';
+
+var apiUtem = new ApiUtem();
 
 var cache = new Cache({
     namespace: "estudiantes",
@@ -18,28 +22,42 @@ export default class CarrerasScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            datos: []
+            datos: [],
+            estaActualizando: false
         };
+    }
+
+    _parseCarreras = (json) => {
+        this.setState({
+            datos: json,
+            estaActualizando: false
+        });
     }
 
     _getCarreras = async () => {
         const rut = await AsyncStorage.getItem('rut');
-        cache.getItem(rut + 'carreras', (err, value) => {
-            if (err) console.error(err);
-            this.setState({
-                datos: value
-            });
+        cache.getItem(rut + 'carreras', async (err, cache) => {
+            if (err) {
+                const token = await AsyncStorage.getItem('userToken');
+                const carreras = await apiUtem.getCarreras(token, rut);
+                this._parseCarreras(carreras);
+            } else {
+                this._parseCarreras(cache);
+            }
+            
         });
     }
 
     _refreshCarreras = async () => {
+        this.setState({
+            estaActualizando: true
+        });
+
         const rut = await AsyncStorage.getItem('rut');
         const token = await AsyncStorage.getItem('userToken');
         var carreras = await apiUtem.getCarreras(token, rut);
 
-        this.setState({
-            datos: carreras
-        });
+        this._parseCarreras(carreras);
     }
 
     componentWillMount() {
@@ -51,17 +69,17 @@ export default class CarrerasScreen extends Component {
             <SafeAreaView style={ styles.container }>
                 <FlatList
                     data={this.state.datos}
-                    renderItem={({item}) => 
-                        <TouchableHighlight
-                            style={styles.item}
-                            onPress={() => {
-                                this.props.navigation.navigate('Malla', {
-                                    id: item._id
-                                })
-                              }} >
-                            <Text style={styles.texto}>{item.carrera.nombre}</Text>
-                        </TouchableHighlight>
-                    } />
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.estaActualizando}
+                            onRefresh={this._refreshCarreras.bind(this)}
+                            title="Pull to refresh"
+                            tintColor={colors.primario}
+                            titleColor="#fff"
+                         />
+                      }
+                    keyExtractor={(item) => item._id.toString()}
+                    renderItem={({item}) => <CarrerasItem carrera={item} navigation={this.props.navigation}/> } />
             </SafeAreaView>
             
         );

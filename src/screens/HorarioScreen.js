@@ -3,12 +3,16 @@ import { StyleSheet, View, AsyncStorage } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
 
-import GridContent from '../components/GridContent';
-import RowLabels from '../components/RowLabels';
-import ColumnLabels from '../components/ColumnLabels';
+import HorarioCeldas from '../components/HorarioCeldas';
+import HorarioPeriodos from '../components/HorarioPeriodos';
+import HorarioDias from '../components/HorarioDias';
+
+import ApiUtem from '../ApiUtem';
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+
+var apiUtem = new ApiUtem();
 
 var cache = new Cache({
   namespace: "estudiantes",
@@ -23,11 +27,12 @@ export default class HorarioScreen extends Component {
     super(props);
     this.horarioScroll;
     this.state = {
-        datos:[]
+        datos: [],
+        estaCargando: true,
     }
   }
 
-  _horario(horario){
+  _parseHorario(horario){
     var datos=[];
     var dia=[];
 
@@ -79,12 +84,24 @@ export default class HorarioScreen extends Component {
   }
 
   _getHorario = async () => {
-    var rut = await AsyncStorage.getItem('rut');
-    cache.getItem(rut + 'horarios', (err, value) => {
+    const rut = await AsyncStorage.getItem('rut');
+    cache.getItem(rut + 'horarios', async (err, cache) => {
       if (err) {
-        console.error(err);
+        const token = await AsyncStorage.getItem('userToken');
+        const horario = await apiUtem.getHorarios(token, rut);
+        
+        this.setState({
+          estaCargando: false
+        });
+
+        this._parseHorario(horario);
       } else {
-        this._horario(value);
+        
+        this.setState({
+          estaCargando: false
+        });
+
+        this._parseHorario(cache);
       }
     });
   }
@@ -105,13 +122,13 @@ export default class HorarioScreen extends Component {
         
 
         <ScrollViewChild scrollDirection={'both'}>
-          <GridContent data={this.state.datos}/>
+          <HorarioCeldas data={this.state.datos}/>
         </ScrollViewChild>
         <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
-          <RowLabels data={labelF}/>
+          <HorarioPeriodos data={labelF}/>
         </ScrollViewChild>
         <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
-          <ColumnLabels data={labelC} />
+          <HorarioDias data={labelC} />
         </ScrollViewChild>
       </ScrollView>
     );

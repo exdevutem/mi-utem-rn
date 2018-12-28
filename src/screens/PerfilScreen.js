@@ -1,210 +1,211 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, StyleSheet, Image,ScrollView,FlatList,TouchableHighlight,AsyncStorage} from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage } from 'react-native';
+import { Cache } from "react-native-cache";
 
-const API_URL = 'https://api-utem.herokuapp.com/';
+import PerfilCampo from '../components/PerfilCampo';
 
-class CampoPerfil extends Component {
-    constructor(props) {
-        super(props);
-    }
-    
+import ApiUtem from '../ApiUtem';
 
-    render(){
-        return(
-            <View>
-                <Text style={styles.texto}>{this.props.etiqueta}</Text>
-                <TextInput value={this.props.valor}></TextInput>
-            </View>
-        );
-    }
-}
+import colors from '../colors';
+
+var cache = new Cache({
+    namespace: "estudiantes",
+    policy: {
+        maxEntries: 50000
+    },
+    backend: AsyncStorage
+});
+var apiUtem = new ApiUtem();
 
 export default class PerfilScreen extends Component {
     constructor(props) {
         super(props);
-        this.getPerfil = this.getPerfil.bind(this);
-        this.state={
-            datos:[]
-
+        this._getPerfil = this._getPerfil.bind(this);
+        this.state = {
+            campos: [],
+            perfil: null
         }
     }
-    getPerfil = async () => {
-        var rut=await AsyncStorage.getItem('rut');
-        var token=await AsyncStorage.getItem('userToken');
-        var perfil = await fetch(API_URL+"estudiantes/"+rut, {
-            headers:{
-                Authorization:"Bearer "+token  
+
+    _getPerfil = async () => {
+        const rut = await AsyncStorage.getItem('rut');
+        const token = await AsyncStorage.getItem('userToken');
+        cache.getItem(rut, async (err, cache) => {
+            if (err) {
+                const perfil = await apiUtem.getPerfil(token, rut);
+                console.log(perfil)
+                this._renderPerfil(perfil);
+            } else {
+                console.log(cache)
+                this._renderPerfil(cache)
             }
-        }).then(response => response.json());
 
-        console.log(perfil)
+        });
 
-        this.RenderPerfil(perfil)
+        
     }
 
-    RenderPerfil (estudiante){
-        var datos=[]
+    _renderPerfil = (estudiante) => {
+        var campos = []
 
-        if(estudiante.nombre!=null){
-            datos.push({
+        /*
+        if (estudiante.nombre != null)
+            campos.push({
                 etiqueta: "Nombre Completo",
                 valor: estudiante.nombre.nombres +" "+ estudiante.nombre.apellidos
             })
-        }
-        else{
-            datos.push({
+        else
+            campos.push({
                 etiqueta: "Nombre",
                 valor:"Nombre no asignado"
             })
-        }
-        if(estudiante.rut!=null){
-            datos.push({
+        */
+
+        if (estudiante.rut != null)
+            campos.push({
                 etiqueta: "RUT",
                 valor:estudiante.rut.toString()
             })
-        }
-        else{
-            datos.push({
+        else
+            campos.push({
                 etiqueta: "RUT",
                 valor: "No tiene Rut asignado"
             })
-        }
-        if(estudiante.nacimiento!=null){//Sacar la edad de la fecha de nacimiento
+
+        if (estudiante.correoPersonal != null)
+            campos.push({
+                etiqueta:"Correo personal",
+                valor:estudiante.correoPersonal
+            })
+        else
+            campos.push({
+                etiqueta:"Correo personal",
+                valor:"No hay registro de correo personal"
+            })
+
+        if (estudiante.nacimiento != null) {
             var s=estudiante.nacimiento
             var d=new Date();
             d.setFullYear(s.substr(6,4),s.substr(3,2)-1,s.substr(0,2));
             var hoy= new Date();
             var Edad = new Date(hoy-d)
 
-
-            datos.push({
-                etiqueta: "Edad",
+            campos.push({
+                etiqueta: "Fecha de nacimiento",
                 valor: Edad.getFullYear().toString()
             })
-        }
-        else{
-            datos.push({
-                etiqueta: "Edad",
-                valor: "No tiene Edad asignada"
+        } else
+            campos.push({
+                etiqueta: "Fecha de nacimiento",
+                valor: "No tiene nacimiento asignado"
             })
-        }
-        if(estudiante.telefonoMovil!=null){
-            datos.push({
-                etiqueta: "Celular",
-                valor:estudiante.telefonoMovil.toString()
-            })
-        }
-        else{
-            datos.push({
-                etiqueta:"Celular",
-                valor:"No hay telefono asignado"
-            })
-        }
-        if(estudiante.telefonoFijo){
-            datos.push({
-                etiqueta: "Telefono fijo",
-                valor:estudiante.telefonoFijo.toString()
-            })
-        }
-        else{
-            datos.push({
-                etiqueta:"Telefono fijo",
-                valor: "No hay telefono asignado"
-            })
-        }
-        if(estudiante.correoUtem!=null){
-            datos.push({
-                etiqueta:"Correo institucional",
-                valor:estudiante.correoUtem
-            })
-        }
-        else{
-            datos.push({
-                etiqueta:"Correo institucional",
-                valor:"No hay registro de un correo institucional"
-            })
-        }
-        if(estudiante.correoPersonal!=null){
-            datos.push({
-                etiqueta:"Correo personal",
-                valor:estudiante.correoPersonal
-            })
-        }
-        else{
-            datos.push({
-                etiqueta:"Correo personal",
-                valor:"No hay registro de correo personal"
-            })
-        }
-        if(estudiante.sexo.sexo!=null){
-            datos.push({
+
+        if (estudiante.sexo.sexo != null)
+            campos.push({
                etiqueta:"Sexo",
                valor:estudiante.sexo.sexo
             })
-        }
-        else{
-            datos.push({
+        else
+            campos.push({
                 etiqueta:"Sexo",
                 valor:"No hay registro de su sexo"
             })
-        }
-        if(estudiante.nacionalidad.nacionalidad!=null){
-            datos.push({
+
+        if (estudiante.telefonoMovil != null)
+            campos.push({
+                etiqueta: "Telefono móvil",
+                valor:estudiante.telefonoMovil.toString()
+            })
+        
+        else
+            campos.push({
+                etiqueta:"Telefono móvil",
+                valor:"No hay telefono asignado"
+            })
+        
+        if (estudiante.telefonoFijo)
+            campos.push({
+                etiqueta: "Telefono fijo",
+                valor:estudiante.telefonoFijo.toString()
+            })
+        else
+            campos.push({
+                etiqueta:"Telefono fijo",
+                valor: "No hay telefono asignado"
+            })
+        /*
+        if (estudiante.correoUtem != null)
+            campos.push({
+                etiqueta:"Correo institucional",
+                valor:estudiante.correoUtem
+            })
+        else
+            campos.push({
+                etiqueta:"Correo institucional",
+                valor:"No hay registro de un correo institucional"
+            })
+        */
+        
+        if (estudiante.nacionalidad.nacionalidad != null)
+            campos.push({
                 etiqueta:"Nacionalidad",
                 valor:estudiante.nacionalidad.nacionalidad
             })
-        }
-        else{
-            datos.push({
+        else
+            campos.push({
                 etiqueta:"Nacionalidad",
                 valor:"No hay registro de nacionalidad"
             })
-        }
-        if(estudiante.direccion.comuna.comuna!=null){
-            datos.push({
+        
+        if (estudiante.direccion.comuna.comuna != null)
+            campos.push({
                 etiqueta:"Comuna",
                 valor:estudiante.direccion.comuna.comuna
             })
-        }
-        else{
-            datos.push({
+        else
+            campos.push({
                 etiqueta:"Comuna",
                 valor:"No hay comuna registrada"
             })
-        }
-        if(estudiante.direccion.direccion){
-            datos.push({
+        
+        if (estudiante.direccion.direccion)
+            campos.push({
                 etiqueta:"Dirección",
                 valor:estudiante.direccion.direccion
             })
-        }
-        else{
-            datos.push({
+        else
+            campos.push({
                 etiqueta:"Dirección",
                 valor:"No hay dirección registrada"
             })
-        }
-        this.setState(previousState => ({
-            datos: datos,
-        }))
+        
+        this.setState({
+            campos: campos,
+            perfil: estudiante
+        })
     }
 
     componentWillMount() {
-        this.getPerfil();
+        this._getPerfil();
     }
 
-    render(){
+    render() {
+        const nombre = this.state.perfil ? this.state.perfil.nombre : null;
         return (
             <ScrollView>
-                <View style={styles.container}>
-                    <Image source={{uri: 'https://raw.githubusercontent.com/mapacheverdugo/android-utem/master/app/src/main/res/drawable/profile.jpeg'}} style={styles.foto} />
+                <View style={styles.headerContainer}>
+                    <View style={styles.fotoContainer}>
+                        <Image source={{uri: this.state.perfil ? this.state.perfil.fotoUrl : ""}} style={styles.foto} />
+                    </View>
+                    <Text style={styles.textoNombre}>{nombre != null ? (nombre.completo ? nombre.completo : (nombre.apellidos ? nombre.nombres + " " + nombre.apellidos : nombre)) : ""}</Text>
+                    <Text style={styles.textoCorreo}>{this.state.perfil ? this.state.perfil.correoUtem : ""}</Text>
                 </View>
                 
                 <FlatList
-                    data={this.state.datos}
+                    data={this.state.campos}
                     style={styles.lista}
                     renderItem={({item}) => 
-                        <CampoPerfil etiqueta={item.etiqueta} valor={item.valor}></CampoPerfil>
+                        <PerfilCampo etiqueta={item.etiqueta} valor={item.valor}/>
                     }/>
             </ScrollView>
         );
@@ -213,19 +214,30 @@ export default class PerfilScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex:1,
+    headerContainer: {
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+    }, 
+    fotoContainer: {
+        flex: 1,
         backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
     },
     foto: {
-        height: 150,
-        width: 150,
-        borderRadius: 75,
+        height: 104,
+        width: 104,
+        borderRadius: 52,
         
     },
-    lista: {
-        padding: 0
+    textoNombre: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginTop: 10
+    },
+    textoCorreo: {
+        color: colors.material.grey['600']
     }
 });

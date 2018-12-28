@@ -3,20 +3,20 @@ import { Text, View, StyleSheet } from 'react-native';
 //import type { Cell } from '../static/data';
 import colors from '../colors';
 
-export default class ColumnLabels extends Component {
+export default class HorarioDias extends Component {
   render() {
     return (
       <View style={styles.container} pointerEvents={'box-none'}>
-        { this.props.data.map((label, index) => this._renderColumnLabel(label, index)) }
+        { this.props.data.map((dia, index) => this._renderDiaLabel(dia, index)) }
       </View>
     );
   }
 
-  _renderColumnLabel(label, index) {
+  _renderDiaLabel(dia, index) {
     return (
       <View key={index} style={styles.columnLabel} pointerEvents={'box-none'}>
         <Text style={styles.columnTitle}>
-          {label}
+          {dia}
         </Text>
       </View>
     );

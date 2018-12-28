@@ -1,39 +1,42 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
-const colors = [
-  '#EC407A',
-  '#AB47BC',
-  '#42A5F5',
-  '#CDDC39',
-  '#FFA726',
-  '#FF7043',
-  '#66BB6A'
+import colors from '../colors';
+
+const colores = [
+  colors.material.pink['400'],
+  colors.material.purple['400'],
+  colors.material.blue['600'],
+  colors.material.lime['600'],
+  colors.material.orange['800'],
+  colors.material.yellow['600'],
+  colors.material.green['500'],
+  colors.material.teal['500']
 ]
 
 var arreglo = [];
 
-export default class GridContent extends Component {
+export default class HorarioCeldas extends Component {
 
   render() {
     return (
       <View style={styles.container}>
-        { this.props.data.map((row, index) => this._renderRow(row, index)) }
+        { this.props.data.map((fila, index) => this._renderFila(fila, index)) }
       </View>
     );
   }
 
-  _renderRow(fila, i) {
+  _renderFila(fila, i) {
     return (
       <View style={styles.rowContainer}>
-        { fila.map((celda, j) => this._renderCell(celda, i, j)) }
+        { fila.map((celda, j) => this._renderCelda(celda, i, j)) }
       </View>
     );
   }
 
-  _renderCell(celda, indexF, indexC) {
+  _renderCelda(celda, indexF, indexC) {
     var objeto={};
-    var coloresAux = colors;
+    var coloresAux = colores;
 
     if(celda != null){
       var codigoAux = celda.codigo;

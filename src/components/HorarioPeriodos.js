@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-export default class RowLabels extends Component {
+export default class HorarioPeriodos extends Component {
   render() {
     return (
       <View style={styles.container} pointerEvents={'box-none'}>
-        { this.props.data.map(label => this._renderRowLabel(label)) }
+        { this.props.data.map(periodo => this._renderPeriodoLabel(periodo)) }
       </View>
     );
   }
 
-  _renderRowLabel(label) {
+  _renderPeriodoLabel(periodo) {
     return (
       <View style={styles.rowLabel} pointerEvents={'box-none'}>
         <Text style={styles.rowTitle}>
-          {label}
+          {periodo}
         </Text>
       </View>
     )

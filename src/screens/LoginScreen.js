@@ -39,28 +39,39 @@ export default class LoginScreen extends Component {
             await AsyncStorage.setItem('rut', respuesta.rut.toString());
             await AsyncStorage.setItem('correo', respuesta.correo);
 
-            var perfil = await apiUtem.getPerfil(respuesta.token, respuesta.rut.toString());
-            var horarios = await apiUtem.getHorarios(respuesta.token, respuesta.rut.toString());
-            var carreras = await apiUtem.getCarreras(respuesta.token, respuesta.rut.toString());
-            const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
-            const fotoUrl = perfil.fotoUrl;
-            const correoUtem = perfil.correoUtem;
-            var navigation = this.props.navigation;
+            var promesas = [apiUtem.getPerfil(respuesta.token, respuesta.rut.toString()),
+                            apiUtem.getHorarios(respuesta.token, respuesta.rut.toString()),
+                            apiUtem.getCarreras(respuesta.token, respuesta.rut.toString())]
 
-            cache.setItem(respuesta.rut.toString(), perfil, function(err) {
-                if (err) console.error(err);
-                cache.setItem(respuesta.rut.toString() + 'carreras', carreras, function(err) {
+            Promise.all(promesas).then(respuestas => {
+                const perfil = respuestas[0];
+                const horarios = respuestas[1];
+                const carreras = respuestas[2]
+                const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
+                const fotoUrl = perfil.fotoUrl;
+                const correoUtem = perfil.correoUtem;
+                const navigation = this.props.navigation;
+
+                cache.setItem(respuesta.rut.toString(), perfil, function(err) {
                     if (err) console.error(err);
-                    cache.setItem(respuesta.rut.toString() + 'horarios', horarios, function(err) {
+                    cache.setItem(respuesta.rut.toString() + 'carreras', carreras, function(err) {
                         if (err) console.error(err);
-                        navigation.navigate('Main', {
-                            nombre: nombre,
-                            foto: fotoUrl,
-                            correo: correoUtem
+                        cache.setItem(respuesta.rut.toString() + 'horarios', horarios, function(err) {
+                            if (err) console.error(err);
+                            navigation.navigate('Main', {
+                                nombre: nombre,
+                                foto: fotoUrl,
+                                correo: correoUtem
+                            });
                         });
                     });
                 });
             });
+
+            /*
+            
+            
+            */
         } catch (error) {
             console.error(error);
             
