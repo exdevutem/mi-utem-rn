@@ -11,7 +11,15 @@ export default class ApiUtem {
                 body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
             }).then(response => {
                 var json = response.json();
-                resolve(json);
+                if (response.ok) {
+                    resolve(json);
+                } else {
+                    reject(response);
+                }
+            }).catch(err => {
+                console.log(err);
+                reject(err);
+                
             });
         });   
     }

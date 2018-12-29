@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import PerfilCampo from '../components/PerfilCampo';
@@ -30,14 +30,16 @@ export default class PerfilScreen extends Component {
     _getPerfil = async () => {
         const rut = await AsyncStorage.getItem('rut');
         const token = await AsyncStorage.getItem('userToken');
-        cache.getItem(rut, async (err, cache) => {
+        // Se intentará obtener el perfil del caché
+        cache.getItem(rut, async (err, cachePerfil) => {
             if (err) {
-                const perfil = await apiUtem.getPerfil(token, rut);
-                console.log(perfil)
+                // Si no está en el cache
+                const perfil = await apiUtem.getPerfil(token, rut); // Lo obtenemos de la API
+                cache.setItem(perfil.rut.toString, perfil, null); // Y lo guardamos en el caché
                 this._renderPerfil(perfil);
             } else {
-                console.log(cache)
-                this._renderPerfil(cache)
+                // Si está en el caché, se ocupa ese
+                this._renderPerfil(cachePerfil)
             }
 
         });
@@ -193,6 +195,9 @@ export default class PerfilScreen extends Component {
         const nombre = this.state.perfil ? this.state.perfil.nombre : null;
         return (
             <ScrollView>
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={colors.primarioOscuro} />
                 <View style={styles.headerContainer}>
                     <View style={styles.fotoContainer}>
                         <Image source={{uri: this.state.perfil ? this.state.perfil.fotoUrl : ""}} style={styles.foto} />
@@ -222,7 +227,7 @@ const styles = StyleSheet.create({
     }, 
     fotoContainer: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
     },

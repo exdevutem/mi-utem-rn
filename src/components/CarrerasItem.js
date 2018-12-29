@@ -51,8 +51,9 @@ export default class CarrerasItem extends Component {
     }
 
     _onPress = () => {
-        this.props.navigation.navigate('Malla', {
-            id: this.props.carrera._id
+        this.props.navigation.navigate('Carrera', {
+            id: this.props.carrera._id,
+            nombre: this.props.carrera.carrera.nombre
         });
     }
 
@@ -78,13 +79,17 @@ export default class CarrerasItem extends Component {
                 background={TouchableNativeFeedback.SelectableBackground()} >
 
                 <View style={styles.container}>
-                    <View style={styles.topContainer}>
+                    <View style={styles.horizontalContainer}>
                         <Text numberOfLines={1} style={styles.texto}>{codigo + "/" + plan}</Text>
                         <View style={[styles.estadoContainer, {backgroundColor: colorEstado}]}>
                             <Text numberOfLines={1} style={styles.textoEstado}>{estado}</Text>
                         </View>
                     </View>
                     <Text numberOfLines={2} style={styles.textoNombre}>{nombre}</Text>
+                    <View style={styles.horizontalContainer}>
+                        <Text numberOfLines={1}>{"/"}</Text>
+                        <Text numberOfLines={1}>{"/"}</Text>
+                    </View>
                 </View>
 
             </TouchableNativeFeedback>
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10 
     },
-    topContainer: {
+    horizontalContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between'
     },

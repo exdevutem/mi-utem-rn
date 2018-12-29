@@ -102,11 +102,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.miutem"
+        applicationId "cl.inndev.miutem"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 14
+        versionName "0.5.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -141,6 +141,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-orientation')
     compile project(':lottie-react-native')
     compile project(':react-native-video')
     compile project(':react-native-vector-icons')

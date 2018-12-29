@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Dimensions, Text, View, SafeAreaView, TextInput, StyleSheet, Image, TouchableHighlight, AsyncStorage, StatusBar, Linking, Animated, ActivityIndicator} from 'react-native';
 import Video from 'react-native-video';
 import { Cache } from "react-native-cache";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
@@ -22,10 +23,13 @@ export default class LoginScreen extends Component {
         super(props);
         this.state = {
             anchoMaximoBoton: 0,
+            altoBoton: null,
             animationAnchoBoton: new Animated.Value(),
             estaCargando: false,
-            correoIsFocused: false,
-            contraseniaIsFocused: false,
+            colorCorreo: 'white',
+            colorContrasenia: 'white',
+            correoEsValido: null,
+            contraseniaEsValido: null,
             correo: "",
             contrasenia: ""
         };
@@ -55,100 +59,171 @@ export default class LoginScreen extends Component {
                 cache.setItem(respuesta.rut.toString(), perfil, function(err) {
                     if (err) console.error(err);
                     cache.setItem(respuesta.rut.toString() + 'carreras', carreras, function(err) {
+                        const nCarreras = carreras.length || null;
                         if (err) console.error(err);
                         cache.setItem(respuesta.rut.toString() + 'horarios', horarios, function(err) {
                             if (err) console.error(err);
                             navigation.navigate('Main', {
                                 nombre: nombre,
                                 foto: fotoUrl,
-                                correo: correoUtem
+                                correo: correoUtem,
+                                carreras: nCarreras
                             });
                         });
                     });
                 });
             });
-
-            /*
+        } catch (respuesta) {
+            switch (respuesta.status) {
+                case 403:
+                    this.setState({
+                        colorCorreo: colors.material.red['600'],
+                        correoEsValido: false,
+                        colorContrasenia: colors.material.red['600'],
+                        contraseniaEsValido: false
+                    });
+                    this._toggleCargando();
+                    break;
             
-            
-            */
-        } catch (error) {
-            console.error(error);
-            
+                default:
+                    this.setState({
+                        colorCorreo: colors.material.red['600'],
+                        correoEsValido: false,
+                        colorContrasenia: colors.material.red['600'],
+                        contraseniaEsValido: false
+                    });
+                    this._toggleCargando();
+                    break;
+            }
         }
     };
 
     _onSubmitPress = () => {
-        if (this.state.correo != '' && this.state.contrasenia != ''){
+        if (this.state.correo != '' && this.state.contrasenia != '') {
             if (this.state.correo.endsWith('@utem.cl')) {
                 this._toggleCargando();
                 this._login(this.state.correo, this.state.contrasenia);
+            } else {
+                this.setState({
+                    colorCorreo: colors.material.red['600']
+                });
+            }
+        } else {
+            if (this.state.correo == '') {
+                this.setState({
+                    colorCorreo: colors.material.red['600']
+                });
+            }
+            if (this.state.contrasenia == '') {
+                this.setState({
+                    colorContrasenia: colors.material.red['600']
+                });
             }
         }
     }
 
     _onCorreoFocus = () => {
         this.setState({
-            correoIsFocused: true
+            colorCorreo: colors.primario,
+            correoEsValido: null
         });
     }
 
     _onContraseniaFocus = () => {
         this.setState({
-            contraseniaIsFocused: true
+            colorContrasenia: colors.primario,
+            contraseniaEsValido: null
         });
     }
 
     _onCorreoBlur = () => {
-        this.setState({
-            correoIsFocused: false
-        });
+        var esValido = this.state.correo != '' && this.state.correo.endsWith('@utem.cl');
+        if (esValido) {
+            this.setState({
+                colorCorreo: 'white',
+                correoEsValido: esValido
+            });
+        } else {
+            this.setState({
+                colorCorreo: colors.material.red['600'],
+                correoEsValido: esValido
+            });
+        }
     }
 
     _onContraseniaBlur = () => {
-        this.setState({
-            contraseniaIsFocused: false
-        });
+        var esValido = this.state.contrasenia != '';
+        if (esValido) {
+            this.setState({
+                colorContrasenia: 'white',
+                contraseniaEsValido: esValido
+            });
+        } else {
+            this.setState({
+                colorContrasenia: colors.material.red['600'],
+                contraseniaEsValido: esValido
+            });
+        }
+        
     }
 
-    _goToURL() {
-        const url = "https://pasaporte.utem.cl/reset";
-        Linking.canOpenURL(url).then(supported => {
-          if (supported) {
-            Linking.openURL(url);
-          } else {
-            console.log("Don't know how to open URI: " + url);
-          }
-        });
+    _abrirUrl() {
+        if (!this.state.estaCargando) {
+            const url = "https://pasaporte.utem.cl/reset";
+            Linking.canOpenURL(url).then(supported => {
+                if (supported) {
+                    Linking.openURL(url);
+                }
+            });
+        }
     }
 
     _setDimensionesBoton(event){
-        this.setState({
-            anchoMaximoBoton: event.nativeEvent.layout.width,
-            altoBoton: event.nativeEvent.layout.height
-        });
+        if (this.state.anchoMaximoBoton == 0) {
+            this.setState({
+                anchoMaximoBoton: event.nativeEvent.layout.width,
+                altoBoton: event.nativeEvent.layout.height
+            });
+        }
+        
     }
 
     _toggleCargando() {
         let valorInicial = this.state.estaCargando ? this.state.altoBoton : this.state.anchoMaximoBoton;
         let valorFinal = this.state.estaCargando ? this.state.anchoMaximoBoton : this.state.altoBoton;
 
-        this.setState({
-            estaCargando: !this.state.estaCargando
-        });
+        var estabaCargando = this.state.estaCargando;
+        if (!estabaCargando) {
+            this.setState({
+                estaCargando: !estabaCargando
+            });
+        }
 
         this.state.animationAnchoBoton.setValue(valorInicial);
         Animated.timing(this.state.animationAnchoBoton, {
             toValue: valorFinal,
             duration: 500
-        }).start();
+        }).start(({finished}) => {
+            if (finished) {
+                if (estabaCargando) {
+                    this.setState({
+                        estaCargando: !estabaCargando
+                    });
+                }
+            }
+        });
     }
 
     render() {
+        const {estaCargando, colorCorreo, colorContrasenia, correoEsValido, contraseniaEsValido} = this.state;
+        var iconoCorreo = correoEsValido == null ? null : (correoEsValido ? "check-circle" : "cancel");
+        var iconoContrasenia = contraseniaEsValido == null ? null : (contraseniaEsValido ? "check-circle" : "cancel");
         return (
             <View style={styles.container}>
                 <StatusBar
-                    barStyle="light-content" />
+                    barStyle="light-content"
+                    translucent={true}
+                    backgroundColor="rgba(255, 255, 255, 0)" />
 
                 <Image
                     source={require('../assets/images/login-background.png')}
@@ -171,47 +246,56 @@ export default class LoginScreen extends Component {
                         style={styles.logo} />
 
                     <View style={styles.formContainer}>
-                        <Text style={styles.texto}>Correo</Text>
-                        <TextInput
-                            style={[styles.textInput, {borderColor: this.state.correoIsFocused ? '#009d9b' : 'white'}]} 
-                            keyboardType='email-address'
-                            placeholder='correo@utem.cl'
-                            autoCorrect={false}
-                            editable={!this.state.estaCargando}
-                            placeholderTextColor='rgba(255, 255, 255, 0.7)'
-                            selectionColor='#009d9b'
-                            autoCapitalize='none'
-                            textContentType='emailAddress'
-                            onFocus={this._onCorreoFocus}
-                            onBlur={this._onCorreoBlur}
-                            onChangeText={(texto) => 
-                                this.setState({
-                                    correo: texto
-                                })
-                            } />
-                        <Text style={styles.texto}>Contraseña</Text>
-                        <TextInput 
-                            style={[styles.textInput, {borderColor: this.state.contraseniaIsFocused ? '#009d9b' : 'white'}]} 
-                            placeholder='••••••••••'
-                            autoCorrect={false}
-                            editable={!this.state.estaCargando}
-                            secureTextEntry={true}
-                            textContentType='password'
-                            placeholderTextColor='rgba(255, 255, 255, 0.7)'
-                            selectionColor='#009d9b'
-                            onFocus={this._onContraseniaFocus}
-                            onBlur={this._onContraseniaBlur}
-                            onChangeText={(texto) => 
-                                this.setState({
-                                    contrasenia: texto
-                                })
-                            } />
+                        <View style={{opacity: estaCargando ? 0.7 : 1}}>
+                            <Text style={styles.texto}>Correo</Text>
+                            <View style={styles.inputContainer}>
+                                <MaterialIcons style={styles.icono} name={iconoCorreo} size={ 20 } color={colorCorreo}/>
+                                <TextInput
+                                    style={[styles.textInput, {borderColor: colorCorreo}]} 
+                                    keyboardType='email-address'
+                                    placeholder='correo@utem.cl'
+                                    autoCorrect={false}
+                                    editable={!this.state.estaCargando}
+                                    placeholderTextColor='rgba(255, 255, 255, 0.7)'
+                                    selectionColor='#009d9b'
+                                    autoCapitalize='none'
+                                    textContentType='emailAddress'
+                                    onFocus={this._onCorreoFocus}
+                                    onBlur={this._onCorreoBlur}
+                                    onChangeText={(texto) => 
+                                        this.setState({
+                                            correo: texto
+                                        })
+                                    } />
+                            </View>
+                            <Text style={styles.texto}>Contraseña</Text>
+                            <View style={styles.inputContainer}>
+                                <MaterialIcons style={styles.icono} name={iconoContrasenia} size={ 20 } color={colorContrasenia}/>
+                                <TextInput 
+                                style={[styles.textInput, {borderColor: colorContrasenia}]} 
+                                placeholder='••••••••••'
+                                autoCorrect={false}
+                                editable={!this.state.estaCargando}
+                                secureTextEntry={true}
+                                textContentType='password'
+                                placeholderTextColor='rgba(255, 255, 255, 0.7)'
+                                selectionColor='#009d9b'
+                                onFocus={this._onContraseniaFocus}
+                                onBlur={this._onContraseniaBlur}
+                                onChangeText={(texto) => 
+                                    this.setState({
+                                        contrasenia: texto
+                                    })
+                                } />
+                            </View>
+                            
+                            <Text
+                                style={[styles.texto, styles.url]}
+                                onPress={this._abrirUrl.bind(this)}> 
+                                ¿Olvidaste tu contraseña?
+                            </Text>
+                        </View>
                         
-                        <Text
-                            style={[styles.texto, styles.url]}
-                            onPress={this._goToURL}> 
-                            ¿Olvidaste tu contraseña?
-                        </Text>
                         <Animated.View
                             style={[styles.botonContainer, {width: this.state.animationAnchoBoton, height: this.state.altoBoton}]}>
                             <TouchableHighlight 
@@ -235,6 +319,7 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        ...StyleSheet.absoluteFill,
         flex: 1,
         backgroundColor: 'black'
     },
@@ -275,14 +360,23 @@ const styles = StyleSheet.create({
     url: {
         textDecorationLine: 'underline'
     },
+    inputContainer: {
+        justifyContent: 'center',
+        alignContent: 'center',
+        marginBottom: 15
+    },
     textInput: {
         color: 'white',
         paddingHorizontal: 15,
         padding: 10,
-        marginBottom: 15,
         borderRadius: 26,
         borderWidth: 2,
         maxHeight: 40
+    },
+    icono: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        paddingRight: 10
     },
     botonContainer: {
         margin: 20,

@@ -14,11 +14,9 @@ export default class Drawer extends Component {
     }
 
     _onLogoutPress = async () => {
-        console.log(this.props);
-        
-        await AsyncStorage.setItem('userToken', respuesta.token);
-        await AsyncStorage.setItem('rut', respuesta.rut.toString());
-        await AsyncStorage.setItem('correo', respuesta.correo);
+        AsyncStorage.multiRemove(['userToken', 'rut', 'correo'], (err) => {
+            if (err) console.error(err);
+        });
         this.props.items.navigation.navigate('Login');
     }
 

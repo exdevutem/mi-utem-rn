@@ -9,9 +9,10 @@ const colores = [
   colors.material.blue['600'],
   colors.material.lime['600'],
   colors.material.orange['800'],
-  colors.material.yellow['600'],
+  //colors.material.yellow['600'],
   colors.material.green['500'],
-  colors.material.teal['500']
+  colors.material.teal['500'],
+  colors.material.red['600']
 ]
 
 var arreglo = [];

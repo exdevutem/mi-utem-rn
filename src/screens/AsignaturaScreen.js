@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, Text, StyleSheet } from 'react-native';
+import { Platform, SafeAreaView, Text, StyleSheet, StatusBar } from 'react-native';
 
 const ES_IOS = Platform.OS === 'ios';
 
@@ -14,6 +14,9 @@ export default class AsignaturaScreen extends Component {
     render() {
         return (
             <SafeAreaView style={ styles.container }>
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={colors.primarioOscuro} />
                 <Text style={styles.titulo}>Asignatura</Text>
             </SafeAreaView>
         );

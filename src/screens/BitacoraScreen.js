@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 
 export default class BitacoraScreen extends Component {
     render() {
         return (
             <SafeAreaView>
-                
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={colors.primarioOscuro} />
             </SafeAreaView>
         );
     }

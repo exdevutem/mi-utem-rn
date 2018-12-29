@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage } from 'react-native';
+import { StyleSheet, StatusBar, AsyncStorage } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
 
@@ -8,6 +8,7 @@ import HorarioPeriodos from '../components/HorarioPeriodos';
 import HorarioDias from '../components/HorarioDias';
 
 import ApiUtem from '../ApiUtem';
+import colors from '../colors';
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
@@ -120,6 +121,9 @@ export default class HorarioScreen extends Component {
         contentContainerStyle={styles.contentContainer}
         style={styles.container}>
         
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={colors.primarioOscuro} />
 
         <ScrollViewChild scrollDirection={'both'}>
           <HorarioCeldas data={this.state.datos}/>

@@ -104,7 +104,9 @@ export default class SplashScreen extends Component {
         return (
             <LinearGradient style={styles.container} start={{x: 0, y: 1}} end={{x: 1, y: 0}} colors={['#06607a', '#1d8e5c']}>
                 <StatusBar
-                    translucent={true}
+                    hidden={true}
+                    backgroundColor="rgba(255, 255, 255, 0)"
+                    animated
                 />
                 <Text style={styles.footer}>Creado por el Club de Innovación y Desarrollo UTEM</Text>
                 <LottieView

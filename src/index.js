@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, Text, View } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
@@ -126,10 +126,7 @@ const MainStack = createStackNavigator({
     }
   },
   Carrera: {
-    screen: CarreraScreen,
-    navigationOptions: {
-      title: 'Carrera'
-    }
+    screen: CarreraScreen
   },
   Malla: {
     screen: MallaScreen,
@@ -153,7 +150,7 @@ const MainStack = createStackNavigator({
 {
   defaultNavigationOptions: {
       headerStyle: {
-          backgroundColor: ES_IOS ? 'white' : colors.primario,
+          backgroundColor: ES_IOS ? 'white' : colors.primario
       },
       headerTitleStyle: {
         color: ES_IOS ? 'black' : 'white'
@@ -178,10 +175,10 @@ const MainDrawer = createDrawerNavigator({
       title: 'Perfil'
     }
   },
-  Asignatura: {
+  Asignaturas: {
     screen: AsignaturaTabs,
     navigationOptions: {
-      title: 'Asignatura',
+      title: 'Asignaturas',
       headerStyle: {
         elevation: 0,
         borderBottomWidth: 0,
@@ -211,7 +208,7 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'ios-home';
         } else if (routeName === 'Perfil') {
           nombreIcono = 'ios-contact';
-        } else if (routeName === 'Asignatura') {
+        } else if (routeName === 'Asignaturas') {
           nombreIcono = 'ios-book';
         } else if (routeName === 'Carreras') {
           nombreIcono = 'ios-school';
@@ -224,7 +221,7 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'home';
         } else if (routeName === 'Perfil') {
           nombreIcono = 'account-circle';
-        } else if (routeName === 'Asignatura') {
+        } else if (routeName === 'Asignaturas') {
           nombreIcono = 'book';
         } else if (routeName === 'Carreras') {
           nombreIcono = 'school';
@@ -245,7 +242,7 @@ const MainDrawer = createDrawerNavigator({
 });
 
 const AppNavigator = createSwitchNavigator({
-  //Splash: SplashScreen,
+  Splash: SplashScreen,
   Login: LoginScreen,
   Main: MainDrawer
 });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, SafeAreaView, AsyncStorage, FlatList, RefreshControl } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, AsyncStorage, FlatList, RefreshControl, StatusBar } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import ApiUtem from '../ApiUtem';
@@ -28,10 +28,16 @@ export default class CarrerasScreen extends Component {
     }
 
     _parseCarreras = (json) => {
-        this.setState({
-            datos: json,
-            estaActualizando: false
-        });
+        if (json.length == 1) {
+            this.props.navigation.navigate('Carrera', {
+                id: json[0]._id
+            });
+        } else {
+            this.setState({
+                datos: json,
+                estaActualizando: false
+            });
+        }
     }
 
     _getCarreras = async () => {
@@ -67,6 +73,9 @@ export default class CarrerasScreen extends Component {
     render() {
         return (
             <SafeAreaView style={ styles.container }>
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={colors.primarioOscuro} />
                 <FlatList
                     data={this.state.datos}
                     refreshControl={

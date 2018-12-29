@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, SafeAreaView, AsyncStorage, SectionList } from 'react-native';
+import { StyleSheet, View, SafeAreaView, AsyncStorage, SectionList, StatusBar } from 'react-native';
 
 import MallaItem from '../components/MallaItem';
 import MallaHeader from '../components/MallaHeader';
@@ -56,6 +56,9 @@ export default class MallaScreen extends Component {
     render() {
         return (
             <SafeAreaView style={ styles.container }>
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={colors.primarioOscuro} />
                 <SectionList
                     sections={ this.state.datos }
                     stickySectionHeadersEnabled={ true }
