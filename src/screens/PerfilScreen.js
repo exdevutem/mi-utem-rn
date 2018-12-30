@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar,Picker } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import PerfilCampo from '../components/PerfilCampo';
@@ -102,7 +102,7 @@ export default class PerfilScreen extends Component {
                 valor: "No tiene nacimiento asignado"
             })
 
-        if (estudiante.sexo.sexo != null)
+        /*if (estudiante.sexo.sexo != null)
             campos.push({
                etiqueta:"Sexo",
                valor:estudiante.sexo.sexo
@@ -111,7 +111,7 @@ export default class PerfilScreen extends Component {
             campos.push({
                 etiqueta:"Sexo",
                 valor:"No hay registro de su sexo"
-            })
+            })*/
 
         if (estudiante.telefonoMovil != null)
             campos.push({
@@ -205,7 +205,18 @@ export default class PerfilScreen extends Component {
                     <Text style={styles.textoNombre}>{nombre != null ? (nombre.completo ? nombre.completo : (nombre.apellidos ? nombre.nombres + " " + nombre.apellidos : nombre)) : ""}</Text>
                     <Text style={styles.textoCorreo}>{this.state.perfil ? this.state.perfil.correoUtem : ""}</Text>
                 </View>
-                
+                <View style={styles.container}>
+                    <Text style={styles.textoEtiqueta}>Sexo</Text>
+                </View>
+                <Picker  
+                    selectedValue={this.state.language}
+                    style={{ left:20,height: 50, width: 300 }}
+                    onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
+                    <Picker.Item label="Indefinido" value="Indefinido" />
+                    <Picker.Item label="Masculino" value="Masculino" />
+                    <Picker.Item label="Femenino" value="Femenino" />
+                </Picker>
+
                 <FlatList
                     data={this.state.campos}
                     style={styles.lista}
@@ -244,5 +255,11 @@ const styles = StyleSheet.create({
     },
     textoCorreo: {
         color: colors.material.grey['600']
+    },
+    container: {
+        paddingHorizontal: 20
+    },
+    textoEtiqueta: {
+        fontWeight: 'bold'
     }
 });
