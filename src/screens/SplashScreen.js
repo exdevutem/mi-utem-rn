@@ -32,7 +32,7 @@ export default class SplashScreen extends Component {
             });
             if (rut) {
                 cache.getItem(rut, async (err, perfilCache) => {
-                    if (err) {
+                    if (err || !perfilCache) {
                         const datos = await apiUtem.getPrincipales(rut);
                         const perfil = datos[0];
                         const horarios = datos[1];
