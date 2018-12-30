@@ -31,7 +31,7 @@ const ES_IOS = Platform.OS === 'ios';
 
 const AsignaturaTabs = createMaterialTopTabNavigator({
   Teoria: {
-    screen: MallaScreen,
+    screen: AsignaturaScreen,
     title: 'Teoría'
   },
   Taller: {
@@ -237,7 +237,7 @@ const MainDrawer = createDrawerNavigator({
   contentComponent: props => <Drawer items={props}/>,
   contentOptions: {
     activeTintColor: colors.primario,
-    inactiveTintColor: colors.material.grey['600']
+    inactiveTintColor: colors.material.grey['700']
   },
 });
 
