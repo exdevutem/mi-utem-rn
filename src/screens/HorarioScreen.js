@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, StatusBar, AsyncStorage } from 'react-native';
+import { StyleSheet, StatusBar, AsyncStorage, SafeAreaView, ActivityIndicator } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
 
@@ -86,55 +86,60 @@ export default class HorarioScreen extends Component {
 
   _getHorario = async () => {
     const rut = await AsyncStorage.getItem('rut');
-    cache.getItem(rut + 'horarios', async (err, cache) => {
-      if (err) {
-        const token = await AsyncStorage.getItem('userToken');
-        const horario = await apiUtem.getHorarios(token, rut);
-        
-        this.setState({
-          estaCargando: false
-        });
+    const key = rut + 'horarios';
+    cache.getItem(key, async (err, horariosCache) => {
+        if (err || !horariosCache) {
+            const horarios = await apiUtem.getHorarios(rut);
+            cache.setItem(key, horarios, (err) => {
+                if (err) console.error(err);
+                this.setState({
+                    estaCargando: false
+                });
+    
+                this._parseHorario(horarios);
+            });
+        } else {
+            this.setState({
+                estaCargando: false
+            });
 
-        this._parseHorario(horario);
-      } else {
-        
-        this.setState({
-          estaCargando: false
-        });
-
-        this._parseHorario(cache);
-      }
+            this._parseHorario(horariosCache)
+        }
     });
   }
 
   render() {
 
     return (
-      <ScrollView
-        ref={component => this.horarioScroll = component}
-        bounces={false}
-        bouncesZoom={false}
-        maximumZoomScale={2.0}
-        minimumZoomScale={0.5}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
-        style={styles.container}>
-        
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor={colors.primarioOscuro} />
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color={colors.primario} style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+        <ScrollView
+          ref={component => this.horarioScroll = component}
+          bounces={false}
+          bouncesZoom={false}
+          maximumZoomScale={2.0}
+          minimumZoomScale={0.5}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[styles.contentContainer, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
+          
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor={colors.primarioOscuro} />
 
-        <ScrollViewChild scrollDirection={'both'}>
-          <HorarioCeldas data={this.state.datos}/>
-        </ScrollViewChild>
-        <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
-          <HorarioPeriodos data={labelF}/>
-        </ScrollViewChild>
-        <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
-          <HorarioDias data={labelC} />
-        </ScrollViewChild>
-      </ScrollView>
+          <ScrollViewChild scrollDirection={'both'}>
+            <HorarioCeldas data={this.state.datos}/>
+          </ScrollViewChild>
+          <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
+            <HorarioPeriodos data={labelF}/>
+          </ScrollViewChild>
+          <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
+            <HorarioDias data={labelC} />
+          </ScrollViewChild>
+        </ScrollView>
+
+      </SafeAreaView>
+      
     );
   }
 
@@ -142,6 +147,9 @@ export default class HorarioScreen extends Component {
  
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  horarioContainer: {
     flex: 1,
   },
   contentContainer: {
@@ -157,6 +165,14 @@ const styles = StyleSheet.create({
   },
   columnLabelsContainer: {
     position: 'absolute',
-    height: 30,
+    height: 30
   },
+  cargando: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 0, 
+    left: 0,
+    bottom: 0,
+    right: 0
+  }
 })

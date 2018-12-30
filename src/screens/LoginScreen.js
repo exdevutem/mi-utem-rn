@@ -36,66 +36,49 @@ export default class LoginScreen extends Component {
     }
 
      _login = async function(correo, contrasenia) {
-        try {
-            var respuesta = await apiUtem.getToken(correo, contrasenia);
-
-            await AsyncStorage.setItem('userToken', respuesta.token);
-            await AsyncStorage.setItem('rut', respuesta.rut.toString());
-            await AsyncStorage.setItem('correo', respuesta.correo);
-
-            var promesas = [apiUtem.getPerfil(respuesta.token, respuesta.rut.toString()),
-                            apiUtem.getHorarios(respuesta.token, respuesta.rut.toString()),
-                            apiUtem.getCarreras(respuesta.token, respuesta.rut.toString())]
-
-            Promise.all(promesas).then(respuestas => {
-                const perfil = respuestas[0];
-                const horarios = respuestas[1];
-                const carreras = respuestas[2]
-                const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
-                const fotoUrl = perfil.fotoUrl;
-                const correoUtem = perfil.correoUtem;
-                const navigation = this.props.navigation;
-
-                cache.setItem(respuesta.rut.toString(), perfil, function(err) {
+        apiUtem.getToken(correo, contrasenia).then(async (respuesta) => {
+            const rut = respuesta.rut;
+            const datos = await apiUtem.getPrincipales(rut);
+            const perfil = datos[0];
+            const horarios = datos[1];
+            const carreras = datos[2];
+            
+            const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
+            const fotoUrl = perfil.fotoUrl;
+            const correoUtem = perfil.correoUtem;
+            const navigation = this.props.navigation;
+            cache.setItem(rut + "horarios", horarios, (err) => {
+                if (err) console.error(err);
+                cache.setItem(rut + "carreras", carreras, (err) => {
                     if (err) console.error(err);
-                    cache.setItem(respuesta.rut.toString() + 'carreras', carreras, function(err) {
-                        const nCarreras = carreras.length || null;
+                    cache.setItem(rut, perfil, (err) => {
                         if (err) console.error(err);
-                        cache.setItem(respuesta.rut.toString() + 'horarios', horarios, function(err) {
-                            if (err) console.error(err);
-                            navigation.navigate('Main', {
-                                nombre: nombre,
-                                foto: fotoUrl,
-                                correo: correoUtem,
-                                carreras: nCarreras
-                            });
+                        navigation.navigate('Main', {
+                            nombre: nombre,
+                            foto: fotoUrl,
+                            correo: correoUtem,
+                            carrerasN: carreras.length,
+                            carreraId: carreras.length == 1 ? carreras[0]._id : null,
+                            horariosN: horarios.length || null,
+                            horarioId: horarios.length == 1 ? horarios[0].carrera.codigo : null,
+                            asignaturasN: null,
+                            asignaturaId: null
                         });
                     });
                 });
             });
-        } catch (respuesta) {
-            switch (respuesta.status) {
-                case 403:
-                    this.setState({
-                        colorCorreo: colors.material.red['600'],
-                        correoEsValido: false,
-                        colorContrasenia: colors.material.red['600'],
-                        contraseniaEsValido: false
-                    });
-                    this._toggleCargando();
-                    break;
+        }).catch(err => {
+            console.log(err);
             
-                default:
-                    this.setState({
-                        colorCorreo: colors.material.red['600'],
-                        correoEsValido: false,
-                        colorContrasenia: colors.material.red['600'],
-                        contraseniaEsValido: false
-                    });
-                    this._toggleCargando();
-                    break;
-            }
-        }
+            this.setState({
+                colorCorreo: colors.material.red['600'],
+                correoEsValido: false,
+                colorContrasenia: colors.material.red['600'],
+                contraseniaEsValido: false
+            });
+            this._toggleCargando();
+        })
+        
     };
 
     _onSubmitPress = () => {

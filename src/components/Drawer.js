@@ -14,10 +14,52 @@ export default class Drawer extends Component {
     }
 
     _onLogoutPress = async () => {
-        AsyncStorage.multiRemove(['userToken', 'rut', 'correo'], (err) => {
+        AsyncStorage.multiRemove(['token', 'rut', 'correo'], (err) => {
             if (err) console.error(err);
+            this.props.items.navigation.navigate('Login');
         });
-        this.props.items.navigation.navigate('Login');
+    }
+
+    _onItemPress = (route, focused) => {
+        const {items} = this.props;
+        switch (route.key) {
+            case 'Carreras':
+                if (items.navigation.getParam('carrerasN', null) == 1) {
+                    items.navigation.navigate('Carrera', {
+                        id: items.navigation.getParam('carreraId', null)
+                    })
+                } else {
+                    items.navigation.navigate('Carreras')
+                }
+                break;
+            
+            case 'Asignaturas':
+                if (items.navigation.getParam('asignaturasN', null) == 1) {
+                    items.navigation.navigate('Asignatura', {
+                        id: items.navigation.getParam('asignaturaId', null)
+                    })
+                } else {
+                    items.navigation.navigate('Asignaturas')
+                }
+                break;
+
+            case 'Horarios':
+                if (items.navigation.getParam('horariosN', null) == 1) {
+                    items.navigation.navigate('Horario', {
+                        id: items.navigation.getParam('horarioId', null)
+                    })
+                } else {
+                    items.navigation.navigate('Horarios')
+                }
+                break;
+        
+            default:
+                items.onItemPress({ route, focused })
+                break;
+        }
+        
+        
+        
     }
 
     render() {
@@ -30,7 +72,7 @@ export default class Drawer extends Component {
                     <Text style={styles.correoText}>{items.navigation.getParam("correo")}</Text>
                 </View>
                 <ScrollView>
-                    <DrawerItems {...items} />
+                    <DrawerItems {...items} onItemPress={({ route, focused }) => this._onItemPress(route, focused)} />
                 </ScrollView>
                 <View style={styles.footer}>
                     <TouchableHighlight
