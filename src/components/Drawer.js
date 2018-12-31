@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, SafeAreaView, Text, ScrollView, Image, TouchableHighlight, StyleSheet, AsyncStorage } from 'react-native';
+import { Platform, View, SafeAreaView, Text, ScrollView, Image, TouchableHighlight, StyleSheet, AsyncStorage, Alert, ToastAndroid } from 'react-native';
 import { DrawerItems } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -34,12 +34,17 @@ export default class Drawer extends Component {
                 break;
             
             case 'Asignaturas':
-                if (items.navigation.getParam('asignaturasN', null) == 1) {
+                /*if (items.navigation.getParam('asignaturasN', null) == 1) {
                     items.navigation.navigate('Asignatura', {
                         id: items.navigation.getParam('asignaturaId', null)
                     })
                 } else {
                     items.navigation.navigate('Asignaturas')
+                }*/
+                if (ES_IOS) {
+                    Alert.alert('Esta función pronto estará diponible 💪 ');
+                } else {
+                    ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
                 }
                 break;
 

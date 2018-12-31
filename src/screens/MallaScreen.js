@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, SafeAreaView, AsyncStorage, SectionList, StatusBar, ActivityIndicator } from 'react-native';
+import { Platform, StyleSheet, View, SafeAreaView, AsyncStorage, SectionList, StatusBar, ActivityIndicator } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import MallaItem from '../components/MallaItem';
@@ -8,6 +8,8 @@ import MallaHeader from '../components/MallaHeader';
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
 
+const ES_IOS = Platform.OS === 'ios';
+
 var cache = new Cache({
     namespace: "estudiantes",
     policy: {
@@ -15,6 +17,7 @@ var cache = new Cache({
     },
     backend: AsyncStorage
 });
+
 var apiUtem = new ApiUtem();
   
 export default class MallaScreen extends Component {
@@ -82,11 +85,16 @@ export default class MallaScreen extends Component {
     render() {
         return (
             <SafeAreaView style={ styles.container }>
-                <ActivityIndicator size="large" color={colors.primario} style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+                <StatusBar
+                    barStyle={ES_IOS ? "dark-content" : "light-content"}
+                    backgroundColor={colors.primarioOscuro} />
+
+                <ActivityIndicator 
+                    size="large" 
+                    color={colors.primario} 
+                    style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+
                 <View style={[styles.contentContainter, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
-                    <StatusBar
-                        barStyle="light-content"
-                        backgroundColor={colors.primarioOscuro} />
                     <SectionList
                         sections={ this.state.datos }
                         stickySectionHeadersEnabled={ true }

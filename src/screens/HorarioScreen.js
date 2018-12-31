@@ -112,8 +112,17 @@ export default class HorarioScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color={colors.primario} style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+        <StatusBar
+          barStyle={ES_IOS ? "dark-content" : "light-content"}
+          backgroundColor={colors.primarioOscuro} />
+
+        <ActivityIndicator 
+          size="large" 
+          color={colors.primario} 
+          style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]} />
+
         <ScrollView
+          style={styles.container}
           ref={component => this.horarioScroll = component}
           bounces={false}
           bouncesZoom={false}
@@ -122,10 +131,6 @@ export default class HorarioScreen extends Component {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[styles.contentContainer, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
-          
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor={colors.primarioOscuro} />
 
           <ScrollViewChild scrollDirection={'both'}>
             <HorarioCeldas data={this.state.datos}/>

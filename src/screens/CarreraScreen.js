@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StatusBar, Button } from 'react-native';
+import { SafeAreaView, StatusBar, Button, Platform } from 'react-native';
+
+const ES_IOS = Platform.OS === 'ios';
 
 export default class CarreraScreen extends Component {
 
@@ -29,7 +31,7 @@ export default class CarreraScreen extends Component {
         return (
             <SafeAreaView>
                 <StatusBar
-                    barStyle="light-content"
+                    barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
 
                 <Button

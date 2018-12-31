@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, Text, StyleSheet, StatusBar, View, SafeAreaView } from 'react-native';
+import { Platform, Text, StyleSheet, StatusBar, View, SafeAreaView, Alert, ToastAndroid } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
 import SliderEntry from '../components/SliderEntry';
@@ -64,6 +64,11 @@ export default class MainScreen extends Component {
 
     _onPress = (id, titulo) => {
         //this.props.navigation.navigate('Noticia', {title: titulo, id: id});
+        if (ES_IOS) {
+            Alert.alert('Esta función pronto estará diponible 💪 ');
+        } else {
+            ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
+        }
     }
 
     _renderNoticiaItem ({item, index}, parallaxProps) {
@@ -115,7 +120,7 @@ export default class MainScreen extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar
-                    barStyle="light-content"
+                    barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
                 <Text style={styles.titulo}>Noticias</Text>
                 <View>

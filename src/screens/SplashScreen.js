@@ -141,7 +141,7 @@ export default class SplashScreen extends Component {
         this._comprobarToken();
         Animated.timing(this.state.progress, {
             toValue: 1,
-            duration: 8000
+            duration: 3500
         }).start(async ({ finished }) => {
             if (finished) {
                 this.setState({
@@ -160,7 +160,7 @@ export default class SplashScreen extends Component {
                     backgroundColor="rgba(255, 255, 255, 0)"
                     animated
                 />
-                <Text style={styles.footer}>Creado por el Club de Innovación y Desarrollo UTEM</Text>
+                
                 <LottieView
                     ref={animation => {
                         this.animation = animation;
@@ -179,11 +179,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#009d9b'
-    },
-    footer: {
-        color: 'white',
-        alignSelf: 'center',
-        position: 'absolute',
-        bottom: 10
     }
 });

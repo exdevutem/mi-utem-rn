@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Alert, ToastAndroid, Platform } from 'react-native';
 
 import colors from '../colors';
+
+const ES_IOS = Platform.OS === 'ios';
 
 const colores = [
   colors.material.pink['400'],
@@ -71,10 +73,34 @@ export default class HorarioCeldas extends Component {
         }
       }
 
+      if (ES_IOS) {
+        return (
+          <TouchableOpacity
+            style={styles.cellContainer}
+            onPress={() => { this._onCellPressed(celda, indexF, indexC)}}>
+            {this._renderContent(celda, aux)}
+          </TouchableOpacity>
+        );
+      } else {
+        <TouchableNativeFeedback
+          style={styles.cellContainer}
+          onPress={() => { this._onCellPressed(celda, indexF, indexC)}}
+          background={TouchableNativeFeedback.SelectableBackground()} >
+          {this._renderContent(celda, aux)}
+        </TouchableNativeFeedback>
+      }
+
+      
+    } else {
+      return (
+        <TouchableOpacity style={styles.noCell}></TouchableOpacity>
+      );
+    }
+  }
+
+  _renderContent = (celda, aux) => {
     return (
-      <TouchableOpacity
-        style={[styles.cellContainer, {backgroundColor: aux}]}
-        onPress={() => { this._onCellPressed(celda, indexF, indexC); }}>
+      <View style={[styles.contentContainer, {backgroundColor: aux}]}>
         <Text style={styles.textoLargo} numberOfLines={1}>
           {celda.codigo}/{celda.seccion}
         </Text>
@@ -84,17 +110,16 @@ export default class HorarioCeldas extends Component {
         <Text style={celda.sala.length < 8 ? styles.textoSala : styles.textoLargo} numberOfLines={2}>
           {celda.sala}
         </Text>
-      </TouchableOpacity>
-    );}
-    else{
-      return(
-        <TouchableOpacity style={styles.noCell}></TouchableOpacity>
-      )
-    }
+      </View>
+    );
   }
 
   _onCellPressed(celda, i, j) {
-    Alert.alert(`Pressed (${i}, ${j})`);
+    if (ES_IOS) {
+      Alert.alert('Esta función pronto estará diponible 💪 ');
+    } else {
+      ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
+    }
   }
 }
 
@@ -107,13 +132,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   cellContainer: {
+    height: 100,
+    width: 120,
+    margin: 5
+  },
+  contentContainer: {
+    flex: 1,
     justifyContent: 'center',
     padding: 10,
     alignItems: 'center',
-    height: 100,
-    width: 120,
-    margin: 5,
-    borderRadius: 5,
+    borderRadius: 5
   },
   noCell: {
     justifyContent: 'center',

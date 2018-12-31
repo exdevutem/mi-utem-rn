@@ -293,7 +293,7 @@ export default class LoginScreen extends Component {
                             </TouchableHighlight>
                         </Animated.View>
                     </View>
-                    
+                    <Text style={styles.footer}>Creado por el Club de Innovación y Desarrollo UTEM</Text>
                 </SafeAreaView>
             </View>
         );
@@ -385,5 +385,11 @@ const styles = StyleSheet.create({
         left: 0,
         bottom: 0,
         right: 0
+    },
+    footer: {
+        color: 'white',
+        alignSelf: 'center',
+        position: 'absolute',
+        bottom: 10
     }
 });
