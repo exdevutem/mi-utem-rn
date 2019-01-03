@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, StatusBar, AsyncStorage, SafeAreaView, ActivityIndicator } from 'react-native';
+import { Platform, StyleSheet, StatusBar, AsyncStorage, SafeAreaView, ActivityIndicator } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
 
@@ -12,6 +12,8 @@ import colors from '../colors';
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+
+const ES_IOS = Platform.OS === 'ios';
 
 var apiUtem = new ApiUtem();
 
@@ -88,8 +90,11 @@ export default class HorarioScreen extends Component {
     const rut = await AsyncStorage.getItem('rut');
     const key = rut + 'horarios';
     cache.getItem(key, async (err, horariosCache) => {
+      
         if (err || !horariosCache) {
+          console.log("DE LA API");
             const horarios = await apiUtem.getHorarios(rut);
+            console.log(horarios);
             cache.setItem(key, horarios, (err) => {
                 if (err) console.error(err);
                 this.setState({
@@ -99,6 +104,9 @@ export default class HorarioScreen extends Component {
                 this._parseHorario(horarios);
             });
         } else {
+          console.log("DEL CACHE");
+          console.log(horariosCache);
+          
             this.setState({
                 estaCargando: false
             });

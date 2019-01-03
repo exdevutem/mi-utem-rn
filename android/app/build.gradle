@@ -105,8 +105,8 @@ android {
         applicationId "cl.inndev.miutem"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
-        versionName "0.5.1"
+        versionCode 15
+        versionName "0.5.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -141,6 +141,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-charts-wrapper')
     compile project(':react-native-orientation')
     compile project(':lottie-react-native')
     compile project(':react-native-video')

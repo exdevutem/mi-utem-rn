@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, Text, StyleSheet, StatusBar, View, SafeAreaView, Alert, ToastAndroid } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import Orientation from 'react-native-orientation';
 
 import SliderEntry from '../components/SliderEntry';
 import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
@@ -128,6 +129,10 @@ export default class MainScreen extends Component {
                 </View>
             </SafeAreaView>
         );
+    }
+
+    componentDidMount() {
+        Orientation.lockToPortrait();
     }
 }
 

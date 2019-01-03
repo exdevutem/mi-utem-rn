@@ -3,6 +3,7 @@ import {Text, AsyncStorage, StatusBar, StyleSheet, Animated} from 'react-native'
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Cache } from "react-native-cache";
+import Orientation from 'react-native-orientation';
 
 import ApiUtem from '../ApiUtem';
 
@@ -138,6 +139,7 @@ export default class SplashScreen extends Component {
     }
 
     componentDidMount() {
+        Orientation.lockToPortrait();
         this._comprobarToken();
         Animated.timing(this.state.progress, {
             toValue: 1,
