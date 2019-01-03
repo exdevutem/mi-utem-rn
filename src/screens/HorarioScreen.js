@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage, ActivityIndicator } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
 
@@ -8,6 +8,8 @@ import HorarioPeriodos from '../components/HorarioPeriodos';
 import HorarioDias from '../components/HorarioDias';
 
 import ApiUtem from '../ApiUtem';
+
+const ES_IOS = Platform.OS === 'ios';
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
@@ -85,52 +87,66 @@ export default class HorarioScreen extends Component {
 
   _getHorario = async () => {
     const rut = await AsyncStorage.getItem('rut');
-    cache.getItem(rut + 'horarios', async (err, cache) => {
-      if (err) {
-        const token = await AsyncStorage.getItem('userToken');
-        const horario = await apiUtem.getHorarios(token, rut);
-        
-        this.setState({
-          estaCargando: false
-        });
+    const key = rut + 'horarios';
+    cache.getItem(key, async (err, horariosCache) => {
+      
+        if (err || !horariosCache) {
+            const horarios = await apiUtem.getHorarios(rut);
+            cache.setItem(key, horarios, (err) => {
+                if (err) console.error(err);
+                this.setState({
+                    estaCargando: false
+                });
+    
+                this._parseHorario(horarios);
+            });
+        } else {
+          
+            this.setState({
+                estaCargando: false
+            });
 
-        this._parseHorario(horario);
-      } else {
-        
-        this.setState({
-          estaCargando: false
-        });
-
-        this._parseHorario(cache);
-      }
+            this._parseHorario(horariosCache)
+        }
     });
   }
 
   render() {
 
     return (
-      <ScrollView
-        ref={component => this.horarioScroll = component}
-        bounces={false}
-        bouncesZoom={false}
-        maximumZoomScale={2.0}
-        minimumZoomScale={0.5}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
-        style={styles.container}>
-        
+      <View style={styles.container}>
+        <StatusBar
+          barStyle={ES_IOS ? "dark-content" : "light-content"}
+          backgroundColor={colors.primarioOscuro} />
 
-        <ScrollViewChild scrollDirection={'both'}>
-          <HorarioCeldas data={this.state.datos}/>
-        </ScrollViewChild>
-        <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
-          <HorarioPeriodos data={labelF}/>
-        </ScrollViewChild>
-        <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
-          <HorarioDias data={labelC} />
-        </ScrollViewChild>
-      </ScrollView>
+        <ActivityIndicator 
+          size="large" 
+          color={colors.primario} 
+          style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+
+        <ScrollView
+          ref={component => this.horarioScroll = component}
+          bounces={false}
+          bouncesZoom={false}
+          maximumZoomScale={2.0}
+          minimumZoomScale={0.5}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainer}
+          style={[styles.container, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
+          
+
+          <ScrollViewChild scrollDirection={'both'}>
+            <HorarioCeldas data={this.state.datos}/>
+          </ScrollViewChild>
+          <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
+            <HorarioPeriodos data={labelF}/>
+          </ScrollViewChild>
+          <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
+            <HorarioDias data={labelC} />
+          </ScrollViewChild>
+        </ScrollView>
+      </View>
     );
   }
 
@@ -155,4 +171,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 30,
   },
+  cargando: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 0, 
+    left: 0,
+    bottom: 0,
+    right: 0
+  }
 })
