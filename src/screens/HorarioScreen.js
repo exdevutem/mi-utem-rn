@@ -12,7 +12,6 @@ import ApiUtem from '../ApiUtem';
 const ES_IOS = Platform.OS === 'ios';
 
 const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 
 var apiUtem = new ApiUtem();
 
@@ -39,6 +38,7 @@ export default class HorarioScreen extends Component {
     var dia=[];
 
     for(var key in horario[0].horario){
+      console.log(key);
       if(key != 'domingo'){
         horario[0].horario[key].forEach(function(elemento){
           if(elemento.bloques[0] != null){
@@ -140,7 +140,7 @@ export default class HorarioScreen extends Component {
             <HorarioCeldas data={this.state.datos}/>
           </ScrollViewChild>
           <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
-            <HorarioPeriodos data={labelF}/>
+            <HorarioPeriodos/>
           </ScrollViewChild>
           <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
             <HorarioDias data={labelC} />
