@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, SafeAreaView, Text, ScrollView, Image, TouchableHighlight, StyleSheet, AsyncStorage, Alert, ToastAndroid } from 'react-native';
+import { Platform, View, SafeAreaView, Text, TouchableNativeFeedback, ScrollView, Image, TouchableOpacity, StyleSheet, AsyncStorage, Alert, ToastAndroid } from 'react-native';
 import { DrawerItems } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -72,6 +72,33 @@ export default class Drawer extends Component {
         
     }
 
+    _renderFooter = () => {
+        return Platform.select({
+            android: (
+                <View>
+                  <TouchableNativeFeedback
+                    style={{flex: 1}}
+                    background={TouchableNativeFeedback.SelectableBackground()}
+                    onPress={() => this._onLogoutPress()} >
+                        {
+                            ES_IOS ? <MaterialCommunityIcons name="logout" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/> :
+                            <Ionicons name="ios-log-out" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/>
+                        }
+                  </TouchableNativeFeedback>
+                </View>
+            ),
+            ios: (
+                <TouchableOpacity
+                  onPress={() => this._onLogoutPress()} >
+                        {
+                            ES_IOS ? <MaterialCommunityIcons name="logout" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/> :
+                            <Ionicons name="ios-log-out" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/>
+                        }
+                </TouchableOpacity>
+            )
+        });
+    }
+
     render() {
         const {items} = this.props;
         return (
@@ -85,14 +112,7 @@ export default class Drawer extends Component {
                     <DrawerItems {...items} onItemPress={({ route, focused }) => this._onItemPress(route, focused)} />
                 </ScrollView>
                 <View style={styles.footer}>
-                    <TouchableHighlight
-                        onPress={() => this._onLogoutPress()} >
-                        {
-                            ES_IOS ? <MaterialCommunityIcons name="logout" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/> :
-                            <Ionicons name="ios-log-out" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/>
-                        }
-                        
-                    </TouchableHighlight>
+                    {this._renderFooter()}
                 </View>
             </SafeAreaView>
             
