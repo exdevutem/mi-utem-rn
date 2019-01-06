@@ -29,17 +29,70 @@ export default class HorarioScreen extends Component {
     this.horarioScroll;
     this.state = {
         datos: [],
+        numeroDias: 6,
+        numeroPeriodos: 9,
         estaCargando: true,
     }
   }
 
-  _parseHorario(horario){
+  UltimosBloques(horario){
+    delete(horario[0].horario['domingo']);
+    var numeroDias = 6;
+    var numeroPeriodos = 9;
+
+    var sinSabado = true;
+    horario[0].horario['sabado'].forEach(function(sabado){
+      if(sabado.bloques[0] != null){
+        sinSabado = false;
+      }
+    });
+
+    if(sinSabado == true){
+      delete(horario[0].horario['sabado']);
+      numeroDias--;
+    }
+
+    var sinUltimo = true;
+    var sinPenultimo = true;
+    var auxiliar;
+
+    for(var dia in horario[0].horario){
+      auxiliar = horario[0].horario[dia];
+      if(auxiliar[8].bloques[0] != null){
+        sinUltimo = false;
+      }
+      if(auxiliar[7].bloques[0] != null){
+        sinPenultimo = false;
+      }
+    }
+
+
+    for(var key in horario[0].horario){
+      auxiliar = horario[0].horario[key];
+      if(sinUltimo == true){
+        auxiliar.splice(8, 1);
+        numeroPeriodos--;
+
+        if(sinPenultimo == true){
+          auxiliar.splice(7, 1);
+          numeroPeriodos--;
+        }
+      }
+    }
+    
+    this.setState({
+    numeroDias: nDias,
+    numeroPeriodos: nPeriodos
+    });
+
+    this._parseHorario(numeroDias, numeroPeriodos, horario);
+  }
+
+  _parseHorario(nDias, nPeriodos, horario){
     var datos=[];
     var dia=[];
 
     for(var key in horario[0].horario){
-      console.log(key);
-      if(key != 'domingo'){
         horario[0].horario[key].forEach(function(elemento){
           if(elemento.bloques[0] != null){
             var auxNombre;
@@ -64,20 +117,19 @@ export default class HorarioScreen extends Component {
         })
         datos.push(dia);
         dia=[];
-      }
     }
 
     var aux = [];
-    for(var i=0; i < 9; i++){
+    for(var i=0; i < nPeriodos; i++){
       var diaAux = [];
-      for(var j=0; j < 6; j++){
+      for(var j=0; j < nDias; j++){
         diaAux.push(datos[j][i])
       }
       aux.push(diaAux);
     }
 
     this.setState({
-      datos: aux
+      datos: aux,
     });
   }
 
@@ -98,7 +150,7 @@ export default class HorarioScreen extends Component {
                     estaCargando: false
                 });
     
-                this._parseHorario(horarios);
+                this.UltimosBloques(horarios);
             });
         } else {
           
@@ -106,7 +158,7 @@ export default class HorarioScreen extends Component {
                 estaCargando: false
             });
 
-            this._parseHorario(horariosCache)
+            this.UltimosBloques(horariosCache)
         }
     });
   }
@@ -140,10 +192,10 @@ export default class HorarioScreen extends Component {
             <HorarioCeldas data={this.state.datos}/>
           </ScrollViewChild>
           <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
-            <HorarioPeriodos/>
+            <HorarioPeriodos largo={this.state.numeroPeriodos}/>
           </ScrollViewChild>
           <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
-            <HorarioDias data={labelC} />
+            <HorarioDias largo={this.state.numeroDias} data={labelC} />
           </ScrollViewChild>
         </ScrollView>
       </View>
@@ -158,14 +210,14 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: 995,
-    width: 815
+    width: 815,
   },
   rowLabelsContainer: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: 100
+    width: 50
   },
   columnLabelsContainer: {
     position: 'absolute',

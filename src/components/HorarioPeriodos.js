@@ -29,10 +29,20 @@ const periodos=[
 }];
 
 export default class HorarioPeriodos extends Component {
+  _totalPeriodos(){
+    var periodosUsados =[];
+    var maximoPeriodos = this.props.largo;
+
+    for(var i=0 ; i < maximoPeriodos ; i++){
+      periodosUsados.push(periodos[i]);
+    }
+    return periodosUsados;
+  }
+ 
   render() {
     return (
       <View style={styles.container} pointerEvents={'box-none'}>
-        { periodos.map((e, index) => this._renderPeriodoLabel(e)) }
+        { this._totalPeriodos().map((e, index) => this._renderPeriodoLabel(e)) }
       </View>
     );
   }
