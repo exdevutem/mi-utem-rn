@@ -645,6 +645,179 @@ export const horario = [
     }
 ]
 
+export const notas = [
+    {
+        "codigo": "FISC8050",
+        "nombre": "Optica Y Ondas",
+        "tipo": "Taller",
+        "docente": {
+            "nombre": "Pablo Moises Leiva Paves"
+        },
+        "ponderadoresRegistrados": true,
+        "notas": {
+            "presentacion": 2.3,
+            "examenes": [
+                null,
+                null
+            ],
+            "nota": null,
+            "observacion": "I",
+            "notas": [
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.13,
+                    "nota": 3
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.13,
+                    "nota": 2.2
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.13,
+                    "nota": null
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.13,
+                    "nota": null
+                },
+                {
+                    "tipo": "Trabaj",
+                    "ponderador": 0.12,
+                    "nota": 7
+                },
+                {
+                    "tipo": "Trabaj",
+                    "ponderador": 0.12,
+                    "nota": 6.3
+                },
+                {
+                    "tipo": "Trabaj",
+                    "ponderador": 0.12,
+                    "nota": null
+                },
+                {
+                    "tipo": "Trabaj",
+                    "ponderador": 0.12,
+                    "nota": null
+                }
+            ]
+        }
+    },
+    {
+        "codigo": "FISC8050",
+        "nombre": "Optica Y Ondas",
+        "tipo": "Teoria",
+        "docente": {
+            "nombre": "Pablo Moises Leiva Paves"
+        },
+        "ponderadoresRegistrados": true,
+        "notas": {
+            "presentacion": 1,
+            "examenes": [
+                null,
+                null
+            ],
+            "nota": null,
+            "observacion": "I",
+            "notas": [
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.22,
+                    "nota": null
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.1,
+                    "nota": null
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.08,
+                    "nota": null
+                },
+                {
+                    "tipo": "Prueba",
+                    "ponderador": 0.25,
+                    "nota": 4
+                },
+                {
+                    "tipo": "Prueba",
+                    "ponderador": 0.35,
+                    "nota": null
+                }
+            ]
+        }
+    },
+    {
+        "codigo": "FISC8050",
+        "nombre": "Optica Y Ondas",
+        "tipo": "Laboratorio",
+        "docente": {
+            "nombre": "Tabatha . Rodriguez Cabello"
+        },
+        "ponderadoresRegistrados": true,
+        "notas": {
+            "presentacion": 2.6,
+            "examenes": [
+                null,
+                null
+            ],
+            "nota": null,
+            "observacion": "I",
+            "notas": [
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.04,
+                    "nota": 4.1
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.04,
+                    "nota": 5.1
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.04,
+                    "nota": 4.9
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.04,
+                    "nota": 6
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.04,
+                    "nota": null
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.1,
+                    "nota": 4.5
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.1,
+                    "nota": null
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.3,
+                    "nota": 4.4
+                },
+                {
+                    "tipo": "Nota",
+                    "ponderador": 0.3,
+                    "nota": null
+                }
+            ]
+        }
+    }
+]
+
 export const asignaturas = [
     {
         "_id": 12333,

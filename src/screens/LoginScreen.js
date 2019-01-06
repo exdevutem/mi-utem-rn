@@ -260,21 +260,21 @@ export default class LoginScreen extends Component {
                             <View style={styles.inputContainer}>
                                 <MaterialIcons style={styles.icono} name={iconoContrasenia} size={ 20 } color={colorContrasenia}/>
                                 <TextInput 
-                                style={[styles.textInput, {borderColor: colorContrasenia}]} 
-                                placeholder='••••••••••'
-                                autoCorrect={false}
-                                editable={!this.state.estaCargando}
-                                secureTextEntry={true}
-                                textContentType='password'
-                                placeholderTextColor='rgba(255, 255, 255, 0.7)'
-                                selectionColor='#009d9b'
-                                onFocus={this._onContraseniaFocus}
-                                onBlur={this._onContraseniaBlur}
-                                onChangeText={(texto) => 
-                                    this.setState({
-                                        contrasenia: texto
-                                    })
-                                } />
+                                    style={[styles.textInput, {borderColor: colorContrasenia}]} 
+                                    placeholder='••••••••••'
+                                    autoCorrect={false}
+                                    editable={!this.state.estaCargando}
+                                    secureTextEntry={true}
+                                    textContentType='password'
+                                    placeholderTextColor='rgba(255, 255, 255, 0.7)'
+                                    selectionColor='#009d9b'
+                                    onFocus={this._onContraseniaFocus}
+                                    onBlur={this._onContraseniaBlur}
+                                    onChangeText={(texto) => 
+                                        this.setState({
+                                            contrasenia: texto
+                                        })
+                                    } />
                             </View>
                             
                             <Text
