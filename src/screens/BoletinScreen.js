@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { Platform, SafeAreaView, StatusBar } from 'react-native';
+
+const ES_IOS = Platform.OS === 'ios';
 
 export default class BoletinScreen extends Component {
     render() {
         return (
             <SafeAreaView>
                 <StatusBar
-                    barStyle="light-content"
+                    barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
             </SafeAreaView>
         );

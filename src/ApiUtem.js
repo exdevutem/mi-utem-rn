@@ -293,6 +293,57 @@ export default class ApiUtem {
         });
     }
 
+    getBoletin = (rut, carreraId, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const token = await AsyncStorage.getItem('token');
+            const uri = "estudiantes/" + rut + "/carreras/" + carreraId + "/boletin";
+            if (comprobar) {
+                const { esValido } = await this.checkToken(token);
+                if (esValido) {
+                    fetch(BASE_URL + uri, {
+                        headers: {
+                            Authorization: "Bearer " + token  
+                        }
+                    }).then(async (response) => {
+                        var json = await response.json();
+                        if (response.ok) {
+                            resolve(json);
+                        } else {
+                            reject(json);
+                        }
+                    }).catch(err => {
+                        reject(err);
+                    });
+                } else {
+                    try {
+                        await this.refreshToken();
+                        const boletin = await this.getBoletin(rut, carreraId, false);
+                        resolve(malla);
+                    } catch (error) {
+                        reject("La token ya no es válida");
+                    }
+                }
+            } else {
+                fetch(BASE_URL + uri, {
+                    headers: {
+                        Authorization: "Bearer " + token  
+                    }
+                }).then(async (response) => {
+                    var json = await response.json();
+                    if (response.ok) {
+                        resolve(json);
+                    } else {
+                        reject(json);
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
+            }
+            
+            
+        });
+    }
+
     getPrincipales = (rut) => {
         return new Promise(async (resolve, reject) => {
             const { esValido } = await this.checkToken();

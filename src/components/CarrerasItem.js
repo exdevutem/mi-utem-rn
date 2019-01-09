@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Platform, View, Text, TouchableNativeFeedback, StyleSheet} from 'react-native';
+import {Platform, View, Text, TouchableHighlight, TouchableNativeFeedback, StyleSheet} from 'react-native';
 
 import colors from '../colors';
 
@@ -57,10 +57,29 @@ export default class CarrerasItem extends Component {
         });
     }
 
+    _renderContent = (carrera, color) => {
+        const { codigo, nombre } = carrera.carrera;
+        const estado = carrera.estado;
+        const plan = carrera.plan.numero;
+        return (
+            <View style={styles.container}>
+                <View style={styles.horizontalContainer}>
+                    <Text numberOfLines={1} style={styles.texto}>{codigo + "/" + plan}</Text>
+                    <View style={[styles.estadoContainer, {backgroundColor: color}]}>
+                        <Text numberOfLines={1} style={styles.textoEstado}>{estado}</Text>
+                    </View>
+                </View>
+                <Text numberOfLines={2} style={styles.textoNombre}>{nombre}</Text>
+                <View style={styles.horizontalContainer}>
+                    <Text numberOfLines={1}>{"/"}</Text>
+                    <Text numberOfLines={1}>{"/"}</Text>
+                </View>
+            </View>
+        );
+    }
+
     render() {
-        const { codigo, nombre } = this.props.carrera.carrera;
-        const estado = this.props.carrera.estado;
-        const plan = this.props.carrera.plan.numero;
+        const carrera = this.props.carrera;
 
         var colorEstado;
         if (estado) {
@@ -73,27 +92,22 @@ export default class CarrerasItem extends Component {
             }
         }
 
-        return (
-            <TouchableNativeFeedback
-                onPress={this._onPress}
-                background={TouchableNativeFeedback.SelectableBackground()} >
-
-                <View style={styles.container}>
-                    <View style={styles.horizontalContainer}>
-                        <Text numberOfLines={1} style={styles.texto}>{codigo + "/" + plan}</Text>
-                        <View style={[styles.estadoContainer, {backgroundColor: colorEstado}]}>
-                            <Text numberOfLines={1} style={styles.textoEstado}>{estado}</Text>
-                        </View>
-                    </View>
-                    <Text numberOfLines={2} style={styles.textoNombre}>{nombre}</Text>
-                    <View style={styles.horizontalContainer}>
-                        <Text numberOfLines={1}>{"/"}</Text>
-                        <Text numberOfLines={1}>{"/"}</Text>
-                    </View>
-                </View>
-
-            </TouchableNativeFeedback>
-        )
+        return Platform.select({
+            android: (
+                <TouchableNativeFeedback
+                    onPress={this._onPress}
+                    background={TouchableNativeFeedback.SelectableBackground()} >
+                    {this._renderContent(carrera, colorEstado)}
+                </TouchableNativeFeedback>
+           ),
+           ios: (
+                <TouchableHighlight
+                    onPress={this._onPress}
+                    underlayColor={colors.material.grey['300']}>
+                    {this._renderContent(carrera, colorEstado)}
+                </TouchableHighlight>
+           )
+        })
         
     }
 }

@@ -3,6 +3,7 @@ import {Dimensions, Text, View, SafeAreaView, TextInput, StyleSheet, Image, Touc
 import Video from 'react-native-video';
 import { Cache } from "react-native-cache";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Orientation from 'react-native-orientation';
 
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
@@ -197,6 +198,10 @@ export default class LoginScreen extends Component {
         });
     }
 
+    componentDidMount() {
+        Orientation.lockToPortrait();
+    }
+
     render() {
         const {estaCargando, colorCorreo, colorContrasenia, correoEsValido, contraseniaEsValido} = this.state;
         var iconoCorreo = correoEsValido == null ? null : (correoEsValido ? "check-circle" : "cancel");
@@ -255,21 +260,21 @@ export default class LoginScreen extends Component {
                             <View style={styles.inputContainer}>
                                 <MaterialIcons style={styles.icono} name={iconoContrasenia} size={ 20 } color={colorContrasenia}/>
                                 <TextInput 
-                                style={[styles.textInput, {borderColor: colorContrasenia}]} 
-                                placeholder='••••••••••'
-                                autoCorrect={false}
-                                editable={!this.state.estaCargando}
-                                secureTextEntry={true}
-                                textContentType='password'
-                                placeholderTextColor='rgba(255, 255, 255, 0.7)'
-                                selectionColor='#009d9b'
-                                onFocus={this._onContraseniaFocus}
-                                onBlur={this._onContraseniaBlur}
-                                onChangeText={(texto) => 
-                                    this.setState({
-                                        contrasenia: texto
-                                    })
-                                } />
+                                    style={[styles.textInput, {borderColor: colorContrasenia}]} 
+                                    placeholder='••••••••••'
+                                    autoCorrect={false}
+                                    editable={!this.state.estaCargando}
+                                    secureTextEntry={true}
+                                    textContentType='password'
+                                    placeholderTextColor='rgba(255, 255, 255, 0.7)'
+                                    selectionColor='#009d9b'
+                                    onFocus={this._onContraseniaFocus}
+                                    onBlur={this._onContraseniaBlur}
+                                    onChangeText={(texto) => 
+                                        this.setState({
+                                            contrasenia: texto
+                                        })
+                                    } />
                             </View>
                             
                             <Text
@@ -293,12 +298,13 @@ export default class LoginScreen extends Component {
                             </TouchableHighlight>
                         </Animated.View>
                     </View>
-                    
                 </SafeAreaView>
             </View>
         );
     }
 }
+
+// <Text style={styles.footer}>Creado por el Club de Innovación y Desarrollo UTEM</Text>
 
 const styles = StyleSheet.create({
     container: {
@@ -385,5 +391,11 @@ const styles = StyleSheet.create({
         left: 0,
         bottom: 0,
         right: 0
+    },
+    footer: {
+        color: 'white',
+        alignSelf: 'center',
+        position: 'absolute',
+        bottom: 10
     }
 });

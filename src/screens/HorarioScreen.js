@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, StatusBar, AsyncStorage, SafeAreaView, ActivityIndicator } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage, ActivityIndicator } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
 
@@ -8,10 +8,8 @@ import HorarioPeriodos from '../components/HorarioPeriodos';
 import HorarioDias from '../components/HorarioDias';
 
 import ApiUtem from '../ApiUtem';
-import colors from '../colors';
 
-const labelC = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-const labelF = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+const ES_IOS = Platform.OS === 'ios';
 
 var apiUtem = new ApiUtem();
 
@@ -29,54 +27,108 @@ export default class HorarioScreen extends Component {
     this.horarioScroll;
     this.state = {
         datos: [],
+        //numeroDias: 0,
+        //numeroPeriodos: 0,
         estaCargando: true,
     }
   }
 
-  _parseHorario(horario){
-    var datos=[];
-    var dia=[];
+  _reducirHorario = (horario) => {
+    delete(horario[0].horario['domingo']);
+    var numeroDias = 6;
+    var numeroPeriodos = 9;
 
-    for(var key in horario[0].horario){
-      if(key != 'domingo'){
-        horario[0].horario[key].forEach(function(elemento){
-          if(elemento.bloques[0] != null){
-            var auxNombre;
-            for(var i=0; i < horario[0].asignaturas.length; i++){
-              if(horario[0].asignaturas[i] != null){
-                if(elemento.bloques[0].codigoAsignatura == horario[0].asignaturas[i].codigo){
-                  auxNombre = horario[0].asignaturas[i].nombre;
-                }
-              }
-            }
-            var bloque={
-              nombre: auxNombre,
-              codigo: elemento.bloques[0].codigoAsignatura,
-              seccion: elemento.bloques[0].seccionAsignatura,
-              sala: elemento.bloques[0].sala,
-            }
-            dia.push(bloque)
-          }
-          else{
-            dia.push(null);
-          }
-        })
-        datos.push(dia);
-        dia=[];
+    var sinSabado = true;
+    horario[0].horario['sabado'].forEach(function(sabado){
+      if(sabado.bloques[0] != null){
+        sinSabado = false;
+      }
+    });
+
+    if(sinSabado == true){
+      delete(horario[0].horario['sabado']);
+      numeroDias--;
+    }
+
+    var sinUltimo = true;
+    var sinPenultimo = true;
+    var auxiliar;
+
+    for(var dia in horario[0].horario){
+      auxiliar = horario[0].horario[dia];
+      if(auxiliar[8].bloques[0] != null){
+        sinUltimo = false;
+      }
+      if(auxiliar[7].bloques[0] != null){
+        sinPenultimo = false;
       }
     }
 
+    if(sinUltimo == true) {
+      numeroPeriodos--;
+      if(sinPenultimo == true) {
+        numeroPeriodos--;
+      }
+    }
+
+    for(var key in horario[0].horario){
+      auxiliar = horario[0].horario[key];
+      if(sinUltimo == true) {
+        auxiliar.splice(8, 1);
+
+        if(sinPenultimo == true) {
+          auxiliar.splice(7, 1);
+        }
+      }
+    }
+
+    this._parseHorario(numeroDias, numeroPeriodos, horario);
+  }
+
+  _parseHorario = (nDias, nPeriodos, horario) => {
+    
+    var datos=[];
+    
+    for (var key in horario[0].horario){
+      var dia = [];
+      horario[0].horario[key].forEach(function(elemento) {
+        if(elemento.bloques[0] != null){
+          var auxNombre;
+          for(var i=0; i < horario[0].asignaturas.length; i++){
+            if(horario[0].asignaturas[i] != null){
+              if(elemento.bloques[0].codigoAsignatura == horario[0].asignaturas[i].codigo){
+                auxNombre = horario[0].asignaturas[i].nombre;
+              }
+            }
+          }
+          var bloque = {
+            nombre: auxNombre,
+            codigo: elemento.bloques[0].codigoAsignatura,
+            seccion: elemento.bloques[0].seccionAsignatura,
+            sala: elemento.bloques[0].sala,
+          }
+          dia.push(bloque)
+        } else {
+          dia.push(null);
+        }
+      });
+
+      datos.push(dia);
+    }
+
     var aux = [];
-    for(var i=0; i < 9; i++){
+    for(var i=0; i < nPeriodos; i++) {
       var diaAux = [];
-      for(var j=0; j < 6; j++){
+      for(var j=0; j < nDias; j++) {
         diaAux.push(datos[j][i])
       }
       aux.push(diaAux);
     }
 
     this.setState({
-      datos: aux
+      datos: aux,
+      numeroDias: nDias,
+      numeroPeriodos: nPeriodos
     });
   }
 
@@ -84,10 +136,18 @@ export default class HorarioScreen extends Component {
     this._getHorario();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.datos !== nextState.datos) {
+      return true;
+    }
+    return false;
+  }
+
   _getHorario = async () => {
     const rut = await AsyncStorage.getItem('rut');
     const key = rut + 'horarios';
     cache.getItem(key, async (err, horariosCache) => {
+      
         if (err || !horariosCache) {
             const horarios = await apiUtem.getHorarios(rut);
             cache.setItem(key, horarios, (err) => {
@@ -96,14 +156,15 @@ export default class HorarioScreen extends Component {
                     estaCargando: false
                 });
     
-                this._parseHorario(horarios);
+                this._reducirHorario(horarios);
             });
         } else {
+          
             this.setState({
                 estaCargando: false
             });
 
-            this._parseHorario(horariosCache)
+            this._reducirHorario(horariosCache)
         }
     });
   }
@@ -111,8 +172,16 @@ export default class HorarioScreen extends Component {
   render() {
 
     return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color={colors.primario} style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+      <View style={styles.container}>
+        <StatusBar
+          barStyle={ES_IOS ? "dark-content" : "light-content"}
+          backgroundColor={colors.primarioOscuro} />
+
+        <ActivityIndicator 
+          size="large" 
+          color={colors.primario} 
+          style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+
         <ScrollView
           ref={component => this.horarioScroll = component}
           bounces={false}
@@ -121,25 +190,21 @@ export default class HorarioScreen extends Component {
           minimumZoomScale={0.5}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={[styles.contentContainer, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
+          contentContainerStyle={{width: this.state.numeroDias * 130 + 55, height: this.state.numeroPeriodos * 110 + 35}}
+          style={[styles.container, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
           
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor={colors.primarioOscuro} />
 
           <ScrollViewChild scrollDirection={'both'}>
-            <HorarioCeldas data={this.state.datos}/>
+            <HorarioCeldas datos={this.state.datos}/>
           </ScrollViewChild>
           <ScrollViewChild scrollDirection={'vertical'} style={styles.rowLabelsContainer}>
-            <HorarioPeriodos data={labelF}/>
+            <HorarioPeriodos largo={this.state.numeroPeriodos}/>
           </ScrollViewChild>
           <ScrollViewChild scrollDirection={'horizontal'} style={styles.columnLabelsContainer}>
-            <HorarioDias data={labelC} />
+            <HorarioDias largo={this.state.numeroDias} />
           </ScrollViewChild>
         </ScrollView>
-
-      </SafeAreaView>
-      
+      </View>
     );
   }
 
@@ -147,25 +212,18 @@ export default class HorarioScreen extends Component {
  
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  horarioContainer: {
     flex: 1,
-  },
-  contentContainer: {
-    height: 995,
-    width: 815
   },
   rowLabelsContainer: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: 100
+    width: 50
   },
   columnLabelsContainer: {
     position: 'absolute',
-    height: 30
+    height: 30,
   },
   cargando: {
     position: 'absolute',

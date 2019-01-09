@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-//import type { Cell } from '../static/data';
 import colors from '../colors';
+
+const dias = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 export default class HorarioDias extends Component {
   render() {
     return (
       <View style={styles.container} pointerEvents={'box-none'}>
-        { this.props.data.map((dia, index) => this._renderDiaLabel(dia, index)) }
+        { dias.slice(0, this.props.largo).map((dia, index) => this._renderDiaLabel(dia, index)) }
       </View>
     );
   }
@@ -26,7 +27,7 @@ export default class HorarioDias extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#bdbdbd',
     justifyContent: 'center',
     alignItems: 'center',

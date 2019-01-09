@@ -3,6 +3,7 @@ import {Text, AsyncStorage, StatusBar, StyleSheet, Animated} from 'react-native'
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Cache } from "react-native-cache";
+import Orientation from 'react-native-orientation';
 
 import ApiUtem from '../ApiUtem';
 
@@ -138,10 +139,11 @@ export default class SplashScreen extends Component {
     }
 
     componentDidMount() {
+        Orientation.lockToPortrait();
         this._comprobarToken();
         Animated.timing(this.state.progress, {
             toValue: 1,
-            duration: 8000
+            duration: 3500
         }).start(async ({ finished }) => {
             if (finished) {
                 this.setState({
@@ -160,7 +162,7 @@ export default class SplashScreen extends Component {
                     backgroundColor="rgba(255, 255, 255, 0)"
                     animated
                 />
-                <Text style={styles.footer}>Creado por el Club de Innovación y Desarrollo UTEM</Text>
+                
                 <LottieView
                     ref={animation => {
                         this.animation = animation;
@@ -179,11 +181,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#009d9b'
-    },
-    footer: {
-        color: 'white',
-        alignSelf: 'center',
-        position: 'absolute',
-        bottom: 10
     }
 });

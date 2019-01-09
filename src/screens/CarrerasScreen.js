@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, SafeAreaView, AsyncStorage, FlatList, RefreshControl, StatusBar } from 'react-native';
+import { StyleSheet, Platform, SafeAreaView, AsyncStorage, FlatList, RefreshControl, StatusBar } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import ApiUtem from '../ApiUtem';
 import CarrerasItem from '../components/CarrerasItem';
 import colors from '../colors';
+
+const ES_IOS = Platform.OS === 'ios';
 
 var apiUtem = new ApiUtem();
 
@@ -74,7 +76,7 @@ export default class CarrerasScreen extends Component {
         return (
             <SafeAreaView style={ styles.container }>
                 <StatusBar
-                    barStyle="light-content"
+                    barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
                 <FlatList
                     data={this.state.datos}

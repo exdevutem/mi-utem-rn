@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar,Picker } from 'react-native';
+import { Platform, Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import  RegComuna  from '../static/RegionesComunas';
@@ -10,6 +11,8 @@ import PerfilCampo from '../components/PerfilCampo';
 import ApiUtem from '../ApiUtem';
 
 import colors from '../colors';
+
+const ES_IOS = Platform.OS === 'ios';
 
 var cache = new Cache({
     namespace: "estudiantes",
@@ -221,8 +224,9 @@ export default class PerfilScreen extends Component {
         return (
             <ScrollView>
                 <StatusBar
-                    barStyle="light-content"
+                    barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
+
                 <View style={styles.headerContainer}>
                     <View style={styles.fotoContainer}>
                         <Image source={{uri: this.state.perfil ? this.state.perfil.fotoUrl : ""}} style={styles.foto} />
