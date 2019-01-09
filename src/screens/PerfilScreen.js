@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar,Picker } from 'react-native';
 import { Cache } from "react-native-cache";
 
+import  RegComuna  from '../static/RegionesComunas';
+
+import PerfilComunas from '../components/PerfilComunas';
 import PerfilCampo from '../components/PerfilCampo';
 
 import ApiUtem from '../ApiUtem';
@@ -16,7 +19,6 @@ var cache = new Cache({
     backend: AsyncStorage
 });
 var apiUtem = new ApiUtem();
-
 export default class PerfilScreen extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +26,10 @@ export default class PerfilScreen extends Component {
         this.state = {
             campos: [],
             perfil: null
+        }
+        this.estado = {
+            datos: [],
+            nombre: null
         }
     }
 
@@ -43,9 +49,22 @@ export default class PerfilScreen extends Component {
             }
 
         });
+        this._renderComunas("Arica y Parinacota");
 
         
     }
+    /*_renderComunas=(Comuna)=>{
+        var datos=[]
+        if(Comuna=="Arica y Parinacota"){
+            datos.push({
+                comuna : 
+            })
+        }
+        this.setState({
+            datos:datos,
+            nombre:Comuna
+        })
+    }*/
 
     _renderPerfil = (estudiante) => {
         var campos = []
@@ -193,6 +212,12 @@ export default class PerfilScreen extends Component {
 
     render() {
         const nombre = this.state.perfil ? this.state.perfil.nombre : null;
+        if(this.state.perfil ? this.state.perfil.sexo.sexo:"" == "Masculino"){
+            var otro="Femenino";
+        }
+        else{
+            var otro="Masculino";
+        }
         return (
             <ScrollView>
                 <StatusBar
@@ -212,11 +237,10 @@ export default class PerfilScreen extends Component {
                     selectedValue={this.state.language}
                     style={{ left:20,height: 50, width: 300 }}
                     onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
-                    <Picker.Item label="Indefinido" value="Indefinido" />
-                    <Picker.Item label="Masculino" value="Masculino" />
-                    <Picker.Item label="Femenino" value="Femenino" />
+                    <Picker.Item label={this.state.perfil ? this.state.perfil.sexo.sexo:""} value={this.state.perfil ? this.state.perfil.sexo.sexo:""} />
+                    <Picker.Item label= {otro} value={otro} />
+                    <Picker.Item label="Indefinido" />
                 </Picker>
-
                 <FlatList
                     data={this.state.campos}
                     style={styles.lista}

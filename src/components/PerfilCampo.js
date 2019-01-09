@@ -12,7 +12,7 @@ export default class PerfilCampo extends Component {
         return(
             <View style={styles.container}>
                 <Text style={styles.textoEtiqueta}>{this.props.etiqueta}</Text>
-                <TextInput value={this.props.valor}></TextInput>
+                <TextInput value={this.props.valor} disabled="disabled"></TextInput>
             </View>
         );
     }
