@@ -13,7 +13,7 @@ Aplicación **no oficial** para estudiantes de la [Universidad Tecnológica Metr
 ## Descarga
 ### Android
 
-<img src="https://user-images.githubusercontent.com/16374322/51219825-7041a700-1911-11e9-8b6f-39d92ddedc3d.png" width="200" />
+[<img src="https://user-images.githubusercontent.com/16374322/51219825-7041a700-1911-11e9-8b6f-39d92ddedc3d.png" width="200" />](https://play.google.com/store/apps/details?id=cl.inndev.miutem&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1 "Disponible en Google Play")
 
 ### iOS
 
