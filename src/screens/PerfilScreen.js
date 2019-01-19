@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar,Picker } from 'react-native';
-import { Platform, Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar } from 'react-native';
+import { Platform,Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar,Picker } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import  RegComuna  from '../static/RegionesComunas';
@@ -218,7 +217,7 @@ export default class PerfilScreen extends Component {
         if(this.state.perfil ? this.state.perfil.sexo.sexo:"" == "Masculino"){
             var otro="Femenino";
         }
-        else{
+        if(this.state.perfil ? this.state.perfil.sexo.sexo:"" == "Femenino"){
             var otro="Masculino";
         }
         return (
