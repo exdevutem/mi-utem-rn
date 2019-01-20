@@ -18,7 +18,7 @@ export default class CarrerasItem extends Component {
     }
 
     _onPress = () => {
-        this.props.navigation.navigate('Asignatura', {
+        this.props.navigation.navigate('Notas', {
             id: this.props.asignatura._id,
             nombre: this.props.asignatura.nombre,
             secciones: this.props.asignatura.secciones

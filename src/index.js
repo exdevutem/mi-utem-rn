@@ -194,7 +194,7 @@ const MainDrawer = createDrawerNavigator({
     }
   },
   Asignaturas: {
-    screen: AsignaturaTabsScreen,
+    screen: AsignaturasScreen,
     navigationOptions: {
       title: 'Asignaturas',
       /*headerStyle: {

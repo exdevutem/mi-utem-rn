@@ -25,10 +25,10 @@ export default class NotasItem extends Component{
                 <Text style={styles.item}>{tipo}:</Text>
                 <TextInput
                     onChangeText={(nuevoTexto) => {
-                        this.props.onChange(i, nuevoTexto);
                         this.setState({
                             valorInput: nuevoTexto
-                        })
+                        });
+                        this.props.onChange(i, nuevoTexto);
                     }}
                     editable={nota == null}
                     style={styles.item}>{nota ? nota : ''}</TextInput>

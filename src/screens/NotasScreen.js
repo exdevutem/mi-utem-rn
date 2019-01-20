@@ -14,61 +14,59 @@ export default class NotasScreen extends Component {
     constructor(props) {
         super(props);
         var resultadoNotas = this.parseNotas();
-        var resultadoPresentacion = Number((this.calcularPresentacion(resultadoNotas)).toFixed(3));
-
         this.state = {
             notas: resultadoNotas,
-            presentacion: resultadoPresentacion
+            presentacion: this.calcularPresentacion(resultadoNotas)
         }
     }
 
-    parseNotas(){
+    parseNotas() {
         var asignaturas = notas[0].notas.notas;
 
         var listaDeNotas = [];
         var tupla = [];
 
         asignaturas.forEach(function(elemento){
-                tupla.push(elemento.ponderador);
-                if(elemento.nota == null){
-                    tupla.push(null);
-                }else {
-                    tupla.push(elemento.nota);
-                }
-                listaDeNotas.push(tupla);
-                tupla = [];
+            tupla.push(elemento.ponderador);
+            if (elemento.nota == null) {
+                tupla.push(null);
+            } else {
+                tupla.push(elemento.nota);
+            }
+            listaDeNotas.push(tupla);
+            tupla = [];
         })
         
         return listaDeNotas;
     }
 
-    calcularPresentacion(listaDeNotas){
+    calcularPresentacion(listaDeNotas) {
         var notaFinal = 0;
 
-        listaDeNotas.forEach(function(elemento){
-            if(elemento[1] != null){
+        listaDeNotas.forEach(function(elemento) {
+            if (elemento[1] != null) {
                 notaFinal = notaFinal + elemento[0] * elemento[1];
             }
         })
-        return notaFinal;
+        return notaFinal.toFixed(1);
     }
 
     cambiarStates = (i, nota) => { 
-        var lista = this.state.notas;
-        var nuevaPresentacion = this.state.presentacion;
+        const lista = this.state.notas;
+        
+        const nuevaNota = parseFloat(nota) || null;
 
-        lista[i][1] = nota;
-        nuevaPresentacion = Number((nuevaPresentacion + lista[i][0] * nota).toFixed(3));
-        this.setState({presentacion: nuevaPresentacion});
-        this.render();
+        lista[i][1] = nuevaNota;
+        
+        this.setState({
+            presentacion: this.calcularPresentacion(lista)
+        });
     }
 
     
 
     render() {
-        var asignatura = notas[0]
-        var ñe = this.state.presentacion;
-        console.log(this.state);
+        var asignatura = notas[0];
 
         return (
             <SafeAreaView>
@@ -79,12 +77,13 @@ export default class NotasScreen extends Component {
                     <View style={styles.containerRow}>
                         <View style={styles.containerColumn}>
                         <TextInput
-                        editable={asignatura.notas.examenes[0] == null && asignatura.notas.examenes[1] == null}
-                        style={styles.item}>Nota Examen: ---</TextInput>
-                        <Text style={styles.item}>Nota Presentacion: {ñe}</Text></View>
+                            editable={asignatura.notas.examenes[0] == null && asignatura.notas.examenes[1] == null}
+                            style={styles.item}>Nota Examen: ---
+                        </TextInput>
+                        <Text style={styles.item}>{this.state.presentacion}</Text></View>
 
                         <View style={styles.containerColumn}><Text style={styles.item}>Nota Final:</Text>
-                        <Text style={styles.item}>{ñe}</Text>
+                        <Text style={styles.item}>{this.state.presentacion}</Text>
                         </View>
                     </View>
                     <FlatList   
