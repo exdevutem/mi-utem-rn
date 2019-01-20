@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Platform,Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar,Picker } from 'react-native';
 import { Cache } from "react-native-cache";
+import DatePicker from 'react-native-datepicker'
 
-import  RegComuna  from '../static/RegionesComunas';
-
-import PerfilComunas from '../components/PerfilComunas';
+import  RegComuna  from '../static/Comunas'
+import MyDatepicker from '../components/PerfilDatepicker'
 import PerfilCampo from '../components/PerfilCampo';
 
 import ApiUtem from '../ApiUtem';
@@ -21,6 +21,7 @@ var cache = new Cache({
     backend: AsyncStorage
 });
 var apiUtem = new ApiUtem();
+const lista=[];
 export default class PerfilScreen extends Component {
     constructor(props) {
         super(props);
@@ -28,10 +29,6 @@ export default class PerfilScreen extends Component {
         this.state = {
             campos: [],
             perfil: null
-        }
-        this.estado = {
-            datos: [],
-            nombre: null
         }
     }
 
@@ -51,39 +48,23 @@ export default class PerfilScreen extends Component {
             }
 
         });
-        this._renderComunas("Arica y Parinacota");
+       
 
         
     }
-    /*_renderComunas=(Comuna)=>{
-        var datos=[]
-        if(Comuna=="Arica y Parinacota"){
-            datos.push({
-                comuna : 
-            })
+    _renderPickerCom=(datos)=>{
+        return(
+            <Picker.Item label={datos} value= {datos}></Picker.Item>
+        )
+    }
+    _renderComunas=(datos)=>{
+        for(var key in RegComuna){
+            datos.push(RegComuna[key])
         }
-        this.setState({
-            datos:datos,
-            nombre:Comuna
-        })
-    }*/
+    }
 
     _renderPerfil = (estudiante) => {
         var campos = []
-
-        /*
-        if (estudiante.nombre != null)
-            campos.push({
-                etiqueta: "Nombre Completo",
-                valor: estudiante.nombre.nombres +" "+ estudiante.nombre.apellidos
-            })
-        else
-            campos.push({
-                etiqueta: "Nombre",
-                valor:"Nombre no asignado"
-            })
-        */
-
         if (estudiante.rut != null)
             campos.push({
                 etiqueta: "RUT",
@@ -107,33 +88,15 @@ export default class PerfilScreen extends Component {
             })
 
         if (estudiante.nacimiento != null) {
-            var s=estudiante.nacimiento
-            var d=new Date();
-            d.setFullYear(s.substr(6,4),s.substr(3,2)-1,s.substr(0,2));
-            var hoy= new Date();
-            var Edad = new Date(hoy-d)
-
             campos.push({
                 etiqueta: "Fecha de nacimiento",
-                valor: Edad.getFullYear().toString()
+                valor: estudiante.nacimiento
             })
         } else
             campos.push({
                 etiqueta: "Fecha de nacimiento",
                 valor: "No tiene nacimiento asignado"
             })
-
-        /*if (estudiante.sexo.sexo != null)
-            campos.push({
-               etiqueta:"Sexo",
-               valor:estudiante.sexo.sexo
-            })
-        else
-            campos.push({
-                etiqueta:"Sexo",
-                valor:"No hay registro de su sexo"
-            })*/
-
         if (estudiante.telefonoMovil != null)
             campos.push({
                 etiqueta: "Telefono móvil",
@@ -155,42 +118,7 @@ export default class PerfilScreen extends Component {
             campos.push({
                 etiqueta:"Telefono fijo",
                 valor: "No hay telefono asignado"
-            })
-        /*
-        if (estudiante.correoUtem != null)
-            campos.push({
-                etiqueta:"Correo institucional",
-                valor:estudiante.correoUtem
-            })
-        else
-            campos.push({
-                etiqueta:"Correo institucional",
-                valor:"No hay registro de un correo institucional"
-            })
-        */
-        
-        if (estudiante.nacionalidad.nacionalidad != null)
-            campos.push({
-                etiqueta:"Nacionalidad",
-                valor:estudiante.nacionalidad.nacionalidad
-            })
-        else
-            campos.push({
-                etiqueta:"Nacionalidad",
-                valor:"No hay registro de nacionalidad"
-            })
-        
-        if (estudiante.direccion.comuna.comuna != null)
-            campos.push({
-                etiqueta:"Comuna",
-                valor:estudiante.direccion.comuna.comuna
-            })
-        else
-            campos.push({
-                etiqueta:"Comuna",
-                valor:"No hay comuna registrada"
-            })
-        
+            })       
         if (estudiante.direccion.direccion)
             campos.push({
                 etiqueta:"Dirección",
@@ -213,11 +141,12 @@ export default class PerfilScreen extends Component {
     }
 
     render() {
+        this._renderPickerCom(lista);
+        console.log(lista);
         const nombre = this.state.perfil ? this.state.perfil.nombre : null;
         if(this.state.perfil ? this.state.perfil.sexo.sexo:"" == "Masculino"){
             var otro="Femenino";
-        }
-        if(this.state.perfil ? this.state.perfil.sexo.sexo:"" == "Femenino"){
+        }else{
             var otro="Masculino";
         }
         return (
@@ -236,14 +165,55 @@ export default class PerfilScreen extends Component {
                 <View style={styles.container}>
                     <Text style={styles.textoEtiqueta}>Sexo</Text>
                 </View>
-                <Picker  
-                    selectedValue={this.state.language}
-                    style={{ left:20,height: 50, width: 300 }}
-                    onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
-                    <Picker.Item label={this.state.perfil ? this.state.perfil.sexo.sexo:""} value={this.state.perfil ? this.state.perfil.sexo.sexo:""} />
-                    <Picker.Item label= {otro} value={otro} />
-                    <Picker.Item label="Indefinido" />
+                <Picker selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}
+                    style={{ left:20,height: 50, width: 300 }}>
+                    <Picker.Item label={this.state.perfil ? this.state.perfil.sexo.sexo : ""} value={this.state.perfil ? this.state.perfil.sexo.sexo : ""}></Picker.Item>
+                    <Picker.Item label={otro} value={otro}></Picker.Item>
+                    <Picker.Item label="Otro" value="Otro"></Picker.Item>
                 </Picker>
+                
+                <View style={styles.container}>
+                    <Text style={styles.textoEtiqueta}>Comunas</Text>
+                </View>
+
+                <Picker selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}
+                    style={{ left:20,height: 50, width: 300 }}>
+                    {lista.map((index)=> this._renderPickerCom(index))}
+                </Picker>
+
+                <View style={styles.container}>
+                    <Text style={styles.textoEtiqueta}>Fecha nacimiento</Text>
+                </View>
+                
+                <DatePicker
+                    style={{width: 200}}
+                    date={this.state.date}
+                    mode="date"
+                    placeholder="Fecha de nacimiento"
+                    format="DD-MM-YYYY"
+                    minDate="01-01-1940"
+                    maxDate="01-01-2002"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    androidMode="spinner"
+                    customStyles={{
+                    dateIcon: {
+                        opacity:0,
+                        position: 'absolute',
+                        left: 0,
+                        top: 4,
+                        marginLeft: 0
+                    },
+                    dateInput: {
+                        marginLeft: 36
+                    }
+                    // ... You can check the source to find the other keys.
+                    }}
+                    onDateChange={(date) => {this.setState({date: date})}}
+                />
+                
                 <FlatList
                     data={this.state.campos}
                     style={styles.lista}
