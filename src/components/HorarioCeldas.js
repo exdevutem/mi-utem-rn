@@ -45,7 +45,7 @@ export default class HorarioCeldas extends Component {
 
   _renderContent(celda, color) {
     return (
-      <View style={[styles.contentContainer, {backgroundColor: color}]}>
+      <View style={[styles.contentContainer, {backgroundColor: color}]} pointerEvents='box-only'>
         <Text style={styles.textoLargo} numberOfLines={1}>
           {celda.codigo}/{celda.seccion}
         </Text>

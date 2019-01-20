@@ -24,33 +24,35 @@ export default class Drawer extends Component {
         const {items} = this.props;
         switch (route.key) {
             case 'Carreras':
-                /*if (items.navigation.getParam('carrerasN', null) == 1) {
+                if (items.navigation.getParam('carrerasN', null) == 1) {
                     items.navigation.navigate('Carrera', {
                         id: items.navigation.getParam('carreraId', null)
                     })
                 } else {
                     items.navigation.navigate('Carreras')
-                }*/
+                }
+                /*
                 if (ES_IOS) {
                     Alert.alert('Esta función pronto estará diponible 💪 ');
                 } else {
                     ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
-                }
+                }*/
                 break;
             
             case 'Asignaturas':
-                /*if (items.navigation.getParam('asignaturasN', null) == 1) {
+                if (items.navigation.getParam('asignaturasN', null) == 1) {
                     items.navigation.navigate('Asignatura', {
                         id: items.navigation.getParam('asignaturaId', null)
                     })
                 } else {
                     items.navigation.navigate('Asignaturas')
-                }*/
+                }
+                /*
                 if (ES_IOS) {
                     Alert.alert('Esta función pronto estará diponible 💪 ');
                 } else {
                     ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
-                }
+                }*/
                 break;
 
             case 'Horarios':
@@ -75,17 +77,16 @@ export default class Drawer extends Component {
     _renderFooter = () => {
         return Platform.select({
             android: (
-                <View>
-                  <TouchableNativeFeedback
-                    style={{flex: 1}}
+                <TouchableNativeFeedback
                     background={TouchableNativeFeedback.SelectableBackground()}
                     onPress={() => this._onLogoutPress()} >
+                    <View>
                         {
                             ES_IOS ? <MaterialCommunityIcons name="logout" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/> :
                             <Ionicons name="ios-log-out" size={ 25 } style={{padding: 15}} color={colors.material.grey['600']}/>
                         }
-                  </TouchableNativeFeedback>
-                </View>
+                    </View>
+                </TouchableNativeFeedback>
             ),
             ios: (
                 <TouchableOpacity

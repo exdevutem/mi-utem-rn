@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {TabBar} from 'react-native-tab-view';
 
 import SegmentedTab from './components/SegmentedTab';
 import Drawer from './components/Drawer';
@@ -22,24 +23,26 @@ import CarreraScreen from './screens/CarreraScreen';
 import BoletinScreen from './screens/BoletinScreen';
 import MallaScreen from './screens/MallaScreen';
 
-import AsignaturaScreen from './screens/AsignaturaScreen';
+import AsignaturasScreen from './screens/AsignaturasScreen';
+import AsignaturaTabsScreen from './screens/AsignaturaTabsScreen';
 import NotasScreen from './screens/NotasScreen';
 import BitacoraScreen from './screens/BitacoraScreen';
 
 
 const ES_IOS = Platform.OS === 'ios';
 
+/*
 const AsignaturaTabs = createMaterialTopTabNavigator({
   Teoria: {
-    screen: AsignaturaScreen,
+    screen: AsignaturaTabsScreen,
     title: 'Teoría'
   },
   Taller: {
-    screen: AsignaturaScreen,
+    screen: AsignaturaTabsScreen,
     title: 'Taller'
   },
   Laboratorio: {
-    screen: AsignaturaScreen,
+    screen: AsignaturaTabsScreen,
     title: 'Laboratorio'
   },
 },
@@ -49,15 +52,20 @@ const AsignaturaTabs = createMaterialTopTabNavigator({
       tabBarComponent: ({navigation}) => {
         return (
           <SegmentedTab
-            routes={ ['Teoria', 'Taller', 'Laboratorio'] }
-            values={ ['Teoría', 'Taller', 'Laboratorio'] } 
+            values={ navigation.getParam('tipos', null) } 
             selectedIndex={ navigation.state.index }
             navigation={ navigation }
+          />
+          <TabBar
+            navigationState={this.state}
+            onIndexChange={index => this.setState({ index })}
+            initialLayout={{ width: Dimensions.get('window').width }}
           />
         );
       },
     }
   }),
+
   
   swipeEnabled: !ES_IOS,
   tabBarOptions: {
@@ -68,13 +76,15 @@ const AsignaturaTabs = createMaterialTopTabNavigator({
       backgroundColor: 'white',
     }
   },
-  defaultNavigationOptions: {
+  defaultNavigationOptions: ({ navigation }) => ({
     tabBarOnPress: ({ defaultHandler }) => {
       defaultHandler();
     }
-  }
+  })
     
 });
+
+*/
 
 const MainStack = createStackNavigator({
   Main: {
@@ -96,16 +106,21 @@ const MainStack = createStackNavigator({
       title: 'Perfil'
     }
   },
-  Asignatura: {
-    screen: AsignaturaTabs,
+  Asignaturas: {
+    screen: AsignaturasScreen,
     navigationOptions: {
-      title: 'Asignatura',
+      title: 'Asignaturas'
+    }
+  },
+  Asignatura: {
+    screen: AsignaturaTabsScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.getParam('nombre', 'Asignatura'),
       headerStyle: {
-        elevation: 0,
-        borderBottomWidth: 0,
+        elevation: ES_IOS ? null : 0,
         backgroundColor: ES_IOS ? 'white' : colors.primario
       }
-    }
+    })
   },
   Notas: {
     screen: NotasScreen,
@@ -126,7 +141,10 @@ const MainStack = createStackNavigator({
     }
   },
   Carrera: {
-    screen: CarreraScreen
+    screen: CarreraScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.getParam('nombre', 'Carrera'),
+    })
   },
   Malla: {
     screen: MallaScreen,
@@ -176,13 +194,13 @@ const MainDrawer = createDrawerNavigator({
     }
   },
   Asignaturas: {
-    screen: AsignaturaTabs,
+    screen: AsignaturaTabsScreen,
     navigationOptions: {
       title: 'Asignaturas',
-      headerStyle: {
+      /*headerStyle: {
         elevation: 0,
         borderBottomWidth: 0,
-      }
+      }*/
     }
   },
   Carreras: {

@@ -7,7 +7,7 @@ export default class SegmentedTab extends Component {
     }
 
     render() {
-        const { selectedIndex, routes, values, navigation } = this.props;
+        const { selectedIndex, values, navigation } = this.props;
 
         return (
             <View style={ styles.container }>
@@ -16,7 +16,7 @@ export default class SegmentedTab extends Component {
                     selectedIndex={ selectedIndex }
                     tintColor='#009d9b'
                     onChange={(event) => {
-                        navigation.navigate(routes[event.nativeEvent.selectedSegmentIndex]);
+                        navigation.navigate(values[event.nativeEvent.selectedSegmentIndex]);
                     }}
                     style={ styles.control }
                 />

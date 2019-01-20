@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { ScrollView, Text, processColor, StatusBar, Button, Platform, Alert, ToastAndroid, StyleSheet, View, AsyncStorage } from 'react-native';
-import {LineChart, BarChart} from 'react-native-charts-wrapper';
+import { AreaChart, Grid, YAxis } from 'react-native-svg-charts'
+import * as shape from 'd3-shape'
+import { Circle, Defs, LinearGradient, Stop, Path } from 'react-native-svg'
 import { Cache } from "react-native-cache";
+
 
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
@@ -18,22 +21,48 @@ var cache = new Cache({
 
 var apiUtem = new ApiUtem();
 
-export default class CarreraScreen extends Component {
+const Gradient = ({ index }) => (
+    <Defs key={index}>
+        <LinearGradient id={'gradient'} x1={'0%'} y={'0%'} x2={'0%'} y2={'100%'}>
+            <Stop offset={'0%'} stopColor={colors.primario} stopOpacity={0.3}/>
+            <Stop offset={'100%'} stopColor={colors.primario} stopOpacity={0}/>
+        </LinearGradient>
+    </Defs>
+)
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-          title: navigation.getParam('nombre', 'Carrera'),
-        };
-    };
+const Decorator = ({ x, y, data }) => {
+    return data.map((value, index) => (
+        <Circle
+            key={ index }
+            cx={ x(index) }
+            cy={ y(value) }
+            r={ 4 }
+            stroke={ 'rgb(134, 65, 244)' }
+            fill={ 'white' }
+        />
+    ))
+}
+
+const Line = ({ line }) => (
+    <Path
+        key={'line'}
+        d={line}
+        stroke={colors.primario}
+        fill={'none'}
+        strokeWidth="3"
+    />
+)
+
+export default class CarreraScreen extends Component {
 
     constructor(props) {
         super(props);
         this.state = { 
             malla: null,
-            boletinRendimiento: [0],
+            boletinRendimiento: [],
             cargandoMalla: true,
             cargandoBoletin: true,
-            boletinAsignaturas: [0]
+            boletinAsignaturas: []
         };
     }
 
@@ -107,28 +136,18 @@ export default class CarreraScreen extends Component {
 
     _parseBoletinRendimiento = (boletin) => {        
         var rendimiento = [];
-        var asignaturas = [];
 
         for (let i = 0; i < boletin.length; i++) {
             const semestre = boletin[i];
             if (semestre.promedioFinal) {
-                rendimiento.push({
-                    x: i,
-                    y: semestre.promedioFinal
-                })
+                rendimiento.push(semestre.promedioFinal)
             }
-
-            asignaturas.push({
-                y: semestre.asignaturas.length
-            });
             
         }
         this.setState({
             boletinRendimiento: rendimiento,
-            boletinAsignaturas: asignaturas
+            boletinAsignaturas: []
         });
-
-        this.refs.rendimientoChart.highlights([])
     }
 
     _onPressMalla() {
@@ -166,107 +185,50 @@ export default class CarreraScreen extends Component {
                         <Text style={styles.textoHeader}>RENDIMIENTO</Text>
                     </View>
                     <View style={styles.chartContainer}>
-                        <LineChart
-                            ref="rendimientoChart"
-                            style={styles.chart}
-                            data={ {
-                                dataSets: [
-                                    {
-                                        label: "",
-                                        config: {
-                                            mode: "CUBIC_BEZIER",
-                                            drawValues: false,
-                                            lineWidth: 2,
-                                            drawCircles: true,
-                                            circleColor: processColor(colors.primario),
-                                            drawCircleHole: false,
-                                            circleRadius: 5,
-                                            highlightColor: processColor('transparent'), // Color del seleccionado
-                                            color: processColor(colors.primario), // color de la linea
-                                            drawFilled: true,
-                                            fillGradient: {
-                                            colors: [processColor('transparent'), processColor(colors.primario)],
-                                            positions: [0, 1],
-                                            angle: 90,
-                                            orientation: "TOP_BOTTOM"
-                                            },
-                                            fillAlpha: 1000
-                                        },
-                                        values: this.state.boletinRendimiento
-                                    }
-                                ]
+                        <AreaChart
+                            style={{ height: 200 }}
+                            data={ this.state.boletinRendimiento }
+                            contentInset={{ top: 30, bottom: 30 }}
+                            curve={ shape.curveNatural }
+                            numberOfTicks={ 4 }
+                            svg={{ fill: 'url(#gradient)' }}
+                            yMin={0}
+                            yMax={7}
+                            animate={true} >
+                            <Line/>
+                            <Decorator/>
+                            <Gradient/>
+                            <Grid/>
+                        </AreaChart>
+                        <YAxis
+                            style={ { position: 'absolute', top: 0, bottom: 0 }}
+                            data={ [0, 1, 2, 3, 4, 5, 6, 7] }
+                            contentInset={ { top: 10, bottom: 10 } }
+                            formatLabel={ value => `${value}.0` }
+                            svg={ {
+                                fontSize: 8,
+                                fill: 'white',
+                                stroke: 'black',
+                                strokeWidth: 0.1,
+                                alignmentBaseline: 'baseline',
+                                baselineShift: '3',
                             } }
-                            xAxis={{
-                                enabled: false
-                            }}
-                            yAxis={{
-                                left: {
-                                    axisMaximum: 7,
-                                    axisMinimum: 1
-                                },
-                                right: {
-                                    enabled: false
-                                }
-                            }}
-                            chartDescription={{text: ''}}
-                            legend={{enabled: false}}
-                            animation={{
-                                durationX: 0,
-                                durationY: 1500,
-                                easingY: "EaseInOutQuart"
-                            }}
                         />
-                    </View>
-                    
-                </View>
 
-                <View style={styles.rendimientoContainer}>
-                    <View style={styles.containerHeader}>
-                        <Text style={styles.textoHeader}>RENDIMIENTO</Text>
                     </View>
-                    <View style={styles.chartContainer}>
-                    <BarChart
-                        style={styles.chart}
-                        data={{
-                            dataSets: [{
-                              values: [{y: 100}, {y: 105}, {y: 102}, {y: 110}, {y: 114}, {y: 109}, {y: 105}, {y: 99}, {y: 95}],
-                              label: 'Bar dataSet',
-                              config: {
-                                color: processColor('teal'),
-                                barShadowColor: processColor('lightgrey'),
-                                highlightAlpha: 90,
-                                highlightColor: processColor('red'),
-                              }
-                            }],
-                    
-                            config: {
-                              barWidth: 0.7,
-                            }
-                        }}
-                        xAxis={{
-                            valueFormatter: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                            granularityEnabled: true,
-                            granularity : 1,
-                        }}
-                        animation={{durationX: 2000}}
-                        legend={{
-                            enabled: true,
-                            textSize: 14,
-                            form: 'SQUARE',
-                            formSize: 14,
-                            xEntrySpace: 10,
-                            yEntrySpace: 5,
-                            formToTextSpace: 5,
-                            wordWrapEnabled: true,
-                            maxSizePercent: 0.5
-                        }}
-                        gridBackgroundColor={processColor('#ffffff')}
-                        visibleRange={{x: { min: 5, max: 5 }}}
-                        drawBarShadow={false}
-                        drawValueAboveBar={true}
-                        drawHighlightArrow={true}
-                        highlights={[{x: 3}, {x: 6}]}
-                    />
+                    <View style={styles.contentContainer}>
+                        <View style={styles.valorContainer}>
+                            <Text style={styles.valorText}>13</Text>
+                            <Text style={styles.labelText}>Aprobadas</Text>
+                        </View>
+                        <View style={styles.valorContainer}>
+                            <Text style={styles.valorText}>2</Text>
+                            <Text style={styles.labelText}>Rendimiento</Text>
+                        </View>
+                        <View style={styles.valorContainer}>
+                            <Text style={styles.valorText}>5</Text>
+                            <Text style={styles.labelText}>Inscritas</Text>
+                        </View>
                     </View>
                 </View>
 
@@ -291,6 +253,27 @@ const styles = StyleSheet.create({
         borderColor: colors.material.grey['300'],
         padding: 20
     },
+    contentContainer: {
+        padding: 10,
+        paddingTop: 0,
+        flexDirection: 'row'
+    },
+    valorContainer: {
+        flex: 1,
+        padding: 10
+    },
+    valorText: {
+        color: 'black',
+        fontSize: 22,
+        fontWeight: '500',
+        letterSpacing: 0.5,
+        alignSelf: 'center'
+    },
+    labelText: {
+        fontSize: 13,
+        color: 'grey',
+        alignSelf: 'center'
+    },
     textoHeader: {
         color: 'black',
         fontSize: 13,
@@ -299,16 +282,12 @@ const styles = StyleSheet.create({
     },
     rendimientoContainer: {
         flex: 1,
-        padding: 1,
-        backgroundColor: 'white',
-        margin: 10
+        backgroundColor: 'white'
     },
     chartContainer: {
-        height: 200,
-        padding: 10
+        height: 200
     },
     chart: {
-        flex: 1,
-        margin: 0
+        flex: 1
     }
   });

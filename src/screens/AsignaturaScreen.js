@@ -1,24 +1,14 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, Text, StyleSheet, StatusBar } from 'react-native';
+import { Platform, View, StyleSheet, Text } from 'react-native';
 
-const ES_IOS = Platform.OS === 'ios';
+import colors from '../colors';
 
 export default class AsignaturaScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedIndex: 0,
-        };
-    }
-
-    render() {
+    render() {        
         return (
-            <SafeAreaView style={ styles.container }>
-                <StatusBar
-                    barStyle="light-content"
-                    backgroundColor={colors.primarioOscuro} />
-                <Text style={styles.titulo}>Asignatura</Text>
-            </SafeAreaView>
+            <View style={styles.container}>
+                <Text style={styles.texto}>{this.props.datos.tipo}</Text>
+            </View>
         );
     }
 }
@@ -26,14 +16,11 @@ export default class AsignaturaScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#EEEEEE',
+        backgroundColor: colors.material.grey['200']
+    },
+    texto: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    segmented: {
-        margin: 20,
-    },
-    titulo: {
-        
     }
-});
+})

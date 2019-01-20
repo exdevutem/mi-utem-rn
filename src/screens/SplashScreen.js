@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import {Text, AsyncStorage, StatusBar, StyleSheet, Animated} from 'react-native';
+import {Platform, ActivityIndicator, ToastAndroid, AsyncStorage, StatusBar, StyleSheet, Animated} from 'react-native';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Cache } from "react-native-cache";
 import Orientation from 'react-native-orientation';
 
 import ApiUtem from '../ApiUtem';
+
+const ES_IOS = Platform.OS === 'ios';
 
 var cache = new Cache({
     namespace: "estudiantes",
@@ -22,7 +24,8 @@ export default class SplashScreen extends Component {
         this.state = {
             progress: new Animated.Value(0),
             tokenEsValido: null,
-            terminoAnimacion: false
+            terminoAnimacion: false,
+            estaCargando: false
         };
     }
 
@@ -38,6 +41,7 @@ export default class SplashScreen extends Component {
                         const perfil = datos[0];
                         const horarios = datos[1];
                         const carreras = datos[2];
+                        const asignaturas = datos[3];
                         
                         const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
                         const fotoUrl = perfil.fotoUrl;
@@ -47,19 +51,22 @@ export default class SplashScreen extends Component {
                             if (err) console.error(err);
                             cache.setItem(rut + "carreras", carreras, (err) => {
                                 if (err) console.error(err);
-                                cache.setItem(rut, perfil, (err) => {
+                                cache.setItem(rut + "asignaturas", asignaturas, (err) => {
                                     if (err) console.error(err);
-                                    resolve({
-                                        nombre: nombre,
-                                        foto: fotoUrl,
-                                        correo: correoUtem,
-                                        carrerasN: carreras.length || null,
-                                        carreraId: carreras.length == 1 ? carreras[0]._id : null,
-                                        horariosN: horarios.length || null,
-                                        horarioId: horarios.length == 1 ? horarios[0].carrera.codigo : null,
-                                        asignaturasN: null,
-                                        asignaturaId: null
-
+                                    cache.setItem(rut, perfil, (err) => {
+                                        if (err) console.error(err);
+                                        resolve({
+                                            nombre: nombre,
+                                            foto: fotoUrl,
+                                            correo: correoUtem,
+                                            carrerasN: carreras.length || null,
+                                            carreraId: carreras.length == 1 ? carreras[0]._id : null,
+                                            horariosN: horarios.length || null,
+                                            horarioId: horarios.length == 1 ? horarios[0].carrera.codigo : null,
+                                            asignaturasN: null,
+                                            asignaturaId: null
+    
+                                        });
                                     });
                                 });
                             });
@@ -125,12 +132,26 @@ export default class SplashScreen extends Component {
                     tokenEsValido: true
                 });
             } else {
+                if (!ES_IOS) {
+                    ToastAndroid.show('Volviendo a iniciar sesión', ToastAndroid.SHORT);
+                }
                 this.setState({
-                    tokenEsValido: false
+                    estaCargando: true
                 });
+                const json = await apiUtem.refreshToken();
+                if (json.token) {
+                    this.setState({
+                        tokenEsValido: true
+                    });
+                } else {
+                    this.setState({
+                        tokenEsValido: false
+                    });
+                }
             }
             this._terminoProceso();
         } catch (error) {
+            console.log(error)
             this.setState({
                 tokenEsValido: false
             });
@@ -172,6 +193,11 @@ export default class SplashScreen extends Component {
                     progress={this.state.progress}
                     />
                 
+                <ActivityIndicator 
+                    size="large" 
+                    color="white"
+                    style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+                
             </LinearGradient>
         );
     }
@@ -181,5 +207,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#009d9b'
+    },
+    cargando: {
+        position: 'absolute',
+        alignSelf: 'center',
+        left: 0,
+        bottom: 40,
+        right: 0
     }
 });

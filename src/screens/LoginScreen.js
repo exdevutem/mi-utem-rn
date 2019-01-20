@@ -43,6 +43,7 @@ export default class LoginScreen extends Component {
             const perfil = datos[0];
             const horarios = datos[1];
             const carreras = datos[2];
+            const asignaturas = datos[3];
             
             const nombre = perfil.nombre.completo ? perfil.nombre.completo : (perfil.nombre.apellidos ? perfil.nombre.nombres + " " + perfil.nombre.apellidos : perfil.nombre);
             const fotoUrl = perfil.fotoUrl;
@@ -52,18 +53,21 @@ export default class LoginScreen extends Component {
                 if (err) console.error(err);
                 cache.setItem(rut + "carreras", carreras, (err) => {
                     if (err) console.error(err);
-                    cache.setItem(rut, perfil, (err) => {
+                    cache.setItem(rut + "asignaturas", asignaturas, (err) => {
                         if (err) console.error(err);
-                        navigation.navigate('Main', {
-                            nombre: nombre,
-                            foto: fotoUrl,
-                            correo: correoUtem,
-                            carrerasN: carreras.length,
-                            carreraId: carreras.length == 1 ? carreras[0]._id : null,
-                            horariosN: horarios.length || null,
-                            horarioId: horarios.length == 1 ? horarios[0].carrera.codigo : null,
-                            asignaturasN: null,
-                            asignaturaId: null
+                        cache.setItem(rut, perfil, (err) => {
+                            if (err) console.error(err);
+                            navigation.navigate('Main', {
+                                nombre: nombre,
+                                foto: fotoUrl,
+                                correo: correoUtem,
+                                carrerasN: carreras.length,
+                                carreraId: carreras.length == 1 ? carreras[0]._id : null,
+                                horariosN: horarios.length || null,
+                                horarioId: horarios.length == 1 ? horarios[0].carrera.codigo : null,
+                                asignaturasN: null,
+                                asignaturaId: null
+                            });
                         });
                     });
                 });
@@ -219,8 +223,8 @@ export default class LoginScreen extends Component {
                     style={styles.poster} />
                 
                 <Video 
-                    repeat
-                    muted
+                    repeat={true}
+                    muted={true}
                     source={require('../assets/videos/login-background.mp4')}
                     resizeMode="cover"
                     style={StyleSheet.absoluteFill} />

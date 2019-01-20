@@ -820,148 +820,242 @@ export const notas = [
 
 export const asignaturas = [
     {
-        "_id": 12333,
-        "codigo": "INDC8020",
-        "nombre": "Dibujo De Ingenieria",
-        "docentes": [
+        "_id": 12286,
+        "codigo": "ELEC8040",
+        "nombre": "Circuitos Electricos",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Monica Diaz Gomez"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "411",
+                "docente": {
+                    "nombre": "Juan Patricio Olavarrieta Suarez",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Taller",
-        "seccion": {
-            "_id": 149709,
-            "numero": 104,
-            "alumnoSeccionId": 2700486
-        }
+        ]
     },
     {
-        "_id": 12334,
-        "codigo": "INFB8021",
-        "nombre": "Algoritmos Y Programacion",
-        "docentes": [
+        "_id": 12288,
+        "codigo": "ESTC8050",
+        "nombre": "Estadistica Y Probabilidades",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Laura Angelica Setti Duque"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "101",
+                "docente": {
+                    "nombre": "Montserrat Soto Fulla",
+                    "horario": null
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Taller",
+                "seccion": "101.1",
+                "docente": {
+                    "nombre": "Montserrat Soto Fulla",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Teoria",
-        "seccion": {
-            "_id": 149171,
-            "numero": 412,
-            "alumnoSeccionId": 2700479
-        }
+        ]
     },
     {
-        "_id": 12333,
-        "codigo": "INDC8020",
-        "nombre": "Dibujo De Ingenieria",
-        "docentes": [
+        "_id": 12289,
+        "codigo": "MATC8050",
+        "nombre": "Metodos Numericos Clasicos",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Alejandro Amor Caceres Cuevas"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "104",
+                "docente": {
+                    "nombre": "Rodolfo Rodrigo Vidal Espinoza",
+                    "horario": null
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Taller",
+                "seccion": "104.1",
+                "docente": {
+                    "nombre": "Camilo Vera Albornoz",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Laboratorio",
-        "seccion": {
-            "_id": 149726,
-            "numero": 102,
-            "alumnoSeccionId": 2700485
-        }
+        ]
     },
     {
-        "_id": 12221,
-        "codigo": "MATC8021",
-        "nombre": "Calculo Diferencial",
-        "docentes": [
+        "_id": 12287,
+        "codigo": "FISC8050",
+        "nombre": "Optica Y Ondas",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Erick Gonzalez Gajardo"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "104",
+                "docente": {
+                    "nombre": "Pablo Moises Leiva Paves",
+                    "horario": null
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Laboratorio",
+                "seccion": "106",
+                "docente": {
+                    "nombre": "Tabatha . Rodriguez Cabello",
+                    "horario": "Lunes 9:40-11:10. Martes 14:40-16:10. Jueves 9:40-12:50 M1, segundo piso"
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Taller",
+                "seccion": "104.4",
+                "docente": {
+                    "nombre": "Pablo Moises Leiva Paves",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Taller",
-        "seccion": {
-            "_id": 148416,
-            "numero": 105,
-            "alumnoSeccionId": 2698867
-        }
+        ]
     },
     {
-        "_id": 12221,
-        "codigo": "MATC8021",
-        "nombre": "Calculo Diferencial",
-        "docentes": [
+        "_id": 12344,
+        "codigo": "INFB8062",
+        "nombre": "Sistemas De Informacion",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Erick Gonzalez Gajardo"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "411",
+                "docente": {
+                    "nombre": "Sara Filomena Rojas Aldea",
+                    "horario": null
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Taller",
+                "seccion": "411.1",
+                "docente": {
+                    "nombre": "Sara Filomena Rojas Aldea",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Teoria",
-        "seccion": {
-            "_id": 148415,
-            "numero": 105,
-            "alumnoSeccionId": 2698866
-        }
+        ]
     },
     {
-        "_id": 12222,
-        "codigo": "MATC8020",
-        "nombre": "Algebra Clasica",
-        "docentes": [
+        "_id": 12297,
+        "codigo": "INDC8060",
+        "nombre": "Sistemas Economicos",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Carlos Alejandro Sepulveda Bustamante"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "411",
+                "docente": {
+                    "nombre": "Juan Rodolfo Camus Salinas",
+                    "horario": null
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Taller",
+                "seccion": "411.1",
+                "docente": {
+                    "nombre": "Juan Rodolfo Camus Salinas",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Taller",
-        "seccion": {
-            "_id": 148429,
-            "numero": 105,
-            "alumnoSeccionId": 2698839
-        }
+        ]
     },
     {
-        "_id": 12334,
-        "codigo": "INFB8021",
-        "nombre": "Algoritmos Y Programacion",
-        "docentes": [
+        "_id": 12342,
+        "codigo": "INFB8060",
+        "nombre": "Tecnologia De Computadores",
+        "carrera": {
+            "apeId": 55978,
+            "codigo": "21041"
+        },
+        "periodo": {
+            "_id": 147,
+            "anio": "2018",
+            "semestre": "2"
+        },
+        "secciones": [
             {
-                "nombre": {
-                    "completo": "Laura Angelica Setti Duque"
+                "_id": null,
+                "tipo": "Teoria",
+                "seccion": "412",
+                "docente": {
+                    "nombre": "Luis Rodrigo Cofre Bernal",
+                    "horario": null
+                }
+            },
+            {
+                "_id": null,
+                "tipo": "Taller",
+                "seccion": "412.2",
+                "docente": {
+                    "nombre": "Luis Rodrigo Cofre Bernal",
+                    "horario": null
                 }
             }
-        ],
-        "tipo": "Taller",
-        "seccion": {
-            "_id": 149172,
-            "numero": 412,
-            "alumnoSeccionId": 2700480
-        }
-    },
-    {
-        "_id": 12222,
-        "codigo": "MATC8020",
-        "nombre": "Algebra Clasica",
-        "docentes": [
-            {
-                "nombre": {
-                    "completo": "Carlos Alejandro Sepulveda Bustamante"
-                }
-            }
-        ],
-        "tipo": "Teoria",
-        "seccion": {
-            "_id": 148428,
-            "numero": 105,
-            "alumnoSeccionId": 2698838
-        }
+        ]
     }
 ]
 
