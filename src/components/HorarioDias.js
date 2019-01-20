@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import colors from '../colors';
 
 const dias = ['Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 

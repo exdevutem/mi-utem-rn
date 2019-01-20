@@ -45,12 +45,13 @@ export default class Drawer extends Component {
                     })
                 } else {
                     items.navigation.navigate('Asignaturas')
-                }*/
+                }
                 if (ES_IOS) {
                     Alert.alert('Esta función pronto estará diponible 💪 ');
                 } else {
                     ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
-                }
+                }*/
+                items.navigation.navigate('Notas')
                 break;
 
             case 'Horarios':
