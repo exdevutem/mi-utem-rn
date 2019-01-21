@@ -1058,3 +1058,84 @@ export const asignaturas = [
         ]
     }
 ]
+
+export const calificaciones = {
+    "docente": {
+        "nombre": "Juan Patricio Olavarrieta Suarez",
+        "rut": 4889929,
+        "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=4889929&sexo=1&t_usu=2",
+        "correo": "patricio.olavarrieta@utem.cl"
+    },
+    "calificaciones": {
+        "promedio": 2.0,
+        "totales": 9,
+        "anonimas": 4,
+        "comentarios": [
+            {
+                "_id": 123123,
+                "calificacion": 1,
+                "estudiante": {
+                    "nombre": "Jorge Andrés Verdugo Chacón",
+                    "rut": 19649846,
+                    "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=19649846&sexo=1&t_usu=1"
+                },
+                "fecha": "10-01-2019",
+                "codigoAsignatura": "ELEC8040",
+                "periodo": 149,
+                "comentario": "Es literalmente el peor profesor que he tenido en la carrera, no enseñó nada en todo el semestre, tuve que aprender todo por mi cuenta para pasar el ramo"
+            },
+            {
+                "_id": 353241,
+                "calificacion": 2,
+                "estudiante": {
+                    "nombre": "Felipe Ignacio Flores Vivanco",
+                    "rut": 19890619,
+                    "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=19890619&sexo=1&t_usu=1"
+                },
+                "fecha": "22-12-2018",
+                "codigoAsignatura": "ELEC8040",
+                "periodo": 149,
+                "comentario": "Pésimo profesor, flojo, no enseña nada. No tomen con él"
+            },
+            {
+                "_id": 234233,
+                "calificacion": 4,
+                "estudiante": {
+                    "nombre": "Daniel Alfonso Aguilera Tasso",
+                    "rut": 19287724,
+                    "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=19287724&sexo=1&t_usu=1"
+                },
+                "fecha": "15-01-2019",
+                "codigoAsignatura": "ELEC8040",
+                "periodo": 149,
+                "comentario": "El mejor profe, gracias a él pasé el ramo, aunque me duelen las rodillas"
+            },
+            {
+                "_id": 242342,
+                "calificacion": 1,
+                "estudiante": {
+                    "nombre": "Nicolás Mauricio Andrews Sandoval",
+                    "rut": 19841313,
+                    "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=19841313&sexo=1&t_usu=1"
+                },
+                "fecha": "10-01-2019",
+                "codigoAsignatura": "ELEC8040",
+                "periodo": 149,
+                "comentario": "vueno"
+            },
+            {
+                "_id": 4234233,
+                "calificacion": 1,
+                "estudiante": {
+                    "nombre": "Javiera Paz Vergara Navarro",
+                    "rut": 19841526,
+                    "fotoUrl": "https://sgu.utem.cl/pgai/perfil_foto.php?rut=19841526&sexo=1&t_usu=1"
+                },
+                "fecha": "17-01-2019",
+                "codigoAsignatura": "ELEC8040",
+                "periodo": 149,
+                "comentario": null
+            },
+        ]
+    }
+}
