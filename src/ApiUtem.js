@@ -401,6 +401,63 @@ export default class ApiUtem {
         });
     }
 
+    getNotas = (rut, id, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const token = await AsyncStorage.getItem('token');
+            const uri = "estudiantes/" + rut + "/asignaturas/" + id + "/notas";
+            
+            if (comprobar) {
+                const { esValido } = await this.checkToken(token);
+                if (esValido) {
+                    fetch(BASE_URL + uri, {
+                        headers: {
+                            Authorization: "Bearer " + token  
+                        },
+                        timeout: 60 * 1000
+                    }).then(async (response) => {
+                        console.log(response);
+                        
+                        var json = await response.json();
+                        if (response.ok) {
+                            resolve(json);
+                        } else {
+                            reject(json);
+                        }
+                    }).catch(err => {
+                        reject(err);
+                    });
+                } else {
+                    try {
+                        await this.refreshToken();
+                        const notas = await this.getNotas(rut, id, false);
+                        resolve(notas);
+                    } catch (error) {
+                        reject("La token ya no es válida");
+                    }
+                }
+            } else {
+                fetch(BASE_URL + uri, {
+                    headers: {
+                        Authorization: "Bearer " + token  
+                    },
+                    timeout: 60 * 1000
+                }).then(async (response) => {
+                    console.log(response);
+                    var json = await response.json();
+                    if (response.ok) {
+                        resolve(json);
+                    } else {
+                        reject(json);
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
+            }
+            
+            
+        });
+    }
+
     getPrincipales = (rut) => {
         return new Promise(async (resolve, reject) => {
             const { esValido } = await this.checkToken();

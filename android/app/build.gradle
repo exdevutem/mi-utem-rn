@@ -93,6 +93,7 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+/*
 def getPassword(String currentUser, String keyChain) {
    def stdout = new ByteArrayOutputStream()
    def stderr = new ByteArrayOutputStream()
@@ -108,7 +109,7 @@ def getPassword(String currentUser, String keyChain) {
 
 def keyPass = getPassword(RELEASE_KEY_ALIAS, "android_inndev_keystore")
 def keyStorePass = getPassword(RELEASE_KEY_ALIAS, "android_inndev_miutem_key")
-
+*/
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -127,6 +128,8 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+
+    /*
     signingConfigs {
         release {
             storeFile file(RELEASE_STORE_FILE)
@@ -135,6 +138,7 @@ android {
             keyPassword keyPass
         }
     }
+    */
     splits {
         abi {
             reset()
@@ -145,7 +149,7 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

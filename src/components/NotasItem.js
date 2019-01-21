@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, StyleSheet } from 'react-native';
 import colors from '../colors';
 
-export default class NotasItem extends Component{
+export default class NotasItem extends Component {
     /*
     TODO:
     - Condiciones para validar el valor del TextInput (Entre 1 y 7, solo numeros y punto, etc)

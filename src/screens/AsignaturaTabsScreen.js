@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { TabView, TabBar, SceneMap, PagerExperimental } from 'react-native-tab-view';
-import * as GestureHandler from 'react-native-gesture-handler';
+import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 
-import AsignaturaScreen from './AsignaturaScreen'
+import SeccionScreen from './SeccionScreen'
 import colors from '../colors';
 
 const initialLayout = {
@@ -27,10 +26,6 @@ export default class AsignaturaTabsScreen extends Component {
         secciones.forEach(seccion => {
             if (seccion.tipo == 'Teoria') {
                 rutas.push({ key: 'teoria', title: 'Teoría' });
-            } else if (seccion.tipo == 'Taller') {
-                rutas.push({ key: 'taller', title: 'Taller' });
-            } else if (seccion.tipo == 'Laboratorio') {
-                rutas.push({ key: 'laboratorio', title: 'Laboratorio' });
             } else {
                 rutas.push({ key: seccion.tipo.toLowerCase(), title: seccion.tipo });
             }
@@ -50,39 +45,41 @@ export default class AsignaturaTabsScreen extends Component {
 
     _parseMapa = () => {
         const secciones = this.props.navigation.getParam('secciones');
-        console.log(secciones)
         var mapa = {};
 
-        secciones.forEach(seccion => {
+        secciones.forEach((seccion, i) => {
+            const tabView = () => <SeccionScreen index={i} asignatura={asignatura} navigation={this.props.navigation} seccion={seccion}/>
+            
+            var asignatura = {
+                id: this.props.navigation.getParam('id'),
+                nombre: this.props.navigation.getParam('nombre')
+            }
+            
             if (seccion.tipo == 'Teoria') {
-                mapa['teoria'] = () => <AsignaturaScreen datos={seccion}/>
-            } else if (seccion.tipo == 'Taller') {
-                mapa['taller'] = () => <AsignaturaScreen datos={seccion}/>
-            } else if (seccion.tipo == 'Laboratorio') {
-                mapa['laboratorio'] = () => <AsignaturaScreen datos={seccion}/>
+                mapa['teoria'] = tabView;
             } else {
-                mapa[seccion.tipo.toLowerCase()] = () => <AsignaturaScreen datos={seccion}/>
+                mapa[seccion.tipo.toLowerCase()] = tabView;
             }
             
         });
         return mapa;
     }
 
-    _renderPager = props => {
-        console.log(props);
-        
-        return (<PagerExperimental GestureHandler={GestureHandler} {...props} />)
-    };
-
     render() {
         return (
-            <TabView
-                navigationState={this.state}
-                renderScene={SceneMap(this._parseMapa())}
-                renderTabBar={this._renderTabBar}
-                onIndexChange={this._handleIndexChange}
-                initialLayout={initialLayout}
-            />
+            <View style={styles.container}>
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={colors.primarioOscuro} />
+                <TabView
+                    navigationState={this.state}
+                    renderScene={SceneMap(this._parseMapa())}
+                    renderTabBar={this._renderTabBar}
+                    onIndexChange={this._handleIndexChange}
+                    initialLayout={initialLayout}
+                />
+            </View>
+            
         );
     }
 }

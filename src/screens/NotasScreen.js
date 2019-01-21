@@ -3,38 +3,34 @@ import { SafeAreaView, StatusBar, FlatList, ScrollView, StyleSheet, View, Text }
 import { TextInput } from 'react-native-gesture-handler';
 
 import NotasItem from '../components/NotasItem';
-import {notas, asignaturas} from '../static/estudiantes';
 
 export default class NotasScreen extends Component {
-    /* TODO:
-        - Hacer un parseNotas para llamarlo en el constructor
-        - Hacer calcularPresentacion(notas)
-        - Que cambiarStates cambie state.notas y state.presentacion
-    */
     constructor(props) {
         super(props);
-        var resultadoNotas = this.parseNotas();
+        var seccion = this.props.navigation.getParam("seccion");
+        
+        var resultadoNotas = this.parseNotas(seccion.notas.notas);
         this.state = {
+            seccion: seccion,
             notas: resultadoNotas,
             presentacion: this.calcularPresentacion(resultadoNotas)
         }
     }
 
-    parseNotas() {
-        var asignaturas = notas[0].notas.notas;
-
+    parseNotas(notas) {
         var listaDeNotas = [];
-        var tupla = [];
 
-        asignaturas.forEach(function(elemento){
-            tupla.push(elemento.ponderador);
-            if (elemento.nota == null) {
+        notas.forEach(function(nota) {
+            var tupla = [];
+            tupla.push(nota.ponderador);
+            
+            if (nota.nota == null) {
                 tupla.push(null);
             } else {
-                tupla.push(elemento.nota);
+                tupla.push(nota.nota);
             }
+
             listaDeNotas.push(tupla);
-            tupla = [];
         })
         
         return listaDeNotas;
@@ -66,7 +62,7 @@ export default class NotasScreen extends Component {
     
 
     render() {
-        var asignatura = notas[0];
+        var seccion = this.state.seccion;
 
         return (
             <SafeAreaView>
@@ -77,7 +73,7 @@ export default class NotasScreen extends Component {
                     <View style={styles.containerRow}>
                         <View style={styles.containerColumn}>
                         <TextInput
-                            editable={asignatura.notas.examenes[0] == null && asignatura.notas.examenes[1] == null}
+                            editable={seccion.notas.examenes[0] == null && seccion.notas.examenes[1] == null}
                             style={styles.item}>Nota Examen: ---
                         </TextInput>
                         <Text style={styles.item}>{this.state.presentacion}</Text></View>
@@ -87,7 +83,7 @@ export default class NotasScreen extends Component {
                         </View>
                     </View>
                     <FlatList   
-                        data={asignatura.notas.notas}
+                        data={seccion.notas.notas}
                         renderItem={({item, index}) => <NotasItem index={index} onChange={this.cambiarStates} nota={item}/>}
                     />
                 </ScrollView>
