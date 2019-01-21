@@ -17,6 +17,7 @@ export default class AsignaturaTabsScreen extends Component {
             index: 0,
             routes: this._renderRoutes()
         }
+        this.sceneMap = this._crearMapa();
     }
 
     _renderRoutes = () => {
@@ -39,11 +40,14 @@ export default class AsignaturaTabsScreen extends Component {
         index: index
     });
 
-    _renderTabBar = props => (
-        <TabBar {...props} style={styles.tabBar} labelStyle={styles.label} indicatorStyle={styles.indicator}/>
-    );
+    _renderTabBar = props => {
+        const secciones = this.props.navigation.getParam('secciones');
+        return (
+            <TabBar {...props} style={[styles.tabBar, secciones.length > 1 ? null : {height: 0}]} labelStyle={styles.label} indicatorStyle={styles.indicator}/>
+        )
+    };
 
-    _parseMapa = () => {
+    _crearMapa = () => {
         const secciones = this.props.navigation.getParam('secciones');
         var mapa = {};
 
@@ -63,6 +67,7 @@ export default class AsignaturaTabsScreen extends Component {
             
         });
         return mapa;
+        
     }
 
     render() {
@@ -73,7 +78,7 @@ export default class AsignaturaTabsScreen extends Component {
                     backgroundColor={colors.primarioOscuro} />
                 <TabView
                     navigationState={this.state}
-                    renderScene={SceneMap(this._parseMapa())}
+                    renderScene={SceneMap(this.sceneMap)}
                     renderTabBar={this._renderTabBar}
                     onIndexChange={this._handleIndexChange}
                     initialLayout={initialLayout}

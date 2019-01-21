@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, StatusBar, FlatList, ScrollView, StyleSheet, View, Text } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
+import colors from '../colors';
 import NotasItem from '../components/NotasItem';
 
 export default class NotasScreen extends Component {
@@ -65,27 +66,47 @@ export default class NotasScreen extends Component {
         var seccion = this.state.seccion;
 
         return (
-            <SafeAreaView>
+            <SafeAreaView style={styles.container}>
                 <StatusBar
                     barStyle="light-content"
                     backgroundColor={colors.primarioOscuro} />
                 <ScrollView>
-                    <View style={styles.containerRow}>
-                        <View style={styles.containerColumn}>
-                        <TextInput
-                            editable={seccion.notas.examenes[0] == null && seccion.notas.examenes[1] == null}
-                            style={styles.item}>Nota Examen: ---
-                        </TextInput>
-                        <Text style={styles.item}>{this.state.presentacion}</Text></View>
+                    <View style={[styles.rowContainer, styles.card]}>
+                        <View style={styles.columnContainer}>
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.item}>Examen:</Text>
+                                <TextInput
+                                    editable={seccion.notas.examenes[0] == null}
+                                    underlineColorAndroid={colors.material.grey['500']}
+                                    style={styles.item}>
+                                    {seccion.notas.examenes[0]}
+                                </TextInput>
+                            </View>
+                            
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.item}>Presentacion:</Text>
+                                <TextInput
+                                    editable={false}
+                                    underlineColorAndroid={colors.material.grey['500']}
+                                    style={styles.item}>
+                                    {this.state.presentacion}
+                                </TextInput>
+                            </View>
+                            
+                        </View>
 
-                        <View style={styles.containerColumn}><Text style={styles.item}>Nota Final:</Text>
-                        <Text style={styles.item}>{this.state.presentacion}</Text>
+                        <View style={styles.columnContainer}>
+                            <Text style={styles.presentacionTexto}>{this.state.presentacion}</Text>
+                            <Text style={styles.estadoTexto}>{seccion.notas.observacion}</Text>
                         </View>
                     </View>
-                    <FlatList   
-                        data={seccion.notas.notas}
-                        renderItem={({item, index}) => <NotasItem index={index} onChange={this.cambiarStates} nota={item}/>}
-                    />
+
+                    <View style={styles.card}>
+                        <FlatList   
+                            data={seccion.notas.notas}
+                            renderItem={({item, index}) => <NotasItem index={index} onChange={this.cambiarStates} nota={item}/>}
+                        />
+                    </View>
                 </ScrollView>
             </SafeAreaView>
         );
@@ -93,21 +114,36 @@ export default class NotasScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    containerRow:{
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'space-between'
+    container: {
+        flex: 1,
+        backgroundColor: colors.material.grey['200'],
     },
-    containerColumn:{
-        flexDirection: "column",
-        alignItems: 'center',
-        justifyContent: 'space-between',
+    rowContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    item:{
-        backgroundColor: colors.primarioOscuro,
-        alignItems: 'center',
-        padding: 20,
+    card: {
+        backgroundColor: 'white',
         margin: 10,
+        borderRadius: 5,
+        elevation: 2,
+        padding: 20
+    },
+    columnContainer: {
+        flex: 1,
+        flexDirection: "column",
+        alignItems: 'center'
+    },
+    presentacionTexto: {
+        fontSize: 60,
+        fontWeight: 'bold'
+    },
+    estadoTexto: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    item: {
+        alignItems: 'center',
         fontSize: 15
     }
 })

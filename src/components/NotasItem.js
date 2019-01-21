@@ -22,34 +22,56 @@ export default class NotasItem extends Component {
 
         return(
             <View style={styles.container}>
-                <Text style={styles.item}>{tipo}:</Text>
-                <TextInput
-                    onChangeText={(nuevoTexto) => {
-                        this.setState({
-                            valorInput: nuevoTexto
-                        });
-                        this.props.onChange(i, nuevoTexto);
-                    }}
-                    editable={nota == null}
-                    style={styles.item}>{nota ? nota : ''}</TextInput>
-                <Text style={styles.item}>{(ponderador)*100}%</Text>
+                <View style={styles.columna}>
+                    <Text style={styles.tipoText}>{tipo}:</Text>
+                </View>
+                
+                <View style={styles.columna}>
+                    <TextInput
+                        onChangeText={(nuevoTexto) => {
+                            this.setState({
+                                valorInput: nuevoTexto
+                            });
+                            this.props.onChange(i, nuevoTexto);
+                        }}
+                        editable={nota == null}
+                        underlineColorAndroid={colors.material.grey['500']}
+                        style={[styles.notaInput, (nota == null) ? null : {fontWeight: 'bold'}]}>
+                        {nota ? nota : ''}
+                    </TextInput>
+                </View>
+                
+                <View style={styles.columna}>
+                    <Text style={styles.ponderadorText}>{(ponderador)*100}%</Text>
+                </View>
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    container: {
+        flexDirection: 'row'
     },
-    item:{
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingTop: 20,
-        margin: 10,
+    columna: {
+        flex: 1,
         alignItems: 'center',
-        fontSize: 15,
-        backgroundColor: colors.material.grey['100']
+        justifyContent: 'center'
+    },
+    tipoText: {
+        textAlign: 'right',
+        alignSelf: 'flex-end',
+        fontSize: 15
+    },
+    notaInput: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        paddingHorizontal: 10
+    },
+    ponderadorText: {
+        textAlign: 'left',
+        alignSelf: 'flex-start',
+        fontWeight: 'bold',
+        fontSize: 15
     }
 })

@@ -118,7 +118,7 @@ const MainStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: navigation.getParam('nombre', 'Asignatura'),
       headerStyle: {
-        elevation: ES_IOS ? null : 0,
+        elevation: (ES_IOS || (navigation.getParam('secciones').length >= 1)) ? null : 0, // TODO: Arreglar la elevación para asinaturas sin tab bar
         backgroundColor: ES_IOS ? 'white' : colors.primario
       }
     })
