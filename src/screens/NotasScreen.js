@@ -78,7 +78,8 @@ export default class NotasScreen extends Component {
                                 <TextInput
                                     editable={seccion.notas.examenes[0] == null}
                                     underlineColorAndroid={colors.material.grey['500']}
-                                    style={styles.item}>
+                                    style={styles.item}
+                                    keyboardType = 'numeric'>
                                     {seccion.notas.examenes[0]}
                                 </TextInput>
                             </View>
@@ -88,7 +89,8 @@ export default class NotasScreen extends Component {
                                 <TextInput
                                     editable={false}
                                     underlineColorAndroid={colors.material.grey['500']}
-                                    style={styles.item}>
+                                    style={styles.item}
+                                    keyboardType={'numeric'}>
                                     {this.state.presentacion}
                                 </TextInput>
                             </View>

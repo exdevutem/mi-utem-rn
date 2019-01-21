@@ -29,11 +29,18 @@ export default class NotasItem extends Component {
                 <View style={styles.columna}>
                     <TextInput
                         onChangeText={(nuevoTexto) => {
+                            if(Number(nuevoTexto) <= 7 && Number(nuevoTexto)>= 1){
                             this.setState({
                                 valorInput: nuevoTexto
                             });
                             this.props.onChange(i, nuevoTexto);
-                        }}
+                        }else{
+                            this.setState({
+                                valorInput: 0
+                            });
+                            this.props.onChange(i, 0);
+                        }}}
+                        keyboardType='numeric'
                         editable={nota == null}
                         underlineColorAndroid={colors.material.grey['500']}
                         style={[styles.notaInput, (nota == null) ? null : {fontWeight: 'bold'}]}>
