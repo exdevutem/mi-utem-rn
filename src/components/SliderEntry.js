@@ -35,7 +35,7 @@ export default class SliderEntry extends Component {
     }
 
     render () {
-        const { data: { id, title, subtitle } } = this.props;
+        const { data: { id, title, subtitle, url } } = this.props;
 
         const uppercaseTitle = title ? (
             <Text
@@ -49,7 +49,7 @@ export default class SliderEntry extends Component {
             <TouchableOpacity
               activeOpacity={1}
               style={styles.slideInnerContainer}
-              onPress={() => { this.props.onPress(id, title) }}>
+              onPress={() => { this.props.onPress(id, title, url) }}>
                 <View style={styles.shadow} />
                 <View style={ styles.imageContainer }>
                     { this.image }

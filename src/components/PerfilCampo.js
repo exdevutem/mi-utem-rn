@@ -12,7 +12,7 @@ export default class PerfilCampo extends Component {
         return(
             <View style={styles.container}>
                 <Text style={styles.textoEtiqueta}>{this.props.etiqueta}</Text>
-                <TextInput value={this.props.valor} editable={false} ></TextInput>
+                <TextInput style={styles.textInput} value={this.props.valor} editable={false} ></TextInput>
             </View>
         );
     }
@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
         paddingVertical: ES_IOS ? 10 : 5
+    },
+    textInput: {
+        color: 'black'
     },
     textoEtiqueta: {
         fontWeight: 'bold'

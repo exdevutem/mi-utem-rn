@@ -11,33 +11,73 @@ export default class NotasItem extends Component {
 
     constructor(props) {
         super(props);
+        const {nota} = this.props.nota;
         this.state = {
-            valorInput: ''
+            valorInput: nota ? nota.toFixed(1) : ''
         }
     }
 
-    render(){
+    _getNombreNota = (nombre) => {
+        var nuevoNombre = nombre;
+        
+        if (nombre == "Nota Acum.") {
+            nuevoNombre = "Acumulativa";
+        } else if (nombre == "Trabaj") {
+            nuevoNombre = "Trabajo";
+        }
+        return nuevoNombre;
+    }
+
+    _onBlur = () => {
+        if (this.state.valorInput != '') {
+            if (parseFloat(this.state.valorInput) > 7) {
+                this.setState({
+                    valorInput: (7).toFixed(1)
+                });
+            } else {
+                this.setState((statePrevio) => ({
+                    valorInput: parseFloat(statePrevio.valorInput).toFixed(1)
+                }));
+            }
+        }
+    }
+
+    render() {
         const {tipo, ponderador, nota} = this.props.nota;
         const i = this.props.index;
 
         return(
             <View style={styles.container}>
                 <View style={styles.columna}>
-                    <Text style={styles.tipoText}>{tipo}:</Text>
+                    <Text style={styles.tipoText}>{this._getNombreNota(tipo)}:</Text>
                 </View>
                 
                 <View style={styles.columna}>
                     <TextInput
                         onChangeText={(nuevoTexto) => {
+                            const caracteres = '0123456789.';
+                            var textoLimpio = '';
+
+                            for (var j = 0; j < nuevoTexto.length; j++) {
+                                if (caracteres.indexOf(nuevoTexto[j]) > -1 ) {
+                                    textoLimpio += nuevoTexto[j];
+                                } else {
+                                    // your call back function
+                                }
+                            }
+
                             this.setState({
-                                valorInput: nuevoTexto
+                                valorInput: textoLimpio
                             });
-                            this.props.onChange(i, nuevoTexto);
+                            this.props.onChange(i, textoLimpio);
                         }}
-                        editable={nota == null}
-                        underlineColorAndroid={colors.material.grey['500']}
-                        style={[styles.notaInput, (nota == null) ? null : {fontWeight: 'bold'}]}>
-                        {nota ? nota : ''}
+                        onBlur={this._onBlur}
+                        keyboardType='numeric'
+                        maxLength={3}
+                        editable={this.props.disable || nota == null}
+                        underlineColorAndroid={this.props.disable ? null : colors.material.grey['500']}
+                        style={[styles.notaInput, (nota == null) ? null : {fontWeight: 'bold'}]}
+                        value={this.state.valorInput}>
                     </TextInput>
                 </View>
                 
@@ -66,7 +106,8 @@ const styles = StyleSheet.create({
     notaInput: {
         alignSelf: 'center',
         textAlign: 'center',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        color: 'black'
     },
     ponderadorText: {
         textAlign: 'left',

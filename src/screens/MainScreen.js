@@ -38,6 +38,7 @@ export default class MainScreen extends Component {
                     
                     resolve({
                         id: noticia.id,
+                        url: noticia.link,
                         title: noticia.title.rendered,
                         subtitle: excerpt != "" ? excerpt : content,
                         illustration: media.guid.rendered
@@ -63,13 +64,13 @@ export default class MainScreen extends Component {
         
     }
 
-    _onPress = (id, titulo) => {
+    _onPress = (id, titulo, url) => {
         //this.props.navigation.navigate('Noticia', {title: titulo, id: id});
-        if (ES_IOS) {
-            Alert.alert('Esta función pronto estará diponible 💪 ');
-        } else {
-            ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
-        }
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            }
+        });
     }
 
     _renderNoticiaItem ({item, index}, parallaxProps) {

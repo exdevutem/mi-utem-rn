@@ -10,15 +10,27 @@ export default class NotasScreen extends Component {
         super(props);
         var seccion = this.props.navigation.getParam("seccion");
         
-        var resultadoNotas = this.parseNotas(seccion.notas.notas);
+        var resultadoNotas = this._parseNotas(seccion.notas.notas);
         this.state = {
             seccion: seccion,
             notas: resultadoNotas,
-            presentacion: this.calcularPresentacion(resultadoNotas)
+            presentacion: this._calcularPresentacion(resultadoNotas)
         }
     }
 
-    parseNotas(notas) {
+    _getEstado = (estado) => {
+        var nuevoEstado = estado;
+        if (estado == "I") {
+            nuevoEstado = "Inscrito";
+        } else if (estado == "A") {
+            nuevoEstado = "Aprobado";
+        } else if (estado == "R") {
+            nuevoEstado = "Reprobado";
+        }
+        return nuevoEstado;
+    }
+
+    _parseNotas(notas) {
         var listaDeNotas = [];
 
         notas.forEach(function(nota) {
@@ -37,7 +49,7 @@ export default class NotasScreen extends Component {
         return listaDeNotas;
     }
 
-    calcularPresentacion(listaDeNotas) {
+    _calcularPresentacion(listaDeNotas) {
         var notaFinal = 0;
 
         listaDeNotas.forEach(function(elemento) {
@@ -48,21 +60,22 @@ export default class NotasScreen extends Component {
         return notaFinal.toFixed(1);
     }
 
-    cambiarStates = (i, nota) => { 
+    _cambiarStates = (i, nota) => { 
         const lista = this.state.notas;
         
-        const nuevaNota = parseFloat(nota) || null;
+        var nuevaNota = parseFloat(nota) || null;
+        if (nuevaNota > 7) {
+            nuevaNota = 7;
+        }
 
         lista[i][1] = nuevaNota;
         
         this.setState({
-            presentacion: this.calcularPresentacion(lista)
+            presentacion: this._calcularPresentacion(lista)
         });
     }
 
-    
-
-    render() {
+    render () {
         var seccion = this.state.seccion;
 
         return (
@@ -97,14 +110,14 @@ export default class NotasScreen extends Component {
 
                         <View style={styles.columnContainer}>
                             <Text style={styles.presentacionTexto}>{this.state.presentacion}</Text>
-                            <Text style={styles.estadoTexto}>{seccion.notas.observacion}</Text>
+                            <Text style={styles.estadoTexto}>{this._getEstado(seccion.notas.observacion)}</Text>
                         </View>
                     </View>
 
                     <View style={styles.card}>
                         <FlatList   
                             data={seccion.notas.notas}
-                            renderItem={({item, index}) => <NotasItem index={index} onChange={this.cambiarStates} nota={item}/>}
+                            renderItem={({item, index}) => <NotasItem index={index} onChange={this._cambiarStates} nota={item}/>}
                         />
                     </View>
                 </ScrollView>

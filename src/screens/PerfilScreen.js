@@ -162,7 +162,21 @@ export default class PerfilScreen extends Component {
                     <Text style={styles.textoNombre}>{nombre != null ? (nombre.completo ? nombre.completo : (nombre.apellidos ? nombre.nombres + " " + nombre.apellidos : nombre)) : ""}</Text>
                     <Text style={styles.textoCorreo}>{this.state.perfil ? this.state.perfil.correoUtem : ""}</Text>
                 </View>
-                <View style={styles.container}>
+                
+                <FlatList
+                    data={this.state.campos}
+                    style={styles.lista}
+                    renderItem={({item}) => 
+                        <PerfilCampo etiqueta={item.etiqueta} valor={item.valor}/>
+                    }/>
+            </ScrollView>
+        );
+
+    }
+}
+
+/*
+<View style={styles.container}>
                     <Text style={styles.textoEtiqueta}>Sexo</Text>
                 </View>
                 <Picker selectedValue={this.state.language}
@@ -213,18 +227,7 @@ export default class PerfilScreen extends Component {
                     }}
                     onDateChange={(date) => {this.setState({date: date})}}
                 />
-                
-                <FlatList
-                    data={this.state.campos}
-                    style={styles.lista}
-                    renderItem={({item}) => 
-                        <PerfilCampo etiqueta={item.etiqueta} valor={item.valor}/>
-                    }/>
-            </ScrollView>
-        );
-
-    }
-}
+                */
 
 const styles = StyleSheet.create({
     headerContainer: {
