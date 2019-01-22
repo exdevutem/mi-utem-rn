@@ -149,11 +149,13 @@ export default class SeccionScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.material.grey['200']
+        backgroundColor: colors.material.grey['200'],
+        paddingVertical: 5,
     },
     card: {
         backgroundColor: 'white',
-        margin: 10,
+        marginHorizontal: 10,
+        marginVertical: 5,
         borderRadius: 5,
         padding: 20,
         elevation: 2
