@@ -23,12 +23,13 @@ export default class PerfilCampo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            valorActual: this.props.valor ? this.props.valor : '' 
+            valorActual: this.props.valor ? this.props.valor : '',
+            valorInicial: this.props.valor ? this.props.valor : '',
         }
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.valor !== prevState.valorActual ) {
+        if (nextProps.valor !== prevState.valorInicial) {
             return {valorActual: nextProps.valor ? nextProps.valor : ''};
         }
     }
@@ -39,10 +40,25 @@ export default class PerfilCampo extends Component {
         });
     }
 
+    _onDateChange = (nuevaFecha) => {
+        console.log(nuevaFecha);
+        
+        this.setState({
+            valorActual: nuevaFecha
+        });
+        this._onEndEditing("nacimiento", "nacimiento", nuevaFecha)
+    }
+
     _renderPickerItem = (label, value) => {
         return(
-            <Picker.Item label={label} value= {value}></Picker.Item>
+            <Picker.Item label={label} value={value}></Picker.Item>
         )
+    }
+
+    _onEndEditing = (atributo, campo, valor) => {
+        if (this.state.valorActual != this.state.valorInicial) {
+            this.props.onEdit(atributo, campo, valor);
+        }
     }
 
     _renderInput = (tipo, valor, editable) => {
@@ -55,10 +71,11 @@ export default class PerfilCampo extends Component {
                         onChangeText={this._onTextInputChange}
                         keyboardType="email-address"
                         textContentType="emailAddress"
+                        onEndEditing={() => this._onEndEditing("correoPersonal", "correo", this.state.valorActual)}
                         editable={editable}>
                     </TextInput>
                 )
-            case "telefono":
+            case "movil":
                 return (
                     <TextInput
                         style={styles.textInput}
@@ -66,6 +83,19 @@ export default class PerfilCampo extends Component {
                         keyboardType="phone-pad"
                         textContentType="telephoneNumber"
                         onChangeText={this._onTextInputChange}
+                        onEndEditing={() => this._onEndEditing("telefonoMovil", "movil", parseInt(this.state.valorActual))}
+                        editable={editable}>
+                    </TextInput>
+                )
+            case "fijo":
+                return (
+                    <TextInput
+                        style={styles.textInput}
+                        value={this.state.valorActual}
+                        keyboardType="phone-pad"
+                        textContentType="telephoneNumber"
+                        onChangeText={this._onTextInputChange}
+                        onEndEditing={() => this._onEndEditing("telefonoFijo", "fijo", parseInt(this.state.valorActual))}
                         editable={editable}>
                     </TextInput>
                 )
@@ -76,6 +106,7 @@ export default class PerfilCampo extends Component {
                         value={this.state.valorActual}
                         textContentType="fullStreetAddress"
                         onChangeText={this._onTextInputChange}
+                        onEndEditing={() => this._onEndEditing("telefonoFijo", "fijo", parseInt(this.state.valorActual))}
                         editable={editable}>
                     </TextInput>
                 )
@@ -93,6 +124,7 @@ export default class PerfilCampo extends Component {
                         confirmBtnText="Aceptar"
                         cancelBtnText="Cancelar"
                         androidMode="spinner"
+                        onDateChange={(date) => {this._onDateChange(date)}}
                         customStyles={{
                             dateInput: {
                                 flex: 1,

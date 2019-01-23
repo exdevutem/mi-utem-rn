@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform,Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar, RefreshControl, ActivityIndicator } from 'react-native';
+import { ToastAndroid, Platform,Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar, RefreshControl, ActivityIndicator } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import PerfilCampo from '../components/PerfilCampo';
@@ -29,6 +29,37 @@ export default class PerfilScreen extends Component {
             estaActualizando: false,
             estaCargando: true,
         }
+    }
+
+    _setPerfil = async (atributo, campo, valor) => {
+        const rut = await AsyncStorage.getItem('rut');
+        const key = rut;
+        try {
+            var parametros = {};
+            parametros[campo] = valor;
+            console.log("parametros", parametros);
+            const respuesta = await apiUtem.setPerfil(rut, parametros);
+            var nuevoPerfil = this.state.perfil;
+            console.log(nuevoPerfil);
+            nuevoPerfil[atributo] = valor
+            console.log(nuevoPerfil);
+            
+            cache.setItem(key, nuevoPerfil, (err) => {
+                if (err) console.error(err);
+                ToastAndroid.show('Se actualizaron tus datos correctamente', ToastAndroid.SHORT);
+            });
+        } catch (err) {
+            console.log(err);
+            
+            this.setState({
+                estaCargando: true
+            });
+            this.setState({
+                estaCargando: false
+            });
+            ToastAndroid.show('No se pudieron actualizar tus datos', ToastAndroid.SHORT);
+        }
+        
     }
 
     _getPerfil = async (forzarApi) => {
@@ -67,7 +98,7 @@ export default class PerfilScreen extends Component {
 
         campos.push({
             etiqueta: "Correo personal",
-            valor: estudiante.correoPersonal ? estudiante.correoPersonal.toString() : "",
+            valor: estudiante.correoPersonal,
             editable: true,
             tipo: "email"
         });
@@ -90,22 +121,24 @@ export default class PerfilScreen extends Component {
             etiqueta: "Telefono móvil",
             valor: estudiante.telefonoMovil ? estudiante.telefonoMovil.toString() : "",
             editable: true,
-            tipo: "telefono"
+            tipo: "movil"
         });
 
         campos.push({
             etiqueta: "Telefono fijo",
             valor: estudiante.telefonoFijo ? estudiante.telefonoFijo.toString() : "",
             editable: true,
-            tipo: "telefono"
+            tipo: "fijo"
         });
 
+        /*
         campos.push({
             etiqueta: "Dirección",
             valor: estudiante.direccion && estudiante.direccion.direccion ? estudiante.direccion.direccion : "",
             editable: true,
             tipo: "direccion"
         });
+        */
         
         this.setState({
             campos: campos,
@@ -119,7 +152,7 @@ export default class PerfilScreen extends Component {
         this._getPerfil();
     }
 
-    
+
 
     render() {
         const nombre = this.state.perfil ? this.state.perfil.nombre : null;
@@ -173,7 +206,7 @@ export default class PerfilScreen extends Component {
                         style={styles.lista}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({item}) => 
-                            <PerfilCampo etiqueta={item.etiqueta} valor={item.valor} editable={item.editable} tipo={item.tipo}/>
+                            <PerfilCampo etiqueta={item.etiqueta} valor={item.valor} editable={item.editable} tipo={item.tipo} onEdit={this._setPerfil}/>
                     } />
                 </View>
             </ScrollView>

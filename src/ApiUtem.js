@@ -3,6 +3,17 @@ import {AsyncStorage} from 'react-native';
 const BASE_URL = 'https://api-utem.herokuapp.com/';
 
 export default class ApiUtem {
+    objetoAUri = (objeto) => {
+        var uri = '';
+        for (const key in objeto) {
+            if (uri != '') {
+                uri += '&'
+            }
+            uri += encodeURIComponent(key) + '=' + encodeURIComponent(objeto[key])
+        }
+        return uri;
+    }
+
     getToken = (correo, contrasenia) => {
         return new Promise(async (resolve, reject) => {
             fetch(BASE_URL + 'token', {
@@ -136,6 +147,76 @@ export default class ApiUtem {
                 }).catch(err => {
                     reject(err);
                 });
+            }
+        });
+    }
+
+    put = (uri, parametros, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const token = await AsyncStorage.getItem('token');
+            
+            if (comprobar) {
+                const { esValido } = await this.checkToken(token);
+                if (esValido) {
+                    fetch(BASE_URL + uri, {
+                        method: 'PUT',
+                        headers: {
+                            Authorization: "Bearer " + token,
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: this.objetoAUri(parametros),
+                        timeout: 60 * 1000
+                    }).then(async (response) => {
+                        var json = await response.json();
+                        if (response.ok) {
+                            resolve(json);
+                        } else {
+                            reject(json);
+                        }
+                    }).catch(err => {
+                        reject(err);
+                    });
+                } else {
+                    try {
+                        await this.refreshToken();
+                        const json = await this.get(uri, false);
+                        resolve(json);
+                    } catch (error) {
+                        reject("La token ya no es válida");
+                    }
+                }
+            } else {
+                fetch(BASE_URL + uri, {
+                    headers: {
+                        Authorization: "Bearer " + token  
+                    },
+                    timeout: 60 * 1000
+                }).then(async (response) => {
+                    var json = await response.json();
+                    if (response.ok) {
+                        resolve(json);
+                    } else {
+                        reject(json);
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
+            }
+        });
+    }
+
+    setPerfil = (rut, parametros, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "estudiantes/" + rut;
+            
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const respuesta = await this.put(uri, parametros, comprobar)
+                resolve(respuesta)
+            } catch (err) {
+                reject(err)
             }
         });
     }
