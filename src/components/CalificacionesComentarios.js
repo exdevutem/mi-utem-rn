@@ -12,18 +12,16 @@ export default class ComentariosCalificaciones extends Component {
         const {comentario} = this.props;
         return(
             <View style={styles.container}>
-                <View style={styles.card}>
-                    <View style={styles.docenteContainer}>
-                        <Image source={{uri: comentario.estudiante.fotoUrl}} style={styles.foto} />
-                        <View style={styles.datosDocenteContainer}>
-                            <Text 
-                                style={styles.nombreDocenteTexto}
-                                numberOfLines={2}>
-                                {comentario.estudiante.nombre}
-                            </Text>
-                            <Text>{comentario.calificacion} ★ {comentario.fecha}</Text>
-                            <Text>{comentario.comentario}</Text>
-                        </View>
+                <View style={styles.docenteContainer}>
+                    <Image source={{uri: comentario.estudiante.fotoUrl}} style={styles.foto} />
+                    <View style={styles.datosContainer}>
+                        <Text 
+                            style={styles.nombreTexto}
+                            numberOfLines={2}>
+                            {comentario.estudiante.nombre}
+                        </Text>
+                        <Text>{comentario.calificacion} ★ {comentario.fecha}</Text>
+                        <Text>{comentario.comentario}</Text>
                     </View>
                 </View>
             </View>
@@ -34,24 +32,26 @@ export default class ComentariosCalificaciones extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 5,
+        paddingVertical: 10,
     },
     textoNombre: {
         fontWeight: 'bold',
         fontSize: 16
     },
     foto: {
-        height: 80,
-        width: 80,
-        borderRadius: 35,
+        height: 60,
+        width: 60,
+        borderRadius: 30,
         marginRight: 20
     },
     docenteContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'flex-start'
     },
-    nombreDocenteTexto: {
-        fontWeight: 'bold',
-        fontSize: 16
+    datosContainer: {
+        flex: 1
+    },
+    nombreTexto: {
+        fontWeight: 'bold'
     },
 });

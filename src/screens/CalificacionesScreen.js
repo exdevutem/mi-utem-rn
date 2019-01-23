@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, FlatList, StyleSheet, View, Image, Text } from 'react-native';
+import { Platform, StatusBar, FlatList, StyleSheet, View, Image, Text, ScrollView } from 'react-native';
 import {calificaciones} from '../static/estudiantes'
-import ScrollView from 'react-native-directed-scrollview';
 import ComentariosCalificaciones from '../components/CalificacionesComentarios';
 const ES_IOS = Platform.OS === 'ios';
 
@@ -32,26 +31,24 @@ export default class CalificacionesScreen extends Component {
     render() {
         const {calificaciones} = this.state;
         return (
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 <StatusBar
                     barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
-                <View style={styles.container}>
-                    <View style={styles.card}>
-                        <View style={styles.docenteContainer}>
-                            <Image source={{uri: calificaciones ? calificaciones.docente.fotoUrl : ''}} style={styles.foto} />
-                            <View style={styles.datosDocenteContainer}>
-                                <Text 
-                                    style={styles.nombreDocenteTexto}
-                                    numberOfLines={2}>
-                                    {calificaciones ? calificaciones.docente.nombre : ''}
-                                </Text>
-                                <Text> {calificaciones ? calificaciones.docente.correo : ''}</Text>
-                            </View>
+                <View style={styles.card}>
+                    <View style={styles.docenteContainer}>
+                        <Image source={{uri: calificaciones ? calificaciones.docente.fotoUrl : ''}} style={styles.foto} />
+                        <View style={styles.datosDocenteContainer}>
+                            <Text 
+                                style={styles.nombreDocenteTexto}
+                                numberOfLines={2}>
+                                {calificaciones ? calificaciones.docente.nombre : ''}
+                            </Text>
+                            <Text> {calificaciones ? calificaciones.docente.correo : ''}</Text>
                         </View>
                     </View>
                 </View>
-                <View>
+                <View style={styles.card}>
                     <Text style={styles.textoNombre}>Comentarios</Text>
                     <FlatList
                         data={calificaciones ? calificaciones.calificaciones.comentarios : []}
@@ -68,21 +65,9 @@ export default class CalificacionesScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: 'white',
-        margin: 10,
-        borderRadius: 5,
-        padding: 20,
-        elevation: 2
-    },
     container: {
         flex: 1,
-        backgroundColor: colors.material.grey['200'],
-        paddingVertical: 5,
-    },
-    textoNombre: {
-        fontWeight: 'bold',
-        fontSize: 16
+        backgroundColor: colors.material.grey['200']
     },
     foto: {
         height: 80,
@@ -94,8 +79,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+    datosDocenteContainer: {
+        flex: 1,
+        flexDirection: 'column',
+    },
     nombreDocenteTexto: {
         fontWeight: 'bold',
         fontSize: 16
+    },
+    card: {
+        backgroundColor: 'white',
+        margin: 10,
+        borderRadius: 5,
+        padding: 20,
+        elevation: 2
     },
 });
