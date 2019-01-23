@@ -67,13 +67,13 @@ export default class Drawer extends Component {
                     items.navigation.navigate('Horarios')
                 }
                 break;
-            case 'Calificaciones':
+            /*case 'Calificaciones':
                 if (ES_IOS) {
                     Alert.alert('Esta función pronto estará diponible 💪 ');
                 } else {
                     ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
                 }
-                break;
+                break;*/
         
             default:
                 items.onItemPress({ route, focused })
