@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, Text, View, TextInput, StyleSheet, Image } from 'react-native';
-
+import GeneralStarExample from '../components/CalificacionEstrellas';
 const ES_IOS = Platform.OS === 'ios';
 
 export default class ComentariosCalificaciones extends Component {
@@ -20,7 +20,8 @@ export default class ComentariosCalificaciones extends Component {
                             numberOfLines={2}>
                             {comentario.estudiante.nombre}
                         </Text>
-                        <Text>{comentario.calificacion} ★ {comentario.fecha}</Text>
+                        <GeneralStarExample bool={true} valor={comentario.calificacion} tamaño={10}></GeneralStarExample>
+                        <Text> {comentario.fecha}</Text>
                         <Text>{comentario.comentario}</Text>
                     </View>
                 </View>

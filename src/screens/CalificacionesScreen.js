@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StatusBar, FlatList, StyleSheet, View, Image, Text, ScrollView } from 'react-native';
 import {calificaciones} from '../static/estudiantes'
 import ComentariosCalificaciones from '../components/CalificacionesComentarios';
+import GeneralStarExample from '../components/CalificacionEstrellas';
 const ES_IOS = Platform.OS === 'ios';
 
 export default class CalificacionesScreen extends Component {
@@ -45,6 +46,8 @@ export default class CalificacionesScreen extends Component {
                                 {calificaciones ? calificaciones.docente.nombre : ''}
                             </Text>
                             <Text> {calificaciones ? calificaciones.docente.correo : ''}</Text>
+                            <Text> Total evaluaciones: {calificaciones ? calificaciones.calificaciones.totales:''} </Text>
+                            <GeneralStarExample bool={true} valor={calificaciones ? calificaciones.calificaciones.promedio : ''} tamaño={25}></GeneralStarExample>
                         </View>
                     </View>
                 </View>
