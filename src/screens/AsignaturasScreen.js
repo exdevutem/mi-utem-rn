@@ -96,8 +96,7 @@ export default class AsignaturasScreen extends Component {
                             refreshing={this.state.estaCargando}
                             onRefresh={this._refreshCarreras.bind(this)}
                             title="Pull to refresh"
-                            tintColor={colors.primario}
-                            titleColor="#fff"
+                            colors={[colors.primario]}
                          />
                       }
                     keyExtractor={(item) => item._id.toString()}

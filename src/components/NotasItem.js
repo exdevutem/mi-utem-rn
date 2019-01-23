@@ -11,9 +11,20 @@ export default class NotasItem extends Component {
 
     constructor(props) {
         super(props);
-        const {nota} = this.props.nota;
+        const nota = this.props.nota[1];
         this.state = {
-            valorInput: nota ? nota.toFixed(1) : ''
+            valorInput: nota ? nota.toFixed(1) : '',
+            notaInicial: nota ? nota.toFixed(1) : ''
+        }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const nota = nextProps.nota[1];
+        if (nota !== prevState.notaInicial) {
+            return {
+                valorInput: nota ? nota.toFixed(1) : '',
+                notaInicial: nota ? nota.toFixed(1) : ''
+            }
         }
     }
 
@@ -43,7 +54,11 @@ export default class NotasItem extends Component {
     }
 
     render() {
-        const {tipo, ponderador, nota} = this.props.nota;
+        const tipo = this.props.nota[3];
+        const ponderador = this.props.nota[0];
+        const editable = this.props.nota[2];
+        const nota = this.props.nota[1];
+
         const i = this.props.index;
 
         return(
@@ -74,15 +89,15 @@ export default class NotasItem extends Component {
                         onBlur={this._onBlur}
                         keyboardType='numeric'
                         maxLength={3}
-                        editable={this.props.disable || nota == null}
+                        editable={!this.props.disable || editable}
                         underlineColorAndroid={this.props.disable ? null : colors.material.grey['500']}
-                        style={[styles.notaInput, (nota == null) ? null : {fontWeight: 'bold'}]}
+                        style={[styles.notaInput, editable ? null : {fontWeight: 'bold'}]}
                         value={this.state.valorInput}>
                     </TextInput>
                 </View>
                 
                 <View style={styles.columna}>
-                    <Text style={styles.ponderadorText}>{(ponderador)*100}%</Text>
+                    <Text style={styles.ponderadorText}>{parseFloat(ponderador.toFixed(2)) * 100}%</Text>
                 </View>
             </View>
         );

@@ -89,17 +89,18 @@ export default class ApiUtem {
         });
     }
 
-    getPerfil = (rut, comprobar) => {
+    get = (uri, comprobar) => {
         return new Promise(async (resolve, reject) => {
             const token = await AsyncStorage.getItem('token');
-            const uri = "estudiantes/" + rut;
+            
             if (comprobar) {
                 const { esValido } = await this.checkToken(token);
                 if (esValido) {
                     fetch(BASE_URL + uri, {
                         headers: {
                             Authorization: "Bearer " + token  
-                        }
+                        },
+                        timeout: 60 * 1000
                     }).then(async (response) => {
                         var json = await response.json();
                         if (response.ok) {
@@ -113,8 +114,8 @@ export default class ApiUtem {
                 } else {
                     try {
                         await this.refreshToken();
-                        const perfil = await this.getPerfil(rut, false);
-                        resolve(perfil);
+                        const json = await this.get(uri, false);
+                        resolve(json);
                     } catch (error) {
                         reject("La token ya no es válida");
                     }
@@ -123,7 +124,8 @@ export default class ApiUtem {
                 fetch(BASE_URL + uri, {
                     headers: {
                         Authorization: "Bearer " + token  
-                    }
+                    },
+                    timeout: 60 * 1000
                 }).then(async (response) => {
                     var json = await response.json();
                     if (response.ok) {
@@ -135,383 +137,150 @@ export default class ApiUtem {
                     reject(err);
                 });
             }
-            
-            
-        });
-    }
-
-    getHorarios = (rut, comprobar) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            const uri = "estudiantes/" + rut + "/horarios";
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        }
-                    }).then(async (response) => {
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const horarios = await this.getHorarios(rut, false);
-                        resolve(horarios);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(async (response) => {
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            }
-            
-            
-        });
-    }
-
-    getCarreras = (rut, comprobar) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            const uri = "estudiantes/" + rut + "/carreras";
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        }
-                    }).then(async (response) => {
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const carreras = await this.getCarreras(rut, false);
-                        resolve(carreras);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(async (response) => {
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            }
-            
-            
-        });
-    }
-
-    getMalla = (rut, carreraId, comprobar) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            const uri = "estudiantes/" + rut + "/carreras/" + carreraId + "/malla";
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        }
-                    }).then(async (response) => {
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const malla = await this.getMalla(rut, carreraId, false);
-                        resolve(malla);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(async (response) => {
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            }
-            
-            
-        });
-    }
-
-    getBoletin = (rut, carreraId, comprobar) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            const uri = "estudiantes/" + rut + "/carreras/" + carreraId + "/boletin";
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        }
-                    }).then(async (response) => {
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const boletin = await this.getBoletin(rut, carreraId, false);
-                        resolve(malla);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(async (response) => {
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            }
-            
-            
         });
     }
 
     getAsignaturas = (rut, comprobar) => {
         return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
             const uri = "estudiantes/" + rut + "/asignaturas";
             
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        },
-                        timeout: 60 * 1000
-                    }).then(async (response) => {
-                        console.log(response);
-                        
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const asignaturas = await this.getAsignaturas(rut, false);
-                        resolve(asignaturas);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    },
-                    timeout: 60 * 1000
-                }).then(async (response) => {
-                    console.log(response);
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const asignaturas = await this.get(uri, comprobar)
+                resolve(asignaturas)
+            } catch (err) {
+                reject(err)
             }
+        });
+    }
+
+    getPerfil = (rut, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "estudiantes/" + rut;
             
+            if (comprobar == null)
+                comprobar = true;
             
+            try {
+                const perfil = await this.get(uri, comprobar)
+                resolve(perfil)
+            } catch (err) {
+                reject(err)
+            }
+        });
+    }
+
+    getHorarios = (rut, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "estudiantes/" + rut + "/horarios";
+            
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const horarios = await this.get(uri, comprobar)
+                resolve(horarios)
+            } catch (err) {
+                reject(err)
+            }
+        });
+    }
+
+    getCarreras = (rut, id, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "estudiantes/" + rut + "/carreras/" + (id ? id : '');
+            
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const carreras = await this.get(uri, comprobar)
+                resolve(carreras)
+            } catch (err) {
+                reject(err)
+            }
+        });
+    }
+
+    getMalla = (rut, id, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "estudiantes/" + rut + "/carreras/" + id + "/malla";
+            
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const malla = await this.get(uri, comprobar)
+                resolve(malla)
+            } catch (err) {
+                reject(err)
+            }
+        });
+    }
+
+    getBoletin = (rut, id, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "estudiantes/" + rut + "/carreras/" + carreraId + "/boletin";
+            
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const boletin = await this.get(uri, comprobar)
+                resolve(boletin)
+            } catch (err) {
+                reject(err)
+            }
         });
     }
 
     getNotas = (rut, id, comprobar) => {
         return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
             const uri = "estudiantes/" + rut + "/asignaturas/" + id + "/notas";
             
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        },
-                        timeout: 60 * 1000
-                    }).then(async (response) => {
-                        console.log(response);
-                        
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const notas = await this.getNotas(rut, id, false);
-                        resolve(notas);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    },
-                    timeout: 60 * 1000
-                }).then(async (response) => {
-                    console.log(response);
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const notas = await this.get(uri, comprobar)
+                resolve(notas)
+            } catch (err) {
+                reject(err)
             }
-            
-            
         });
     }
 
     getBitacora = (rut, id, comprobar) => {
         return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
             const uri = "estudiantes/" + rut + "/asignaturas/" + id + "/bitacora";
             
-            if (comprobar) {
-                const { esValido } = await this.checkToken(token);
-                if (esValido) {
-                    fetch(BASE_URL + uri, {
-                        headers: {
-                            Authorization: "Bearer " + token  
-                        },
-                        timeout: 60 * 1000
-                    }).then(async (response) => {
-                        console.log(response);
-                        
-                        var json = await response.json();
-                        if (response.ok) {
-                            resolve(json);
-                        } else {
-                            reject(json);
-                        }
-                    }).catch(err => {
-                        reject(err);
-                    });
-                } else {
-                    try {
-                        await this.refreshToken();
-                        const bitacora = await this.getBitacora(rut, id, false);
-                        resolve(bitacora);
-                    } catch (error) {
-                        reject("La token ya no es válida");
-                    }
-                }
-            } else {
-                fetch(BASE_URL + uri, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    },
-                    timeout: 60 * 1000
-                }).then(async (response) => {
-                    console.log(response);
-                    var json = await response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const bitacora = await this.get(uri, comprobar)
+                resolve(bitacora)
+            } catch (err) {
+                reject(err)
             }
+        });
+    }
+
+    getCalificaciones = (rut, id, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "docentes/" + rut + "/calificaciones/" + (id ? id : '');
             
+            if (comprobar == null)
+                comprobar = true;
             
+            try {
+                const calificaciones = await this.get(uri, comprobar)
+                resolve(calificaciones)
+            } catch (err) {
+                reject(err)
+            }
         });
     }
 
@@ -532,191 +301,4 @@ export default class ApiUtem {
             }
         })
     }
-
-    /*
-    getHorarios = (rut) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            fetch(BASE_URL + "estudiantes/" + rut + "/horarios", {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            }).then(response => {
-                var json = response.json();
-                if (response.ok) {
-                    resolve(json);
-                } else {
-                    reject(json);
-                }
-            }).catch(err => {
-                reject(err);
-            });
-        });
-    }
-
-    getCarreras = async (rut) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            fetch(BASE_URL + "estudiantes/" + rut + "/carreras", {
-                headers: {
-                    Authorization: "Bearer " + token  
-                }
-            }).then(response => {
-                var json = response.json();
-                if (response.ok) {
-                    resolve(json);
-                } else {
-                    reject(json);
-                }
-            }).catch(err => {
-                reject(err);
-            });
-        });
-    } */
 }
-
-/*
-import { AsyncStorage } from 'react-native';
-
-const BASE_URL = 'https://api-utem.herokuapp.com/';
-
-export default class ApiUtem {
-    getToken = (correo, contrasenia) => {
-        return new Promise(async (resolve, reject) => {
-            fetch(BASE_URL + 'token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: encodeURIComponent('correo') + '=' + encodeURIComponent(correo) + '&' + encodeURIComponent('contrasenia') + '=' + encodeURIComponent(contrasenia)
-            }).then(response => {
-                var json = response.json();
-                if (response.ok) {
-                    await AsyncStorage.multiSet(['token', 'rut', 'correo'], [response.token, response.rut.toString(), response.correo]);
-                    resolve(json);
-                } else {
-                    reject(response);
-                }
-            }).catch(err => {
-                reject(err);
-                
-            });
-        });   
-    }
-
-    checkToken = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                fetch(BASE_URL + 'token/placebo', {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(response => {
-                    var json = response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            } catch (e) {
-                reject(e)
-            }
-        });
-    }
-
-    refreshToken = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                fetch(BASE_URL + 'token/refresh', {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(response => {
-                    var json = response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            } catch (e) {
-                reject(e)
-            }
-        });
-    }
-
-    getPerfil = (rut) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            const respuesta = await checkToken(token);
-            const esValido = respuesta.esValido;
-            if (esValido) {
-                fetch(BASE_URL + "estudiantes/" + rut, {
-                    headers: {
-                        Authorization: "Bearer " + token  
-                    }
-                }).then(response => {
-                    var json = response.json();
-                    if (response.ok) {
-                        resolve(json);
-                    } else {
-                        reject(json);
-                    }
-                }).catch(err => {
-                    reject(err);
-                });
-            } else {
-                reject("La token no es válida")
-            }
-        });
-    }
-
-    getHorarios = (rut) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            fetch(BASE_URL + "estudiantes/" + rut + "/horarios", {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            }).then(response => {
-                var json = response.json();
-                if (response.ok) {
-                    resolve(json);
-                } else {
-                    reject(json);
-                }
-            }).catch(err => {
-                reject(err);
-            });
-        });
-    }
-
-    getCarreras = async (rut) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await AsyncStorage.getItem('token');
-            fetch(BASE_URL + "estudiantes/" + rut + "/carreras", {
-                headers: {
-                    Authorization: "Bearer " + token  
-                }
-            }).then(response => {
-                var json = response.json();
-                if (response.ok) {
-                    resolve(json);
-                } else {
-                    reject(json);
-                }
-            }).catch(err => {
-                reject(err);
-            });
-        });
-    }
-}
-
-*/
