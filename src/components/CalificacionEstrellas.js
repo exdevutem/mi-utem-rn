@@ -1,27 +1,26 @@
 import StarRating from 'react-native-star-rating';
 
-export default class GeneralStarExample extends Component {
+export default class Estrellas extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      starCount: 3.5
-    };
+    /*this.state = {
+      starCount: false
+    };*/
   }
 
-  onStarRatingPress(rating) {
+  /*onStarRatingPress(rating) {
     this.setState({
       starCount: rating
     });
-  }
+  }*/
 
   render() {
     return (
       <StarRating
-        disabled={false}
+        disabled={true}
         maxStars={5}
-        rating={this.state.starCount}
-        selectedStar={(rating) => this.onStarRatingPress(rating)}
+        rating={this.props.numero}
       />
     );
   }
