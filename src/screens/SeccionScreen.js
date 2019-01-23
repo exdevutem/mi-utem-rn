@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, AsyncStorage, ActivityIndicator, View, StyleSheet, Text, Button, FlatList } from 'react-native';
+import { ScrollView, RefreshControl, Image, AsyncStorage, ActivityIndicator, View, StyleSheet, Text, Button, FlatList } from 'react-native';
 import { Cache } from "react-native-cache";
 
 import NotasItem from '../components/NotasItem';
@@ -20,35 +20,38 @@ export default class SeccionScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            notas: [],
+            notas: null,
             bitacora: [],
             estaCargandoBitacora: true,
             estaCargandoNotas: true,
+            estaActualizando: false,
         }
     }
 
     _irANotas = () => {
         this.props.navigation.navigate('Notas', {
-            seccion: this.state.notas
+            seccion: this.state.notas,
+            asignatura: this.props.asignatura
         });
     }
 
-    _getNotas = async () => {
+    _getNotas = async (forzarApi) => {
         const rut = await AsyncStorage.getItem('rut');
         const {id, nombre} = this.props.asignatura;
         const {tipo, seccion} = this.props.seccion;
         const key = rut + 'asignaturas' + id + 'notas-' + tipo + '-' + seccion;
         cache.getItem(key, async (err, notasCache) => {
-            if (err || !notasCache) {
+            if (forzarApi || err || !notasCache) {
                 var notas = await apiUtem.getNotas(rut, id);
                 notas = notas.find(seccion => seccion.tipo === tipo);
 
                 cache.setItem(key, notas, (err) => {
                     if (err) console.error(err);
-                    this.setState({
+                    this.setState(statePrevio => ({
                         estaCargandoNotas: false,
-                        notas: notas
-                    });
+                        notas: notas,
+                        estaActualizando: !statePrevio.estaCargandoBitacora ? false : statePrevio.estaActualizando
+                    }));
                 });
             } else {
                 this.setState({
@@ -59,22 +62,23 @@ export default class SeccionScreen extends Component {
         });
     }
 
-    _getBitacora = async () => {
+    _getBitacora = async (forzarApi) => {
         const rut = await AsyncStorage.getItem('rut');
         const {id, nombre} = this.props.asignatura;
         const {tipo, seccion} = this.props.seccion;
         const key = rut + 'asignaturas' + id + 'bitacora-' + tipo + '-' + seccion;
         cache.getItem(key, async (err, bitacoraCache) => {
-            if (err || !bitacoraCache) {
+            if (forzarApi || err || !bitacoraCache) {
                 var bitacora = await apiUtem.getBitacora(rut, id);
                 bitacora = bitacora.find(seccion => seccion.tipo === tipo);
 
                 cache.setItem(key, bitacora, (err) => {
                     if (err) console.error(err);
-                    this.setState({
+                    this.setState(statePrevio => ({
                         estaCargandoBitacora: false,
-                        bitacora: bitacora
-                    });
+                        bitacora: bitacora,
+                        estaActualizando: !statePrevio.estaCargandoNotas ? false : statePrevio.estaActualizando
+                    }));
                 });
             } else {
                 this.setState({
@@ -85,25 +89,40 @@ export default class SeccionScreen extends Component {
         });
     }
 
+    _onRefresh = () => {
+        this.setState({
+            estaActualizando: true,
+        });
+        this._getNotas(true);
+        this._getBitacora(true);
+        
+    }
+
     _renderNotas = () => {
-        if (this.state.notas.ponderadoresRegistrados) {
-            return (
-                <View>
-                    <FlatList
-                        style={{flex: 1}}  
-                        data={this.state.notas}
-                        onChange={null}
-                        renderItem={({item, index}) => <NotasItem index={index} disable={true} nota={item}/>}
-                    />
-                    <Button
-                        onPress={this._irANotas}
-                        title="Ir a notas"
-                        color={colors.primario}
-                    />
-                </View>
-            )
+        console.log(this.state.notas);
+        
+        if (this.state.notas) {
+            if (this.state.notas.ponderadoresRegistrados) {
+                return (
+                    <View>
+                        <FlatList
+                            style={{flex: 1}}  
+                            data={this.state.notas}
+                            onChange={null}
+                            renderItem={({item, index}) => <NotasItem index={index} disable={true} nota={item}/>}
+                        />
+                        <Button
+                            onPress={this._irANotas}
+                            title="Ir a notas"
+                            color={colors.primario}
+                        />
+                    </View>
+                )
+            } else {
+                return (<Text>El profesor no ha registrado ponderadores</Text>)
+            }
         } else {
-            return (<Text>El profesor no ha registrado ponderadores</Text>)
+            return (<Text>No hay notas registradas</Text>)
         }
     }
 
@@ -114,7 +133,14 @@ export default class SeccionScreen extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView
+                style={styles.container}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.estaActualizando}
+                      colors={[colors.primario]}
+                      onRefresh={this._onRefresh}/>
+                } >
                 <View style={styles.card}>
                     <ActivityIndicator 
                         size="large" 
@@ -141,7 +167,7 @@ export default class SeccionScreen extends Component {
                         {this._renderNotas()}
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }

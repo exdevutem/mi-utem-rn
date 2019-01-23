@@ -104,7 +104,11 @@ const MainStack = createStackNavigator({
   Perfil: {
     screen: PerfilScreen,
     navigationOptions: {
-      title: 'Perfil'
+      title: 'Perfil',
+      headerStyle: {
+        elevation: ES_IOS ? null : 0,
+        backgroundColor: ES_IOS ? 'white' : colors.primario
+      }
     }
   },
   Asignaturas: {
