@@ -3,43 +3,34 @@ import { Platform, StatusBar, FlatList, StyleSheet, View, Image, Text } from 're
 import {calificaciones} from '../static/estudiantes'
 import ScrollView from 'react-native-directed-scrollview';
 import ComentariosCalificaciones from '../components/CalificacionesComentarios';
-//import Estrellas from '../components/CalificacionEstrellas';
 const ES_IOS = Platform.OS === 'ios';
 
 export default class CalificacionesScreen extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            campos:[],
-            perfil:null
+        this.state = {
+            calificaciones: calificaciones // Se setean vacíos los comentarios la primera vez
         }
     }
 
-    _renderListaCom=(datos)=>{
-        var lista = []
-        datos.calificaciones.comentarios.map((index)=>this._renderComentario(index,lista));
-    }
-    _renderComentario = (datos,campos)=>{
-        if(datos.comentario!=null)
-            campos.push({
-                Foto: datos.estudiante.fotoUrl,
-                nombre: datos.estudiante.nombre,
-                evaluacion: datos.calificacion,
-                fecha: datos.fecha,
-                coment: datos.comentario
-            })
+    _parseCalificaciones = (calificaciones) => {
         this.setState({
-            campos: campos,
-            perfil: datos
-        })
+            calificaciones: calificaciones
+        });
     }
+
+    _getCalificaciones = () => {
+        // Aqui irá todo lo de la API
+        // const calificaciones = calificaciones; // Se guardará en esta variable
+        this._parseCalificaciones(calificaciones);
+    }
+
     componentWillMount() {
-        this._renderListaCom(calificaciones);
+        this._getCalificaciones();
     }
+    
     render() {
-        
-        
-        console.log(this.state.campos);
+        const {calificaciones} = this.state;
         return (
             <ScrollView>
                 <StatusBar
@@ -48,26 +39,28 @@ export default class CalificacionesScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.card}>
                         <View style={styles.docenteContainer}>
-                            <Image source={{uri: calificaciones.docente.fotoUrl}} style={styles.foto} />
+                            <Image source={{uri: calificaciones ? calificaciones.docente.fotoUrl : ''}} style={styles.foto} />
                             <View style={styles.datosDocenteContainer}>
                                 <Text 
                                     style={styles.nombreDocenteTexto}
                                     numberOfLines={2}>
-                                    {calificaciones.docente.nombre}
+                                    {calificaciones ? calificaciones.docente.nombre : ''}
                                 </Text>
-                                <Text> {calificaciones.docente.correo}</Text>
-                                
+                                <Text> {calificaciones ? calificaciones.docente.correo : ''}</Text>
                             </View>
                         </View>
                     </View>
-                    <Text style={styles.textoNombre}>Comentarios</Text>
                 </View>
-                <FlatList
-                    data={this.state.campos}
-                    style={styles.lista}
-                    renderItem={({item}) => 
-                        <ComentariosCalificaciones URI={item.Foto} Nombre={item.nombre} estrella={item.evaluacion.toString()} Fecha={item.fecha} Comentario={item.coment}/>
-                    }/>
+                <View>
+                    <Text style={styles.textoNombre}>Comentarios</Text>
+                    <FlatList
+                        data={calificaciones ? calificaciones.calificaciones.comentarios : []}
+                        style={styles.lista}
+                        renderItem={({item}) => 
+                            <ComentariosCalificaciones comentario={item}/>
+                        }/>
+                </View>
+                
             </ScrollView>
             
         );

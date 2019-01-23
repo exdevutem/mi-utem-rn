@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, Text, View, StyleSheet,Image } from 'react-native';
+import { Platform, Text, View, TextInput, StyleSheet, Image } from 'react-native';
 
 const ES_IOS = Platform.OS === 'ios';
 
@@ -9,19 +9,20 @@ export default class ComentariosCalificaciones extends Component {
     }
 
     render() {
+        const {comentario} = this.props;
         return(
             <View style={styles.container}>
                 <View style={styles.card}>
                     <View style={styles.docenteContainer}>
-                        <Image source={{uri: this.props.URI}} style={styles.foto} />
+                        <Image source={{uri: comentario.estudiante.fotoUrl}} style={styles.foto} />
                         <View style={styles.datosDocenteContainer}>
                             <Text 
                                 style={styles.nombreDocenteTexto}
                                 numberOfLines={2}>
-                                {this.props.Nombre}
+                                {comentario.estudiante.nombre}
                             </Text>
-                            <Text> {this.props.Estrella+" "} {this.props.Fecha}</Text>
-                            <Text> {this.props.Comentario}</Text>
+                            <Text>{comentario.calificacion} ★ {comentario.fecha}</Text>
+                            <Text>{comentario.comentario}</Text>
                         </View>
                     </View>
                 </View>
@@ -33,7 +34,6 @@ export default class ComentariosCalificaciones extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.material.grey['200'],
         paddingVertical: 5,
     },
     textoNombre: {
