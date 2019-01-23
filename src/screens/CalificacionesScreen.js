@@ -3,7 +3,7 @@ import { Platform, StatusBar, FlatList, StyleSheet, View, Image, Text } from 're
 import {calificaciones} from '../static/estudiantes'
 import ScrollView from 'react-native-directed-scrollview';
 import ComentariosCalificaciones from '../components/CalificacionesComentarios';
-import Estrellas from '../components/CalificacionEstrellas';
+//import Estrellas from '../components/CalificacionEstrellas';
 const ES_IOS = Platform.OS === 'ios';
 
 export default class CalificacionesScreen extends Component {
@@ -56,7 +56,7 @@ export default class CalificacionesScreen extends Component {
                                     {calificaciones.docente.nombre}
                                 </Text>
                                 <Text> {calificaciones.docente.correo}</Text>
-                                <Estrellas rating={calificaciones.calificaciones.promedio}></Estrellas>
+                                
                             </View>
                         </View>
                     </View>
@@ -66,7 +66,7 @@ export default class CalificacionesScreen extends Component {
                     data={this.state.campos}
                     style={styles.lista}
                     renderItem={({item}) => 
-                        <ComentariosCalificaciones/>
+                        <ComentariosCalificaciones URI={item.Foto} Nombre={item.nombre} estrella={item.evaluacion.toString()} Fecha={item.fecha} Comentario={item.coment}/>
                     }/>
             </ScrollView>
             

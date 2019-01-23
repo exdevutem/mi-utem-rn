@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, Text, View, TextInput, StyleSheet } from 'react-native';
+import { Platform, Text, View, StyleSheet,Image } from 'react-native';
 
 const ES_IOS = Platform.OS === 'ios';
 
