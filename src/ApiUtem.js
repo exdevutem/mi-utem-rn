@@ -100,7 +100,7 @@ export default class ApiUtem {
         });
     }
 
-    get = (uri, comprobar) => {
+    send = (method, uri, parametros, comprobar) => {
         return new Promise(async (resolve, reject) => {
             const token = await AsyncStorage.getItem('token');
             
@@ -108,9 +108,69 @@ export default class ApiUtem {
                 const { esValido } = await this.checkToken(token);
                 if (esValido) {
                     fetch(BASE_URL + uri, {
+                        method: method,
                         headers: {
-                            Authorization: "Bearer " + token  
+                            'Authorization': "Bearer " + token,
+                            'Content-Type': 'application/x-www-form-urlencoded'
                         },
+                        body: this.objetoAUri(parametros),
+                        timeout: 60 * 1000
+                    }).then(async (response) => {
+                        var json = await response.json();
+                        if (response.ok) {
+                            resolve(json);
+                        } else {
+                            reject(json);
+                        }
+                    }).catch(err => {
+                        reject(err);
+                    });
+                } else {
+                    try {
+                        await this.refreshToken();
+                        const json = await this.get(uri, false);
+                        resolve(json);
+                    } catch (error) {
+                        reject("La token ya no es válida");
+                    }
+                }
+            } else {
+                fetch(BASE_URL + uri, {
+                    method: method,
+                    headers: {
+                        'Authorization': "Bearer " + token,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: this.objetoAUri(parametros),
+                    timeout: 60 * 1000
+                }).then(async (response) => {
+                    var json = await response.json();
+                    if (response.ok) {
+                        resolve(json);
+                    } else {
+                        reject(json);
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
+            }
+        });
+    }
+
+    put = (uri, parametros, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const token = await AsyncStorage.getItem('token');
+            
+            if (comprobar) {
+                const { esValido } = await this.checkToken(token);
+                if (esValido) {
+                    fetch(BASE_URL + uri, {
+                        method: 'PUT',
+                        headers: {
+                            Authorization: "Bearer " + token,
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: this.objetoAUri(parametros),
                         timeout: 60 * 1000
                     }).then(async (response) => {
                         var json = await response.json();
@@ -151,7 +211,7 @@ export default class ApiUtem {
         });
     }
 
-    put = (uri, parametros, comprobar) => {
+    get = (uri, comprobar) => {
         return new Promise(async (resolve, reject) => {
             const token = await AsyncStorage.getItem('token');
             
@@ -159,12 +219,9 @@ export default class ApiUtem {
                 const { esValido } = await this.checkToken(token);
                 if (esValido) {
                     fetch(BASE_URL + uri, {
-                        method: 'PUT',
                         headers: {
-                            Authorization: "Bearer " + token,
-                            'Content-Type': 'application/x-www-form-urlencoded'
+                            Authorization: "Bearer " + token  
                         },
-                        body: this.objetoAUri(parametros),
                         timeout: 60 * 1000
                     }).then(async (response) => {
                         var json = await response.json();
@@ -303,7 +360,7 @@ export default class ApiUtem {
 
     getBoletin = (rut, id, comprobar) => {
         return new Promise(async (resolve, reject) => {
-            const uri = "estudiantes/" + rut + "/carreras/" + carreraId + "/boletin";
+            const uri = "estudiantes/" + rut + "/carreras/" + id + "/boletin";
             
             if (comprobar == null)
                 comprobar = true;
@@ -381,5 +438,21 @@ export default class ApiUtem {
                 reject("La token no es valida")
             }
         })
+    }
+
+    sendCalificacion = (rut, parametros, comprobar) => {
+        return new Promise(async (resolve, reject) => {
+            const uri = "docentes/" + rut + "/calificaciones";
+            
+            if (comprobar == null)
+                comprobar = true;
+            
+            try {
+                const respuesta = await this.send('POST', uri, parametros, comprobar)
+                resolve(respuesta)
+            } catch (err) {
+                reject(err)
+            }
+        });
     }
 }

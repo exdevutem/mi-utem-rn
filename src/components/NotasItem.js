@@ -11,7 +11,7 @@ export default class NotasItem extends Component {
 
     constructor(props) {
         super(props);
-        const nota = this.props.nota[1];
+        const nota = this.props.nota;
         this.state = {
             valorInput: nota ? nota.toFixed(1) : '',
             notaInicial: nota ? nota.toFixed(1) : ''
@@ -19,12 +19,14 @@ export default class NotasItem extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const nota = nextProps.nota[1];
-        if (nota !== prevState.notaInicial) {
+        const nota = nextProps.nota;
+        if (nextProps.editable && nota !== prevState.notaInicial) {
             return {
                 valorInput: nota ? nota.toFixed(1) : '',
                 notaInicial: nota ? nota.toFixed(1) : ''
             }
+        } else {
+            return null;
         }
     }
 
@@ -46,6 +48,8 @@ export default class NotasItem extends Component {
                     valorInput: (7).toFixed(1)
                 });
             } else {
+                console.log(parseFloat(statePrevio.valorInput));
+                
                 this.setState((statePrevio) => ({
                     valorInput: parseFloat(statePrevio.valorInput).toFixed(1)
                 }));
@@ -54,17 +58,12 @@ export default class NotasItem extends Component {
     }
 
     render() {
-        const tipo = this.props.nota[3];
-        const ponderador = this.props.nota[0];
-        const editable = this.props.nota[2];
-        const nota = this.props.nota[1];
-
-        const i = this.props.index;
+        const {index, ponderador, nota, editable, etiqueta} = this.props;
 
         return(
             <View style={styles.container}>
                 <View style={styles.columna}>
-                    <Text style={styles.tipoText}>{this._getNombreNota(tipo)}:</Text>
+                    <Text style={styles.tipoText}>{this._getNombreNota(etiqueta)}:</Text>
                 </View>
                 
                 <View style={styles.columna}>
@@ -84,20 +83,20 @@ export default class NotasItem extends Component {
                             this.setState({
                                 valorInput: textoLimpio
                             });
-                            this.props.onChange(i, textoLimpio);
+                            this.props.onChange(index, textoLimpio);
                         }}
                         onBlur={this._onBlur}
                         keyboardType='numeric'
                         maxLength={3}
-                        editable={!this.props.disable || editable}
-                        underlineColorAndroid={this.props.disable ? null : colors.material.grey['500']}
+                        editable={editable}
+                        underlineColorAndroid={editable ? colors.material.grey['500'] : null}
                         style={[styles.notaInput, editable ? null : {fontWeight: 'bold'}]}
                         value={this.state.valorInput}>
                     </TextInput>
                 </View>
                 
                 <View style={styles.columna}>
-                    <Text style={styles.ponderadorText}>{parseFloat(ponderador.toFixed(2)) * 100}%</Text>
+                    <Text style={styles.ponderadorText}>{(ponderador * 100).toFixed(0)}%</Text>
                 </View>
             </View>
         );

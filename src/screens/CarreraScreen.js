@@ -9,6 +9,48 @@ import { Cache } from "react-native-cache";
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
 
+const estadoAlerta = [
+    "Sin Especificar",
+    "Causal de Eliminación",
+    "Postergado con Matricula",
+    "Transitorio",
+    "Morosidad Arancelaria",
+    "Congelado y Postergado",
+    "Moroso Autorizado Toma Ramo",
+    "Congelación automatica",
+    "Alumno condicionado a inscrip.",
+    "Cambio de regimen",
+    "Cambio de Rut"];
+
+const estadoUrgente = [
+    "Suspendido",
+    "Eliminado",
+    "Abandono Voluntario con Matric",
+    "Renunciado",
+    "Postergado sin matricula",
+    "Abandono Voluntario",
+    "Expulsado",
+    "Solicitud Rechazada",
+    "Egresado Abandono Voluntario",
+    "Renuncia al Proceso",
+    "Carr no Pertenece a Docencia",
+    "Alumno Fallecido",
+    "Cambio de Carrera",
+    "Cancelacion de Matricula"];
+
+const estadoNormal = [
+    "Regular",
+    "Egresado Matriculado",
+    "Egresado",
+    "Congelado",
+    "Cambio de Plan",
+    "Postulante",
+    "Titulado",
+    "Egreso Pendiente",
+    "Seleccionado",
+    "Egresado Titulo Intermedio"];
+
+
 const ES_IOS = Platform.OS === 'ios';
 
 var cache = new Cache({
@@ -68,47 +110,40 @@ export default class CarreraScreen extends Component {
 
     _getMalla = async () => {
         const rut = await AsyncStorage.getItem('rut');
-        const carreraId = this.props.navigation.getParam('id', null);
+        const carrera = this.props.navigation.getParam('carrera', null);
         
-        const key = rut + 'carrera' + carreraId + 'malla';
+        const key = rut + 'carrera' + carrera.id + 'malla';
         cache.getItem(key, async (err, mallaCache) => {
             if (err || !mallaCache) {
-                try {
-                    const malla = await apiUtem.getMalla(rut, carreraId, true);
-                    cache.setItem(key, malla, (err) => {
-                        if (err) console.error(err);
-                        this.setState({
-                            cargandoMalla: false
-                        });
-            
-                        //this._parseMalla(malla)
+                const malla = await apiUtem.getMalla(rut, carrera.id);
+                cache.setItem(key, malla, (err) => {
+                    if (err) console.error(err);
+                    this.setState({
+                        estaCargando: false
                     });
-                } catch (error) {
-                    if (error == "La token ya no es válida") {
-                        this.props.navigation.navigate('Login');
-                    }
-                }
+        
+                    this._parseMalla(malla)
+                });
             } else {
                 this.setState({
-                    cargandoMalla: false
+                    estaCargando: false
                 });
 
-                //this._parseMalla(mallaCache);
+                this._parseMalla(mallaCache);
             }
         });
     }
 
     _getBoletin = async () => {
         const rut = await AsyncStorage.getItem('rut');
-        const carreraId = this.props.navigation.getParam('id', null);
+        const carrera = this.props.navigation.getParam('carrera', null);
         
-        const key = rut + 'carrera' + carreraId + 'boletin';
+        const key = rut + 'carrera' + carrera.id + 'boletin';
         cache.getItem(key, async (err, boletinCache) => {
             if (err || !boletinCache) {
-                console.log("DE LA API");
                 
                 try {
-                    const boletin = await apiUtem.getBoletin(rut, carreraId, true);
+                    const boletin = await apiUtem.getBoletin(rut, carrera.id, true);
                     cache.setItem(key, boletin, (err) => {
                         if (err) console.error(err);
                         this.setState({
@@ -151,8 +186,9 @@ export default class CarreraScreen extends Component {
     }
 
     _onPressMalla() {
+        const carrera = this.props.navigation.getParam('carrera', null);
         this.props.navigation.navigate('Malla', {
-            id: this.props.navigation.getParam('id', null)
+            carrera: carrera
         });
     }
 
@@ -174,13 +210,62 @@ export default class CarreraScreen extends Component {
     }
 
     render() {
+        const carrera = this.props.navigation.getParam("carrera");
+
+        const {codigo, nombre} = carrera.carrera;
+        const plan = carrera.plan.numero;
+        const {estado, viaIngreso} = carrera;
+        const {semestreInicio, semestreTermino} = carrera
+
+        var colorEstado;
+        if (estado) {
+            if (estadoAlerta.indexOf(estado) != -1) {
+                colorEstado = colors.estados.amarillo
+            } else if (estadoUrgente.indexOf(estado) != -1) {
+                colorEstado = colors.estados.rojo
+            } else {
+                colorEstado = colors.primario
+            }
+        }
+
         return (
             <ScrollView style={styles.container}>
                 <StatusBar
                     barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
 
-                <View style={styles.rendimientoContainer}>
+                <View style={styles.card}>
+                    <View style={styles.horizontalContainer}>
+                        <Text numberOfLines={1} style={styles.texto}>{codigo + "/" + plan}</Text>
+                        <View style={[styles.estadoContainer, {backgroundColor: colorEstado}]}>
+                            <Text numberOfLines={1} style={styles.textoEstado}>{estado}</Text>
+                        </View>
+                    </View>
+                    <Text numberOfLines={2} style={styles.textoNombre}>{nombre}</Text>
+                    <View style={styles.horizontalContainer}>
+                        <Text numberOfLines={1}>{semestreInicio.anio}/{semestreInicio.semestre}</Text>
+                        <Text numberOfLines={1}>{semestreTermino._id ? (semestreTermino.anio + "/" + semestreTermino.semestre) : ''}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.card}>
+                    <Button
+                        onPress={this._onPressMalla.bind(this)}
+                        title="Ir a Malla" />
+
+                    <Button
+                        onPress={this._onPressBoletin.bind(this)}
+                        title="Ir a Boletín" />
+                </View>
+
+                
+            </ScrollView>
+        );
+    }
+}
+
+/*
+<View style={styles.rendimientoContainer}>
                     <View style={styles.containerHeader}>
                         <Text style={styles.textoHeader}>RENDIMIENTO</Text>
                     </View>
@@ -231,22 +316,19 @@ export default class CarreraScreen extends Component {
                         </View>
                     </View>
                 </View>
-
-                <Button
-                    onPress={this._onPressMalla.bind(this)}
-                    title="Ir a Malla" />
-
-                <Button
-                    onPress={this._onPressBoletin.bind(this)}
-                    title="Ir a Boletín" />
-            </ScrollView>
-        );
-    }
-}
+ */
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.material.grey['200']
+    },
+    card: {
+        backgroundColor: 'white',
+        marginHorizontal: 10,
+        marginVertical: 5,
+        borderRadius: 5,
+        padding: 20,
+        elevation: 2
     },
     containerHeader: {
         borderBottomWidth: 1,
@@ -289,5 +371,24 @@ const styles = StyleSheet.create({
     },
     chart: {
         flex: 1
+    },
+    horizontalContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    textoNombre: {
+        fontWeight: 'bold'
+    },
+    estadoContainer: {
+        paddingVertical: 2,
+        paddingHorizontal: 15,
+        backgroundColor: 'red',
+        alignItems: 'stretch',
+        borderRadius: 20
+    },
+    textoEstado: {
+        color: 'white',
+        fontSize: 11,
+        fontWeight: 'bold'
     }
-  });
+});

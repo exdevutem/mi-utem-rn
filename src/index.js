@@ -17,7 +17,9 @@ import MainScreen from './screens/MainScreen';
 import NoticiaScreen from './screens/NoticiaScreen';
 import PerfilScreen from './screens/PerfilScreen';
 import HorarioScreen from './screens/HorarioScreen';
+
 import CalificacionesScreen from './screens/CalificacionesScreen';
+import CalificarScreen from './screens/CalificarScreen';
 
 import CarrerasScreen from './screens/CarrerasScreen';
 import CarreraScreen from './screens/CarreraScreen';
@@ -174,6 +176,12 @@ const MainStack = createStackNavigator({
     navigationOptions: {
       title: 'Calificaciones'
     }
+  },
+  Calificar: {
+    screen: CalificarScreen,
+    navigationOptions: {
+      title: 'Calificar'
+    }
   }
 },
 {
@@ -225,12 +233,6 @@ const MainDrawer = createDrawerNavigator({
     navigationOptions: {
       title: 'Horario'
     }
-  },
-  Calificaciones: {
-    screen: CalificacionesScreen,
-    navigationOptions: {
-      title: 'Calificaciones'
-    }
   }
 },
 {
@@ -249,8 +251,6 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'ios-school';
         } else if (routeName === 'Horario') {
           nombreIcono = 'ios-time';
-        } else if (routeName === 'Calificaciones') {
-          nombreIcono = 'ios-star';
         }
         return <Ionicons name={nombreIcono} size={horizontal ? 20 : 25} color={tintColor} />;
       } else {
@@ -264,8 +264,6 @@ const MainDrawer = createDrawerNavigator({
           nombreIcono = 'school';
         } else if (routeName === 'Horario') {
           nombreIcono = 'access-time';
-        } else if (routeName === 'Calificaciones') {
-          nombreIcono = 'star';
         }
         return <MaterialIcons name={nombreIcono} size={horizontal ? 20 : 25 } color={tintColor}/>
       }

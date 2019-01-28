@@ -31,15 +31,16 @@ export default class MallaScreen extends Component {
 
     _getMalla = async () => {
         const rut = await AsyncStorage.getItem('rut');
-        const carreraId = this.props.navigation.getParam('id', null);
-        console.log(carreraId);
+        const carrera = this.props.navigation.getParam('carrera', null);
         
-        const key = rut + 'carrera' + carreraId + 'malla';
+        const key = rut + 'carrera' + carrera.id + 'malla';
         cache.getItem(key, async (err, mallaCache) => {
             if (err || !mallaCache) {
-                const malla = await apiUtem.getMalla(rut, carreraId);
+                const malla = await apiUtem.getMalla(rut, carrera.id);
                 cache.setItem(key, malla, (err) => {
                     if (err) console.error(err);
+                    console.log(malla);
+                    
                     this.setState({
                         estaCargando: false
                     });
@@ -50,6 +51,7 @@ export default class MallaScreen extends Component {
                 this.setState({
                     estaCargando: false
                 });
+                console.log(mallaCache);
 
                 this._parseMalla(mallaCache);
             }

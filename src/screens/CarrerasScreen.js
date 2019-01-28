@@ -24,22 +24,16 @@ export default class CarrerasScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            datos: [],
+            carreras: [],
             estaActualizando: false
         };
     }
 
     _parseCarreras = (json) => {
-        if (json.length == 1) {
-            this.props.navigation.navigate('Carrera', {
-                id: json[0]._id
-            });
-        } else {
-            this.setState({
-                datos: json,
-                estaActualizando: false
-            });
-        }
+        this.setState({
+            carreras: json,
+            estaActualizando: false
+        });
     }
 
     _getCarreras = async () => {
@@ -56,16 +50,29 @@ export default class CarrerasScreen extends Component {
         });
     }
 
+    _getCarreras = async (forzarApi) => {
+        const rut = await AsyncStorage.getItem('rut');
+        const key = rut + 'carreras';
+        cache.getItem(key, async (err, carrerasCache) => {
+          
+            if (forzarApi || err || !carrerasCache) {
+                const carreras = await apiUtem.getCarreras(rut);
+                cache.setItem(key, carreras, (err) => {
+                    if (err) console.error(err);
+                    this._parseCarreras(carreras);
+                });
+            } else {
+                this._parseCarreras(carrerasCache);
+            }
+        });
+      }
+
     _refreshCarreras = async () => {
         this.setState({
             estaActualizando: true
         });
 
-        const rut = await AsyncStorage.getItem('rut');
-        const token = await AsyncStorage.getItem('userToken');
-        var carreras = await apiUtem.getCarreras(token, rut);
-
-        this._parseCarreras(carreras);
+       this._getCarreras(true);
     }
 
     componentWillMount() {
@@ -79,14 +86,12 @@ export default class CarrerasScreen extends Component {
                     barStyle={ES_IOS ? "dark-content" : "light-content"}
                     backgroundColor={colors.primarioOscuro} />
                 <FlatList
-                    data={this.state.datos}
+                    data={this.state.carreras}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.estaActualizando}
                             onRefresh={this._refreshCarreras.bind(this)}
-                            title="Pull to refresh"
-                            tintColor={colors.primario}
-                            titleColor="#fff"
+                            colors={[colors.primario]}
                          />
                       }
                     keyExtractor={(item) => item._id.toString()}

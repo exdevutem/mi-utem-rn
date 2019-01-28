@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { ScrollView, RefreshControl, Image, AsyncStorage, ActivityIndicator, View, StyleSheet, Text, Button, FlatList } from 'react-native';
+import { ScrollView, RefreshControl, Image, AsyncStorage, ActivityIndicator, View, StyleSheet, Text, Button, FlatList, TouchableNativeFeedback } from 'react-native';
 import { Cache } from "react-native-cache";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import NotasItem from '../components/NotasItem';
 
@@ -31,6 +32,13 @@ export default class SeccionScreen extends Component {
     _irANotas = () => {
         this.props.navigation.navigate('Notas', {
             seccion: this.state.notas,
+            asignatura: this.props.asignatura
+        });
+    }
+
+    _irACalificaciones = () => {
+        this.props.navigation.navigate('Calificaicones', {
+            docente: this.state.bitacora.docente.rut,
             asignatura: this.props.asignatura
         });
     }
@@ -104,26 +112,37 @@ export default class SeccionScreen extends Component {
         if (this.state.notas) {
             if (this.state.notas.ponderadoresRegistrados) {
                 return (
-                    <View>
-                        <FlatList
-                            style={{flex: 1}}  
-                            data={this.state.notas}
-                            onChange={null}
-                            renderItem={({item, index}) => <NotasItem index={index} disable={true} nota={item}/>}
-                        />
-                        <Button
-                            onPress={this._irANotas}
-                            title="Ir a notas"
-                            color={colors.primario}
-                        />
-                    </View>
+                    <FlatList
+                        style={{flex: 1}}  
+                        data={this.state.notas.notas.notas}
+                        onChange={null}
+                        renderItem={({item, index}) => <NotasItem index={index} nota={item.nota} ponderador={item.ponderador} etiqueta={item.tipo} editable={false}/>}
+                    />
                 )
             } else {
-                return (<Text>El profesor no ha registrado ponderadores</Text>)
+                return (
+                    <View style={styles.vacioContainer}>
+                        <MaterialCommunityIcons name="bookmark-off" size={70} color={colors.material.grey['400']}/>
+                        <Text style={styles.vacioTexto}>No hay ponderadores registrados</Text>
+                    </View>
+                    
+                )
             }
         } else {
-            return (<Text>No hay notas registradas</Text>)
+            return (
+                <View style={styles.vacioContainer}>
+                    <MaterialCommunityIcons name="bookmark-off" size={50} color={colors.material.grey['400']}/>
+                    <Text style={styles.vacioTexto}>No hay notas registradas</Text>
+                </View>
+            )
         }
+    }
+
+    _onPressCalificaciones = () => {
+        this.props.navigation.navigate('Calificaciones', {
+            asignaturaId: this.props.asignatura.id,
+            rutDocente: this.state.bitacora.docente.rut
+        })
     }
 
     componentWillMount() {
@@ -146,26 +165,40 @@ export default class SeccionScreen extends Component {
                         size="large" 
                         color={colors.primario} 
                         style={[styles.cargando, this.state.estaCargandoBitacora ? {opacity: 1} : {opacity: 0}]}/>
-                    <View style={[styles.docenteContainer, this.state.estaCargandoBitacora ? {opacity: 0} : {opacity: 1}]}>
-                        <Image source={{uri: this.state.bitacora.docente ? this.state.bitacora.docente.fotoUrl : ''}} style={styles.foto} />
-                        <View style={styles.datosDocenteContainer}>
-                            <Text 
-                                style={styles.nombreDocenteTexto}
-                                numberOfLines={2}>
-                                {this.state.bitacora.docente ? this.state.bitacora.docente.nombre : ''}
-                            </Text>
-                            <Text>{this.state.bitacora.docente ? this.state.bitacora.docente.correo : ''}</Text>
+                    <TouchableNativeFeedback
+                        onPress={this._onPressCalificaciones}
+                        background={TouchableNativeFeedback.Ripple('#1f000000', true)} >
+                            
+                        <View style={this.state.estaCargandoBitacora ? {opacity: 0} : {opacity: 1}}>
+                            <View style={styles.docenteContainer}>
+                                <Image source={{uri: this.state.bitacora.docente ? this.state.bitacora.docente.fotoUrl : ''}} style={styles.foto} />
+                                <View style={styles.datosDocenteContainer}>
+                                    <Text 
+                                        style={styles.nombreDocenteTexto}
+                                        numberOfLines={2}>
+                                        {this.state.bitacora.docente ? this.state.bitacora.docente.nombre : ''}
+                                    </Text>
+                                    <Text>{this.state.bitacora.docente ? this.state.bitacora.docente.correo : ''}</Text>
+                                </View>
+                            </View>
                         </View>
-                    </View>
+
+                    </TouchableNativeFeedback>
+                    
                 </View>
+
                 <View style={styles.card}>
+                    <Text style={styles.textoTitulo}>NOTAS</Text>
                     <ActivityIndicator 
                         size="large" 
                         color={colors.primario} 
                         style={[styles.cargando, this.state.estaCargandoNotas ? {opacity: 1} : {opacity: 0}]}/>
+                    
                     <View style={this.state.estaCargandoNotas ? {opacity: 0} : {opacity: 1}}>
+                        
                         {this._renderNotas()}
                     </View>
+                    
                 </View>
             </ScrollView>
         );
@@ -178,13 +211,24 @@ const styles = StyleSheet.create({
         backgroundColor: colors.material.grey['200'],
         paddingVertical: 5,
     },
+    cardWrapper: {
+        padding: 20
+    },
     card: {
         backgroundColor: 'white',
         marginHorizontal: 10,
         marginVertical: 5,
         borderRadius: 5,
-        padding: 20,
         elevation: 2
+    },
+    textoTitulo: {
+        fontWeight: 'bold',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        letterSpacing: 0.5,
+        padding: 20,
+        borderBottomWidth: 1,
+        borderColor: colors.material.grey['300']
     },
     cargando: {
         position: 'absolute',
@@ -196,7 +240,8 @@ const styles = StyleSheet.create({
     },
     docenteContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 20
     },
     datosDocenteContainer: {
         flex: 1,
@@ -216,5 +261,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    vacioContainer: {
+        padding: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    vacioTexto: {
+        fontSize: 15,
+        marginTop: 10,
+        color: colors.material.grey['500']
     }
 })

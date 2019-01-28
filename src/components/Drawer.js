@@ -24,21 +24,16 @@ export default class Drawer extends Component {
         const {items} = this.props;
         switch (route.key) {
             case 'Carreras':
+
+                items.navigation.navigate('Carreras')
                 /*
-                if (items.navigation.getParam('carrerasN', null) == 1) {
-                    items.navigation.navigate('Carrera', {
-                        id: items.navigation.getParam('carreraId', null)
-                    })
-                } else {
-                    items.navigation.navigate('Carreras')
-                }
-                */
                 
                 if (ES_IOS) {
                     Alert.alert('Esta función pronto estará diponible 💪 ');
                 } else {
                     ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
                 }
+                */
                 break;
             
             case 'Asignaturas':

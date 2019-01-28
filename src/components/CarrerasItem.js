@@ -52,15 +52,17 @@ export default class CarrerasItem extends Component {
 
     _onPress = () => {
         this.props.navigation.navigate('Carrera', {
-            id: this.props.carrera._id,
-            nombre: this.props.carrera.carrera.nombre
+            carrera: this.props.carrera
         });
     }
 
     _renderContent = (carrera, color) => {
-        const { codigo, nombre } = carrera.carrera;
-        const estado = carrera.estado;
+        console.log(carrera);
+        const {codigo, nombre} = carrera.carrera;
         const plan = carrera.plan.numero;
+        const {estado, viaIngreso} = carrera;
+        const {semestreInicio, semestreTermino} = carrera;
+
         return (
             <View style={styles.container}>
                 <View style={styles.horizontalContainer}>
@@ -71,8 +73,8 @@ export default class CarrerasItem extends Component {
                 </View>
                 <Text numberOfLines={2} style={styles.textoNombre}>{nombre}</Text>
                 <View style={styles.horizontalContainer}>
-                    <Text numberOfLines={1}>{"/"}</Text>
-                    <Text numberOfLines={1}>{"/"}</Text>
+                    <Text numberOfLines={1}>{semestreInicio.anio}/{semestreInicio.semestre}</Text>
+                    <Text numberOfLines={1}>{semestreTermino._id ? (semestreTermino.anio + "/" + semestreTermino.semestre) : ''}</Text>
                 </View>
             </View>
         );
@@ -80,6 +82,7 @@ export default class CarrerasItem extends Component {
 
     render() {
         const carrera = this.props.carrera;
+        const estado = carrera.estado;
 
         var colorEstado;
         if (estado) {
