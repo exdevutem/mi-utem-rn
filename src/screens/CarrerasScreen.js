@@ -36,20 +36,6 @@ export default class CarrerasScreen extends Component {
         });
     }
 
-    _getCarreras = async () => {
-        const rut = await AsyncStorage.getItem('rut');
-        cache.getItem(rut + 'carreras', async (err, cache) => {
-            if (err) {
-                const token = await AsyncStorage.getItem('userToken');
-                const carreras = await apiUtem.getCarreras(token, rut);
-                this._parseCarreras(carreras);
-            } else {
-                this._parseCarreras(cache);
-            }
-            
-        });
-    }
-
     _getCarreras = async (forzarApi) => {
         const rut = await AsyncStorage.getItem('rut');
         const key = rut + 'carreras';

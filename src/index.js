@@ -8,6 +8,7 @@ import {TabBar} from 'react-native-tab-view';
 import SegmentedTab from './components/SegmentedTab';
 import Drawer from './components/Drawer';
 import CalificarHeader from './components/CalificarHeader';
+import SimpleHeader from './components/SimpleHeader';
 
 import colors from './colors';
 
@@ -127,7 +128,12 @@ const MainStack = createStackNavigator({
       headerStyle: {
         elevation: (ES_IOS || (navigation.getParam('secciones').length >= 1)) ? null : 0, // TODO: Arreglar la elevación para asinaturas sin tab bar
         backgroundColor: ES_IOS ? 'white' : colors.primario
-      }
+      },
+      headerTitle: 
+        <SimpleHeader 
+          principal={navigation.getParam('nombre', 'Asignatura')}
+          secundario={navigation.getParam('codigo')}
+        />
     })
   },
   Notas: {
@@ -151,7 +157,11 @@ const MainStack = createStackNavigator({
   Carrera: {
     screen: CarreraScreen,
     navigationOptions: ({ navigation }) => ({
-      title: navigation.getParam('nombre', 'Carrera'),
+      headerTitle: 
+        <SimpleHeader 
+          principal={navigation.getParam('nombre')}
+          secundario={navigation.getParam('codigo', '') + (navigation.getParam('plan') ? ('/' + navigation.getParam('plan')) : '')}
+        />
     })
   },
   Malla: {

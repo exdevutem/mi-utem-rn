@@ -660,9 +660,9 @@ export const notas = [
                 null,
                 null
             ],
-            "nota": null,
+            "final": null,
             "observacion": "I",
-            "notas": [
+            "parciales": [
                 {
                     "tipo": "Nota",
                     "ponderador": 0.13,

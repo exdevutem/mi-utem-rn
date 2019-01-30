@@ -52,12 +52,14 @@ export default class CarrerasItem extends Component {
 
     _onPress = () => {
         this.props.navigation.navigate('Carrera', {
-            carrera: this.props.carrera
+            carrera: this.props.carrera,
+            nombre: this.props.carrera.carrera.nombre,
+            codigo: this.props.carrera.carrera.codigo,
+            plan: this.props.carrera.plan.numero
         });
     }
 
     _renderContent = (carrera, color) => {
-        console.log(carrera);
         const {codigo, nombre} = carrera.carrera;
         const plan = carrera.plan.numero;
         const {estado, viaIngreso} = carrera;

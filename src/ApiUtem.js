@@ -345,6 +345,7 @@ export default class ApiUtem {
     getMalla = (rut, id, comprobar) => {
         return new Promise(async (resolve, reject) => {
             const uri = "estudiantes/" + rut + "/carreras/" + id + "/malla";
+            console.log(uri);
             
             if (comprobar == null)
                 comprobar = true;

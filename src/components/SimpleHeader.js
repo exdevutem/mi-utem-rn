@@ -3,12 +3,12 @@ import { Platform, View, Text, StyleSheet } from 'react-native';
 
 import colors from '../colors';
 
-export default class CalificarHeader extends Component {
+export default class SimpleHeader extends Component {
     render() {
         return (
             <View>
-                <Text numberOfLines={1} style={styles.textoPrincipal}>{this.props.docente}</Text>
-                <Text numberOfLines={1} style={styles.textoSecundario}>Calificar</Text>
+                <Text numberOfLines={1} style={styles.textoSecundario}>{this.props.secundario}</Text>
+                <Text numberOfLines={1} style={styles.textoPrincipal}>{this.props.principal}</Text>
             </View>
         )
     }

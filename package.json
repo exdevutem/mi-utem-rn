@@ -28,7 +28,8 @@
     "react-native-ui-xg": "0.0.6",
     "react-native-vector-icons": "^6.1.0",
     "react-native-video": "^4.2.0",
-    "react-navigation": "^3.0.0"
+    "react-navigation": "^3.0.0",
+    "react-navigation-header-buttons": "^2.1.1"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

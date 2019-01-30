@@ -108,48 +108,47 @@ export default class CarreraScreen extends Component {
         };
     }
 
-    _getMalla = async () => {
+    _getMalla = async (forzarApi) => {
         const rut = await AsyncStorage.getItem('rut');
         const carrera = this.props.navigation.getParam('carrera', null);
         
-        const key = rut + 'carrera' + carrera.id + 'malla';
+        const key = rut + 'carrera' + carrera._id + 'malla';
         cache.getItem(key, async (err, mallaCache) => {
-            if (err || !mallaCache) {
-                const malla = await apiUtem.getMalla(rut, carrera.id);
+            if (forzarApi || err || !mallaCache) {
+                const malla = await apiUtem.getMalla(rut, carrera._id);
                 cache.setItem(key, malla, (err) => {
                     if (err) console.error(err);
                     this.setState({
-                        estaCargando: false
+                        cargandoMalla: false
                     });
-        
-                    this._parseMalla(malla)
+                    // this._parseMalla(malla);
                 });
             } else {
                 this.setState({
-                    estaCargando: false
+                    cargandoMalla: false
                 });
 
-                this._parseMalla(mallaCache);
+                // this._parseMalla(mallaCache);
             }
         });
     }
 
-    _getBoletin = async () => {
+    _getBoletin = async (forzarApi) => {
         const rut = await AsyncStorage.getItem('rut');
         const carrera = this.props.navigation.getParam('carrera', null);
         
-        const key = rut + 'carrera' + carrera.id + 'boletin';
+        const key = rut + 'carrera' + carrera._id + 'boletin';
         cache.getItem(key, async (err, boletinCache) => {
-            if (err || !boletinCache) {
+            if (forzarApi || err || !boletinCache) {
                 
                 try {
-                    const boletin = await apiUtem.getBoletin(rut, carrera.id, true);
+                    const boletin = await apiUtem.getBoletin(rut, carrera._id, true);
                     cache.setItem(key, boletin, (err) => {
                         if (err) console.error(err);
                         this.setState({
                             cargandoBoletin: false
                         });
-            
+
                         this._parseBoletinRendimiento(boletin)
                     });
                 } catch (error) {
@@ -159,7 +158,6 @@ export default class CarreraScreen extends Component {
                 }
                 
             } else {
-                console.log("DEL CACHE");
                 this.setState({
                     cargandoBoletin: false
                 });
@@ -193,15 +191,10 @@ export default class CarreraScreen extends Component {
     }
 
     _onPressBoletin() {
-        /*this.props.navigation.navigate('Boletin', {
-            id: this.props.navigation.getParam('id', null)
+        const carrera = this.props.navigation.getParam('carrera', null);
+        this.props.navigation.navigate('Boletin', {
+            carrera: carrera
         });
-        */
-       if (ES_IOS) {
-            Alert.alert('Esta función pronto estará diponible 💪 ');
-        } else {
-            ToastAndroid.show('Esta función pronto estará diponible 💪 ', ToastAndroid.SHORT);
-        }
     }
 
     componentWillMount() {

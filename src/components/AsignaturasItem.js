@@ -21,6 +21,7 @@ export default class CarrerasItem extends Component {
         this.props.navigation.navigate('Asignatura', {
             id: this.props.asignatura._id,
             nombre: this.props.asignatura.nombre,
+            codigo: this.props.asignatura.codigo,
             secciones: this.props.asignatura.secciones
         });
     }

@@ -29,29 +29,25 @@ export default class MallaScreen extends Component {
         };
     }
 
-    _getMalla = async () => {
+    _getMalla = async (forzarApi) => {
         const rut = await AsyncStorage.getItem('rut');
         const carrera = this.props.navigation.getParam('carrera', null);
         
-        const key = rut + 'carrera' + carrera.id + 'malla';
+        const key = rut + 'carrera' + carrera._id + 'malla';
         cache.getItem(key, async (err, mallaCache) => {
-            if (err || !mallaCache) {
-                const malla = await apiUtem.getMalla(rut, carrera.id);
+            if (forzarApi || err || !mallaCache) {
+                const malla = await apiUtem.getMalla(rut, carrera._id);
                 cache.setItem(key, malla, (err) => {
                     if (err) console.error(err);
-                    console.log(malla);
-                    
                     this.setState({
                         estaCargando: false
                     });
-        
-                    this._parseMalla(malla)
+                    this._parseMalla(malla);
                 });
             } else {
                 this.setState({
                     estaCargando: false
                 });
-                console.log(mallaCache);
 
                 this._parseMalla(mallaCache);
             }
@@ -70,14 +66,6 @@ export default class MallaScreen extends Component {
         this.setState({
             datos: malla
         });
-    }
-
-    _renderItem = (asignatura, index) => {
-        return <MallaItem asignatura={asignatura} />
-    }
-
-    _renderSectionHeader = (nivel) => {
-        return <MallaHeader nivel={nivel}/>
     }
 
     componentWillMount() {
@@ -100,8 +88,8 @@ export default class MallaScreen extends Component {
                     <SectionList
                         sections={ this.state.datos }
                         stickySectionHeadersEnabled={ true }
-                        renderSectionHeader={({section: {titulo}}) => this._renderSectionHeader(titulo)}
-                        renderItem={({item, index, section}) => this._renderItem(item, index)}
+                        renderSectionHeader={({section: {titulo}}) => <MallaHeader nivel={titulo}/>}
+                        renderItem={({item, index, section}) => <MallaItem asignatura={item} />}
                         SectionSeparatorComponent={({ trailingItem, section }) =>
                             trailingItem ? null : (<View style={{padding: 5}} />)
                         }

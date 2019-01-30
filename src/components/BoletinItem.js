@@ -5,7 +5,7 @@ import colors from '../colors';
 
 const ES_IOS = Platform.OS === 'ios';
 
-export default class MallaItem extends Component {
+export default class BoletinItem extends Component {
     constructor(props) {
         super(props);
     }
@@ -19,20 +19,15 @@ export default class MallaItem extends Component {
     }
 
     _renderContent = (asignatura) => {
-        const {codigo, nombre, tipo, estado, nota, oportunidades} = asignatura;
+        const {nombre, estado, nota} = asignatura;
         return (
             <View style={styles.container}>
                 <View style={styles.leftContainer}>
-                    <Text numberOfLines={1} style={styles.texto}>{codigo}</Text>
                     <Text numberOfLines={2} style={styles.textoNombre}>{nombre}</Text>
-                    <Text numberOfLines={1} style={styles.texto}>{tipo}</Text>
                 </View>
                 <View style={styles.rightContainer}>
                     <Text numberOfLines={1} style={styles.textoRight}>{estado}</Text>
                     <Text numberOfLines={1} style={styles.textoRight}>{nota != null ? nota.toFixed(1) : ''}</Text>
-                    <Text numberOfLines={1} style={styles.textoRight}>
-                        {oportunidades != 0 ? oportunidades + ' op': null}
-                    </Text>
                 </View>
             </View>
         );
