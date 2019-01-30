@@ -3,7 +3,7 @@ import { Platform, Text, StyleSheet, StatusBar, View, SafeAreaView, Alert, Toast
 import Carousel from 'react-native-snap-carousel';
 import Orientation from 'react-native-orientation';
 
-import SliderEntry from '../components/SliderEntry';
+import NoticiaItem from '../components/NoticiaItem';
 import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
 import colors from '../colors';
 
@@ -64,7 +64,7 @@ export default class MainScreen extends Component {
         
     }
 
-    _onPress = (id, titulo, url) => {
+    _onNoticiaPress = (id, titulo, url) => {
         //this.props.navigation.navigate('Noticia', {title: titulo, id: id});
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
@@ -76,11 +76,10 @@ export default class MainScreen extends Component {
     _renderNoticiaItem ({item, index}, parallaxProps) {
 
         return (
-            <SliderEntry
-              data={item}
-              parallax={true}
-              onPress={this._onPress}
-              parallaxProps={parallaxProps}/>
+            <NoticiaItem
+                noticia={item}
+                onPress={this._onNoticiaPress}
+                parallaxProps={parallaxProps}/>
         );
     }
 

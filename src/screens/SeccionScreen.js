@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, RefreshControl, Image, AsyncStorage, ActivityIndicator, View, StyleSheet, Text, Button, FlatList, TouchableNativeFeedback } from 'react-native';
+import { ScrollView, RefreshControl, Image, AsyncStorage, ToastAndroid, ActivityIndicator, View, StyleSheet, Text, Button, FlatList, TouchableNativeFeedback } from 'react-native';
 import { Cache } from "react-native-cache";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -29,18 +29,22 @@ export default class SeccionScreen extends Component {
         }
     }
 
-    _irANotas = () => {
-        this.props.navigation.navigate('Notas', {
-            seccion: this.state.notas,
-            asignatura: this.props.asignatura
-        });
-    }
 
-    _irACalificaciones = () => {
-        this.props.navigation.navigate('Calificaicones', {
-            docente: this.state.bitacora.docente.rut,
-            asignatura: this.props.asignatura
-        });
+
+    _onPressNotas = () => {
+        if (this.state.estaActualizando || this.state.estaCargandoNotas) {
+            ToastAndroid.show('Espera a que termine de cargar', ToastAndroid.SHORT); // TODO: Poner lo de iOS
+        } else {
+            const {tipo, seccion} = this.props.seccion;
+            this.props.navigation.navigate('Notas', {
+                seccion: this.state.notas,
+                tipo: tipo,
+                onGoBack: () => this._getNotas(),
+                seccionNumero: seccion,
+                asignatura: this.props.asignatura
+            });
+        }
+        
     }
 
     _getNotas = async (forzarApi) => {
@@ -48,6 +52,7 @@ export default class SeccionScreen extends Component {
         const {id, nombre} = this.props.asignatura;
         const {tipo, seccion} = this.props.seccion;
         const key = rut + 'asignaturas' + id + 'notas-' + tipo + '-' + seccion;
+        
         cache.getItem(key, async (err, notasCache) => {
             if (forzarApi || err || !notasCache) {
                 var notas = await apiUtem.getNotas(rut, id);
@@ -107,17 +112,32 @@ export default class SeccionScreen extends Component {
     }
 
     _renderNotas = () => {
-        console.log(this.state.notas);
-        
         if (this.state.notas) {
             if (this.state.notas.ponderadoresRegistrados) {
                 return (
-                    <FlatList
-                        style={{flex: 1}}  
-                        data={this.state.notas.notas.notas}
-                        onChange={null}
-                        renderItem={({item, index}) => <NotasItem index={index} nota={item.nota} ponderador={item.ponderador} etiqueta={item.tipo} editable={false}/>}
-                    />
+                    <TouchableNativeFeedback
+                        onPress={this._onPressNotas}
+                        background={TouchableNativeFeedback.Ripple(colors.material.grey['400'], true)} >
+                        <View pointerEvents='box-only'>
+                            <FlatList
+                                style={{flex: 1}}  
+                                data={this.state.notas.notas.parciales}
+                                onChange={null}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({item, index}) => 
+                                    <NotasItem
+                                        index={index}
+                                        nota={item.nota}
+                                        ponderador={item.ponderador} 
+                                        etiqueta={item.tipo} 
+                                        editable={false}/>
+                                }
+                            />
+                        </View>
+                        
+
+                    </TouchableNativeFeedback>
+                    
                 )
             } else {
                 return (
@@ -131,7 +151,7 @@ export default class SeccionScreen extends Component {
         } else {
             return (
                 <View style={styles.vacioContainer}>
-                    <MaterialCommunityIcons name="bookmark-off" size={50} color={colors.material.grey['400']}/>
+                    <MaterialCommunityIcons name="bookmark-off" size={70} color={colors.material.grey['400']}/>
                     <Text style={styles.vacioTexto}>No hay notas registradas</Text>
                 </View>
             )
@@ -167,7 +187,7 @@ export default class SeccionScreen extends Component {
                         style={[styles.cargando, this.state.estaCargandoBitacora ? {opacity: 1} : {opacity: 0}]}/>
                     <TouchableNativeFeedback
                         onPress={this._onPressCalificaciones}
-                        background={TouchableNativeFeedback.Ripple('#1f000000', true)} >
+                        background={TouchableNativeFeedback.Ripple(colors.material.grey['300'], true)} >
                             
                         <View style={this.state.estaCargandoBitacora ? {opacity: 0} : {opacity: 1}}>
                             <View style={styles.docenteContainer}>

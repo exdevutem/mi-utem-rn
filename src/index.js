@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Platform } from 'react-native';
+import { Platform, ToastAndroid } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator, createDrawerNavigator, createMaterialTopTabNavigator, createSwitchNavigator, createAppContainer, HeaderBackButton} from 'react-navigation';
 import {TabBar} from 'react-native-tab-view';
 
 import SegmentedTab from './components/SegmentedTab';
 import Drawer from './components/Drawer';
+import CalificarHeader from './components/CalificarHeader';
 
 import colors from './colors';
 
@@ -179,9 +180,17 @@ const MainStack = createStackNavigator({
   },
   Calificar: {
     screen: CalificarScreen,
-    navigationOptions: {
-      title: 'Calificar'
-    }
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: <HeaderBackButton tintColor={'white'} onPress={() => {
+        if (navigation.getParam("estaCargando")) {
+          ToastAndroid.show('Espera a que se envíe tu calificación', ToastAndroid.SHORT)
+        } else {
+          navigation.state.params.onGoBack(false);
+          navigation.goBack()
+        }
+      }}/>,
+      headerTitle: <CalificarHeader docente={navigation.getParam("nombreDocente", "Docente")}/>
+    })
   }
 },
 {

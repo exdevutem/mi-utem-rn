@@ -35,32 +35,45 @@ export default class CalificarScreen extends Component {
     }
 
     _sendCalificacion = async () => {
-        console.log("Iniciado");
-        
         const rut = this.props.navigation.getParam('rutDocente');
         const id = this.props.navigation.getParam('asignaturaId');
-        console.log(rut, id);
-        
+        var valor = this.state.calificacionActual;
+        if (valor > 5) {
+            valor = 5;
+        } else if (valor < 1) {
+            valor = 1;
+        }
+
         try {
+            
             const parametros = {
-                valor: this.state.calificacionActual,
-                comentario: this.state.comentarioActual,
+                valor: valor,
                 anonimo: this.state.anonimoSeleccionado,
+                comentario: this.state.anonimoSeleccionado ? null : this.state.comentarioActual,
                 asignatura: id
             }
             const respuesta = await apiUtem.sendCalificacion(rut, parametros);
-            console.log("Listo");
             
             this.setState({
                 estaCargando: false
             });
+            this.props.navigation.setParams({
+                estaCargando: true
+            });
+            this.props.navigation.state.params.onGoBack(true);
+            this.props.navigation.goBack();
         } catch (err) {
-            console.log(err);
+            console.error(err);
 
             this.setState({
                 estaCargando: false
             });
+            this.props.navigation.setParams({
+                estaCargando: true
+            });
         }
+        
+
     }
 
     _onTextInputChange = (nuevoTexto) => {
@@ -83,6 +96,9 @@ export default class CalificarScreen extends Component {
 
     _onPressEnviar = () => {
         this.setState({
+            estaCargando: true
+        });
+        this.props.navigation.setParams({
             estaCargando: true
         });
         this._sendCalificacion()
@@ -126,6 +142,7 @@ export default class CalificarScreen extends Component {
                 <Button
                     title="Enviar"
                     color={colors.primario}
+                    style={styles.botonPublicar}
                     onPress={this._onPressEnviar}/>
             </SafeAreaView>
             

@@ -34,35 +34,40 @@ export default class CalificacionesScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            calificaciones: null, // Se setean vacíos los comentarios la primera vez,
+            calificaciones: null,
+            docente: null,
+            tusCalificaciones: null,
             calificacionActual: 0,
             estaActualizando: false,
-            estaCargando: true
+            estaCargandoOtros: true,
+            estaCargandoComentarios: true,
         }
-    }
-
-    _parseCalificaciones = (calificaciones) => {
-        this.setState({
-            calificaciones: calificaciones,
-            estaActualizando: false,
-            estaCargando: false
-        });
     }
 
     _getCalificaciones = async (forzarApi) => {
         const rut = this.props.navigation.getParam('rutDocente');
         const key = 'docentes' + rut + 'calificaciones';
         cache.getItem(key, async (err, calificacionesCache) => {
-          
-            if (forzarApi || err || !calificacionesCache) {
-                const calificaciones = await apiUtem.getCalificaciones(rut);
-                cache.setItem(key, calificaciones, (err) => {
-                    if (err) console.error(err);
-                    this._parseCalificaciones(calificaciones);
+            if (!err && calificacionesCache && !forzarApi) {
+                this.setState({
+                    docente: calificacionesCache.docente,
+                    tusCalificaciones: calificacionesCache.calificaciones.tusCalificaciones,
+                    estaActualizando: false,
+                    estaCargandoOtros: false
                 });
-            } else {    
-                this._parseCalificaciones(calificacionesCache);
             }
+            const calificaciones = await apiUtem.getCalificaciones(rut);
+            cache.setItem(key, calificaciones, (err) => {
+                if (err) console.error(err);
+                this.setState({
+                    calificaciones: calificaciones.calificaciones,
+                    docente: calificaciones.docente,
+                    tusCalificaciones: calificaciones.calificaciones.tusCalificaciones,
+                    estaActualizando: false,
+                    estaCargandoOtros: false,
+                    estaCargandoComentarios: false,
+                });
+            });
         });
     }
 
@@ -73,12 +78,14 @@ export default class CalificacionesScreen extends Component {
         this.props.navigation.navigate('Calificar', {
             estrellas: estrellas,
             rutDocente: this.props.navigation.getParam('rutDocente'),
-            asignaturaId: this.props.navigation.getParam('asignaturaId')
+            asignaturaId: this.props.navigation.getParam('asignaturaId'),
+            nombreDocente: this._getNombre(this.state.docente.nombre),
+            onGoBack: () => this._onGoBack()
         })
     }
 
     componentWillMount() {
-        this._getCalificaciones(true);
+        this._getCalificaciones();
     }
 
     _renderTuCalificacion = (calificaciones) => {
@@ -89,9 +96,9 @@ export default class CalificacionesScreen extends Component {
             )
         } else {
             return (
-                <View style={styles.contentContainer}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
                     <StarRating
-                        containerStyle={{paddingHorizontal: 20}}
+                        containerStyle={{padding: 20}}
                         maxStars={5}
                         starSize={35}
                         emptyStar='star'
@@ -131,6 +138,19 @@ export default class CalificacionesScreen extends Component {
 
     _getNombre = (objeto) => {
         return objeto ? (objeto.apellidos ? objeto.nombres + " " + objeto.apellidos : (objeto.completo ? objeto.completo : objeto)) : '';
+    }
+
+    _onGoBack = (seCalifico) => {
+        if (seCalifico) {
+            this.setState({
+                estaCargandoComentarios: true,
+            });
+            this._getCalificaciones(true);
+        } else {
+            this.setState({
+                calificacionActual: 0
+            });
+        }
     }
 
     _onRefresh = () => {
@@ -179,10 +199,9 @@ export default class CalificacionesScreen extends Component {
                 },
             },
         ]
-        const {calificaciones} = this.state;
-        const tusCalificaciones = calificaciones ? calificaciones.calificaciones.tusCalificaciones : null;
-        const nombreDocente = calificaciones ? this._getNombre(calificaciones.docente.nombre) : '';
-        const promedio = calificaciones ? (calificaciones.calificaciones.promedio ? calificaciones.calificaciones.promedio.toFixed(1) : 'N/C') : '' 
+        const {calificaciones, tusCalificaciones, docente} = this.state;
+        const nombreDocente = docente ? this._getNombre(docente.nombre) : '';
+        const promedio = calificaciones ? (calificaciones.promedio ? calificaciones.promedio.toFixed(1) : 'N/C') : '' 
         return (
             <ScrollView 
                 style={styles.container}
@@ -199,12 +218,12 @@ export default class CalificacionesScreen extends Component {
                     <ActivityIndicator 
                         size="large" 
                         color={colors.primario} 
-                        style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+                        style={[styles.cargando, this.state.estaCargandoOtros ? {opacity: 1} : {opacity: 0}]}/>
                     
-                    <View style={[styles.cardWrapper, this.state.estaCargando ? {opacity: 0} : {opacity: 1}]}>
+                    <View style={[styles.cardWrapper, this.state.estaCargandoOtros ? {opacity: 0} : {opacity: 1}]}>
                         <View style={styles.docenteContainer}>
                             <Image
-                                source={{uri: calificaciones ? calificaciones.docente.fotoUrl : ''}}
+                                source={{uri: docente ? docente.fotoUrl : ''}}
                                 style={styles.fotoDocente} />
                             <View style={styles.datosDocenteContainer}>
                                 <Text 
@@ -212,7 +231,7 @@ export default class CalificacionesScreen extends Component {
                                     numberOfLines={2}>
                                     {nombreDocente}
                                 </Text>
-                                <Text> {calificaciones ? calificaciones.docente.correo : ''}</Text>
+                                <Text> {docente ? docente.correo : ''}</Text>
                             </View>
                         </View>
                         <View style={styles.calificacionContainer}>
@@ -228,7 +247,7 @@ export default class CalificacionesScreen extends Component {
                                     starStyle={{margin: 2}}
                                     disabled={true}
                                     starSize={15}
-                                    rating={parseFloat(calificaciones ? calificaciones.calificaciones.promedio : 0)}
+                                    rating={parseFloat(calificaciones ? calificaciones.promedio : 0)}
                                     fullStarColor={colors.material.grey['700']} />
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <MaterialIcons name="person" size={15} color={colors.material.grey['700']}/>
@@ -258,9 +277,9 @@ export default class CalificacionesScreen extends Component {
                     <ActivityIndicator 
                         size="large" 
                         color={colors.primario} 
-                        style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+                        style={[styles.cargando, this.state.estaCargandoOtros ? {opacity: 1} : {opacity: 0}]}/>
                     
-                    <View style={this.state.estaCargando ? {opacity: 0} : {opacity: 1}}>
+                    <View style={this.state.estaCargandoOtros ? {opacity: 0} : {opacity: 1}}>
                         {this._renderTuCalificacion(tusCalificaciones)}
                     </View>
                 </View>
@@ -270,11 +289,11 @@ export default class CalificacionesScreen extends Component {
                     <ActivityIndicator 
                         size="large" 
                         color={colors.primario} 
-                        style={[styles.cargando, this.state.estaCargando ? {opacity: 1} : {opacity: 0}]}/>
+                        style={[styles.cargando, this.state.estaCargandoComentarios ? {opacity: 1} : {opacity: 0}]}/>
                     
-                    <View style={this.state.estaCargando ? {opacity: 0} : {opacity: 1}}>
+                    <View style={this.state.estaCargandoComentarios ? {opacity: 0} : {opacity: 1}}>
                         
-                        {this._renderComentarios(calificaciones ? calificaciones.calificaciones.comentarios : null)}
+                        {this._renderComentarios(calificaciones ? calificaciones.comentarios : null)}
                     </View>
                     
                 </View>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AsyncStorage, SafeAreaView, StatusBar, FlatList, ScrollView, StyleSheet, View, Text, RefreshControl } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import NotaInput from '../components/NotaInput'
 import { Cache } from "react-native-cache";
 
 import colors from '../colors';
@@ -17,92 +17,112 @@ var cache = new Cache({
     backend: AsyncStorage
 });
 
+/*
+{
+    finalApi: null,
+    finalCalc: null,
+    examen1Api: null,
+    examen1Calc: null,
+    examen2Api: null,
+    examen2Calc: null,
+    presentacionApi: null,
+    presentacionCalc: null,
+    notasApi: null,
+    notasCalc: null,
+    estaCalculando: false,
+    estaActualizando: false
+}
+
+*/
+
 export default class NotasScreen extends Component {
     constructor(props) {
         super(props);
-        var seccion = this.props.navigation.getParam("seccion");
-        var stateInicial = this._setStateInicial(seccion)
-        this.state = {
-            ...stateInicial,
+        const seccion = this.props.navigation.getParam("seccion");
+        this.state = this._setStateInicial(seccion);
+    }
+
+    _setStateInicial = (seccion) => {
+        return {
+            observacionApi: seccion.notas.observacion,
+            finalApi: seccion.notas.final, // TODO: Cambiar por notas.final
+            finalCalc: this._calcularNotaFinal(seccion.notas.final, seccion.notas.presentacion, seccion.notas.examenes[0]),
+            examen1Api: seccion.notas.examenes[0],
+            examen1Input: null,
+            examen2Api: seccion.notas.examenes[1],
+            examen2Input: null,
+            presentacionApi: seccion.notas.presentacion,
+            presentacionCalc: this._calcularPresentacion(seccion.notas.parciales), // TODO: Cambiar por notas.parciales
+            notasApi: seccion.notas.parciales.slice(), // TODO: Cambiar por notas.parciales
+            notasInputs: seccion.notas.parciales.slice(), // TODO: Cambiar por notas.parciales
+            estaCalculando: false,
             estaActualizando: false
         }
     }
 
-    _setStateInicial = (seccion) => {
-        var resultadoNotas = this._parseNotas(seccion.notas.notas);
-        var presentacion = this._calcularPresentacion(resultadoNotas);
-        var notaExamen;
-
-        if(seccion.notas.examenes[0] == null){
-            notaExamen = seccion.notas.examenes[1];
-        } else{
-            notaExamen = seccion.notas.examenes[0];
-        }
-
-        return {
-            seccion: seccion,
-            notas: resultadoNotas,
-            presentacion: presentacion,
-            examen: notaExamen,
-            notaFinal: this._calcularNotaFinal(seccion, notaExamen, presentacion)
-        }
-    }
-
-    _parseNotas(notas) {
-        var listaDeNotas = [];
-
-        notas.forEach(function(nota) {
-            var tupla = [];
-            tupla.push(nota.ponderador);
-            
-            if (nota.nota == null) {
-                tupla.push(null);
-                tupla.push(true);
-            } else {
-                tupla.push(nota.nota);
-                tupla.push(false);
-            }
-
-            tupla.push(nota.tipo);
-
-            listaDeNotas.push(tupla);
-        })
-        
-        return listaDeNotas;
-    }
-
-    _calcularPresentacion(listaDeNotas) {
+    _calcularPresentacion(notas) {
         var notaFinal = 0;
 
-        listaDeNotas.forEach(function(elemento) {
-            if (elemento[1] != null) {
-                notaFinal = notaFinal + elemento[0] * elemento[1];
+        notas.forEach(nota => {
+            if (nota.ponderador) {
+                notaFinal += (nota.nota * nota.ponderador);
             }
         })
-        return notaFinal.toFixed(1);
+        return notaFinal;
     }
 
-    _calcularNotaFinal(seccion, notaExamen, notaPresentacion) {
-        notaExamen = parseFloat(notaExamen) || null;
-        notaPresentacion = parseFloat(notaPresentacion) || null;
-
-        if (seccion.notas.nota != null) {
-            return seccion.notas.nota;
-        } else {
-            notaPresentacion = parseFloat(notaPresentacion);
-            notaPresentacion = parseFloat(notaPresentacion.toFixed(1));
-            
-            if(notaPresentacion < 4 && notaPresentacion >= 3) {
-                if (notaExamen == null) {
-                    return notaPresentacion;
-                }
-                var resultado = (notaPresentacion * 0.6) + (notaExamen * 0.4);
-                resultado = resultado.toFixed(1);
-                return resultado;
-            } else {
-                return notaPresentacion;
+    _notaAFloat = (nota) => {
+        if (nota) {
+            var nuevaNota = nota;
+            if (typeof(nota) === "string") {
+                nuevaNota = parseFloat(nota).toFixed(1);
+                nuevaNota = parseFloat(nuevaNota);
+                return nuevaNota;
+            } else if (typeof(nota) === "number") {
+                nuevaNota = nota.toFixed(1);
+                nuevaNota = parseFloat(nuevaNota);
+                return nuevaNota;
             }
         }
+        return nota;
+        
+    }
+
+    _notaAString = (nota) => {
+        var nuevaNota;
+        if (nota) {
+            if (typeof(nota) == "string") {
+                nuevaNota = parseFloat(nota).toFixed(1);
+            } else if (typeof(nota) == "number") {
+                nuevaNota = nota.toFixed(1);
+            } else {
+                nuevaNota = nota.toString();
+            }
+        } else {
+            nuevaNota = '';
+        }
+        return nuevaNota;
+    }
+
+    _calcularNotaFinal(finalApi, presentacion, examen1) {
+        finalApi = this._notaAFloat(finalApi);
+        presentacion = this._notaAFloat(presentacion);
+        examen1 = this._notaAFloat(examen1);
+
+        /*if (finalApi) {
+            return finalApi;
+        } else {*/
+            if (presentacion < 4 && presentacion >= 3) {
+                if (examen1 == null || examen1 == "") {
+                    return presentacion;
+                }
+                var resultado = (presentacion * 0.6) + (examen1 * 0.4);
+                resultado = this._notaAFloat(resultado);
+                return resultado;
+            } else {
+                return presentacion;
+            }
+        //}
     }
 
     _getEstado = (estado) => {
@@ -117,37 +137,54 @@ export default class NotasScreen extends Component {
         return nuevoEstado;
     }
 
-    _cambiarStates = (i, nota) => {
-        var nuevaNota = parseFloat(nota) || null;
-        if (nuevaNota > 7) {
-            nuevaNota = 7;
-        }
-        if (i != null) {
-            var lista = this.state.notas;
+    _modificaNota = (i, nuevaNota, nuevoPonderador) => {
 
-            lista[i][1] = nuevaNota;
+        nuevaNota = this._notaAFloat(nuevaNota);
 
-            var presentacion = this._calcularPresentacion(lista);
-            var examen = this._examenEstaHabilitado(this.state.examen, presentacion) ? this.state.examen : null
+        let notasInputs = [ ...this.state.notasInputs ];
+        notasInputs[i] = {...notasInputs[i], nota: nuevaNota};
+        this.setState({ notasInputs });
+
+        const nuevaPresentacion = this._calcularPresentacion(notasInputs);
+        const examen1Habilitado = this._examen1Habilitado(this.state.examen1Api, this.state.examen1Input, nuevaPresentacion, true);
+        
+        var examen1Nuevo = examen1Habilitado ? this.state.examen1Input : null;
+        this.setState({
+            examen1Input: examen1Nuevo,
+            finalCalc: this._calcularNotaFinal(this.state.finalApi, nuevaPresentacion, examen1Nuevo),
+            presentacionCalc: nuevaPresentacion
+        });
+    }
+
+    _modificaExamen = (i, nuevaNota) => {
+        nuevaNota = this._notaAFloat(nuevaNota);
+        if (i == 1) {
             this.setState({
-                presentacion: presentacion,
-                notaFinal: this._calcularNotaFinal(this.state.seccion, examen, presentacion),
-                examen: examen
+                examen2Input: nuevaNota,
+                finalCalc: this._calcularNotaFinal(this.state.finalApi, this.state.presentacionCalc, nuevaNota)
             });
         } else {
             this.setState({
-                examen: nuevaNota,
-                notaFinal: this._calcularNotaFinal(this.state.seccion, nuevaNota, this.state.presentacion)
+                examen1Input: nuevaNota == "" ? null : nuevaNota,
+                finalCalc: this._calcularNotaFinal(this.state.finalApi, this.state.presentacionCalc, nuevaNota)
             });
         }
+        
     }
-    _examenEstaHabilitado = (examen, presentacion) => {
-        presentacion = parseFloat(presentacion) || null
-        presentacion = parseFloat(presentacion.toFixed()) || null;
-        console.log("examenInicial == null", examen, presentacion);
-        if ((examen != null) || (presentacion && presentacion < 4 && presentacion >= 3)) {
-            console.log("otro if", examen, presentacion);
-            return true;
+
+    _examen1Habilitado = (examen1Api, examen1Calc, presentacion, seModificoNota) => {
+        presentacion = this._notaAFloat(presentacion);
+        
+        if (examen1Api == null) {
+            if (seModificoNota) {
+                if (presentacion && presentacion < 4 && presentacion >= 3) {
+                    return true;
+                }
+            } else {
+                if (examen1Calc || (presentacion && presentacion < 4 && presentacion >= 3)) {
+                    return true;
+                }
+            }
         }
         return false;
         
@@ -157,8 +194,10 @@ export default class NotasScreen extends Component {
         const navigation = this.props.navigation;
         const rut = await AsyncStorage.getItem('rut');
         const {id, nombre} = navigation.getParam("asignatura");
-        const {tipo, seccion} = navigation.getParam("seccion");
+        const tipo = navigation.getParam("tipo");
+        const seccion = navigation.getParam("seccionNumero")
         const key = rut + 'asignaturas' + id + 'notas-' + tipo + '-' + seccion;
+        
         cache.getItem(key, async (err, notasCache) => {
             if (forzarApi || err || !notasCache) {
                 var notas = await apiUtem.getNotas(rut, id);
@@ -166,16 +205,10 @@ export default class NotasScreen extends Component {
 
                 cache.setItem(key, notas, (err) => {
                     if (err) console.error(err);
-                    this.setState({
-                        ...this._setStateInicial(notas),
-                        estaActualizando: false
-                    });
+                    this.setState(this._setStateInicial(notas));
                 });
             } else {
-                this.setState({
-                    ...this._setStateInicial(notasCache),
-                    estaActualizando: false
-                });
+                this.setState(this._setStateInicial(notasCache));
             }
         });
     }
@@ -188,8 +221,10 @@ export default class NotasScreen extends Component {
     }
 
     render () {
-        var seccion = this.state.seccion;
-
+        var finalCalc = this._notaAString(this.state.finalCalc);
+        console.log(this.state); 
+        console.log(this._notaAString(this.state.presentacionCalc));
+        
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar
@@ -204,53 +239,51 @@ export default class NotasScreen extends Component {
                     } >
                     <View style={[styles.rowContainer, styles.card]}>
                         <View style={styles.columnContainer}>
-                            <View style={styles.rowContainer}>
+                            <View style={[styles.rowContainer, {alignSelf: 'flex-start'}]}>
                                 <Text style={styles.item}>Examen:</Text>
-                                <TextInput
-                                    onChangeText={(nuevoTexto) => {
-                                        const caracteres = '0123456789.';
-                                        var textoLimpio = '';
-            
-                                        for (var j = 0; j < nuevoTexto.length; j++) {
-                                            if (caracteres.indexOf(nuevoTexto[j]) > -1 ) {
-                                                textoLimpio += nuevoTexto[j];
-                                            }
-                                        }
-                                        this._cambiarStates(null, textoLimpio);
-                                    }}
-                                    editable={this._examenEstaHabilitado(seccion.notas.examenes[0], this.state.presentacion)}
+                                <NotaInput
+                                    onChangeText={(nuevoTexto) => this._modificaExamen(0, nuevoTexto)}
+                                    editable={this._examen1Habilitado(this.state.examen1Api, this.state.examen1Input, this.state.presentacionCalc)}
                                     underlineColorAndroid={colors.material.grey['500']}
                                     style={styles.item}
-                                    value={this.state.examen ? this.state.examen.toString() : ''}
-                                    keyboardType='numeric'>
-                                </TextInput>
+                                    value={this.state.examen1Input} >
+                                </NotaInput>
+                                
                             </View>
                             
-                            <View style={styles.rowContainer}>
+                            <View style={[styles.rowContainer, {alignSelf: 'flex-start'}]}>
                                 <Text style={styles.item}>Presentacion:</Text>
-                                <TextInput
+                                <NotaInput
                                     editable={false}
-                                    underlineColorAndroid={colors.material.grey['500']}
                                     style={styles.item}
-                                    keyboardType={'numeric'}>
-                                    {this.state.presentacion}
-                                </TextInput>
+                                    value={this._notaAString(this.state.presentacionCalc)}>
+                                </NotaInput>
                             </View>
                             
                         </View>
 
                         <View style={styles.columnContainer}>
-                            <Text style={styles.presentacionTexto}>{this.state.notaFinal}</Text>
-                            <Text style={styles.estadoTexto}>{this._getEstado(seccion.notas.observacion)}</Text>
+                            <Text style={styles.finalTexto}>{finalCalc}{this.state.estaCalculando ? '*' : ''}</Text>
+                            <Text style={styles.estadoTexto}>{this._getEstado(this.state.observacionApi)}</Text>
                         </View>
                     </View>
 
                     <View style={styles.card}>
-                        <FlatList
-                            extraData={this.state.notas}
-                            data={this.state.notas}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({item, index}) => <NotasItem index={index} onChange={this._cambiarStates} nota={item}/>}
+                    <FlatList
+                        extraData={this.state}
+                        data={this.state.notasInputs}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({item, index}) => {
+                            return (
+                                <NotasItem
+                                    index={index}
+                                    onChange={this._modificaNota}
+                                    ponderador={item.ponderador}
+                                    nota={item.nota}
+                                    editable={this.state.notasApi[index].nota == null}
+                                    etiqueta={item.tipo}/>
+                            )
+                        }}
                         />
                     </View>
                 </ScrollView>
@@ -282,7 +315,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: 'center'
     },
-    presentacionTexto: {
+    finalTexto: {
         fontSize: 60,
         fontWeight: 'bold'
     },

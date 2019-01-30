@@ -1,32 +1,58 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
+
+import NotaInput from './NotaInput'
 import colors from '../colors';
 
 export default class NotasItem extends Component {
-    /*
-    TODO:
-    - Condiciones para validar el valor del TextInput (Entre 1 y 7, solo numeros y punto, etc)
-     */
+    
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.editable == prevState.editable) {
+            return prevState;
+        } else {
+            if (nextProps.nota != prevState.notaInicial) {
+                return {
+                    valorInput: nextProps.nota ? nextProps.nota.toString() : '',
+                    notaInicial: nextProps.nota
+                }
+            }
+        }
+        /*if (nextProps.editable) { // Si ahora es editable
+            if (nextProps.editable == prevState.editable) { // Y antes también era editable
+                return prevState;
+            } else { // Y antes NO era editable: borraron una nota en Academia
 
+            }
+        } else { // Si ahora no es editable
+            if (nextProps.editable == prevState.editable) { // Y antes tampoco era editable
+                return prevState;
+            } else { // Y antes SÍ era editable: agregaron una nota a Academia
+                if (nextProps.nota != prevState.notaInicial) {
+                    return {
+                        valorInput: nota ? nota.toString() : '',
+                        notaInicial: nota
+                    }
+                }
+            }
+        }
+        
+        if (nota != prevState.notaInicial) {
+            return {
+                valorInput: nota ? nota.toString() : '',
+                notaInicial: nota
+            }
+        } else {
+            return prevState;
+        }*/
+    }
 
     constructor(props) {
         super(props);
         const nota = this.props.nota;
         this.state = {
             valorInput: nota ? nota.toFixed(1) : '',
+            editableInicial: this.props.editable,
             notaInicial: nota ? nota.toFixed(1) : ''
-        }
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const nota = nextProps.nota;
-        if (nextProps.editable && nota !== prevState.notaInicial) {
-            return {
-                valorInput: nota ? nota.toFixed(1) : '',
-                notaInicial: nota ? nota.toFixed(1) : ''
-            }
-        } else {
-            return null;
         }
     }
 
@@ -41,24 +67,16 @@ export default class NotasItem extends Component {
         return nuevoNombre;
     }
 
-    _onBlur = () => {
+    _onEndEditing = () => {
         if (this.state.valorInput != '') {
-            if (parseFloat(this.state.valorInput) > 7) {
-                this.setState({
-                    valorInput: (7).toFixed(1)
-                });
-            } else {
-                console.log(parseFloat(statePrevio.valorInput));
-                
-                this.setState((statePrevio) => ({
-                    valorInput: parseFloat(statePrevio.valorInput).toFixed(1)
-                }));
-            }
+            this.setState((statePrevio) => ({
+                valorInput: parseFloat(statePrevio.valorInput).toFixed(1)
+            }));
         }
     }
 
     render() {
-        const {index, ponderador, nota, editable, etiqueta} = this.props;
+        const {ponderador, editable, etiqueta, index} = this.props;
 
         return(
             <View style={styles.container}>
@@ -67,32 +85,14 @@ export default class NotasItem extends Component {
                 </View>
                 
                 <View style={styles.columna}>
-                    <TextInput
-                        onChangeText={(nuevoTexto) => {
-                            const caracteres = '0123456789.';
-                            var textoLimpio = '';
-
-                            for (var j = 0; j < nuevoTexto.length; j++) {
-                                if (caracteres.indexOf(nuevoTexto[j]) > -1 ) {
-                                    textoLimpio += nuevoTexto[j];
-                                } else {
-                                    // your call back function
-                                }
-                            }
-
-                            this.setState({
-                                valorInput: textoLimpio
-                            });
-                            this.props.onChange(index, textoLimpio);
-                        }}
-                        onBlur={this._onBlur}
-                        keyboardType='numeric'
-                        maxLength={3}
+                    <NotaInput
+                        onChangeText={(nuevoTexto) => this.props.onChange(index, nuevoTexto)}
+                        onEndEditing={this._onEndEditing}
                         editable={editable}
-                        underlineColorAndroid={editable ? colors.material.grey['500'] : null}
+                        underlineColorAndroid={editable ? colors.material.grey['500'] : 'transparent'}
                         style={[styles.notaInput, editable ? null : {fontWeight: 'bold'}]}
                         value={this.state.valorInput}>
-                    </TextInput>
+                    </NotaInput>
                 </View>
                 
                 <View style={styles.columna}>
