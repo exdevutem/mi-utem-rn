@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Dimensions, Text, StyleSheet, View, ScrollView } from 'react-native';
 import HTML from 'react-native-render-html';
+import firebase from 'react-native-firebase';
 
 const postUrl = 'https://www.utem.cl/wp-json/wp/v2/posts/';
 
@@ -18,6 +19,7 @@ export default class NoticiaScreen extends Component {
 
     constructor (props) {
         super(props);
+        firebase.analytics().setCurrentScreen("NoticiaScreen", "NoticiaScreen");
         this.state = {
             html: ''
         };

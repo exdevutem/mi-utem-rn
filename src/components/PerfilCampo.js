@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, Text, View, TextInput, StyleSheet, Picker } from 'react-native';
 import DatePicker from 'react-native-datepicker'
+import firebase from 'react-native-firebase';
 
 const ES_IOS = Platform.OS === 'ios';
 
@@ -41,8 +42,7 @@ export default class PerfilCampo extends Component {
     }
 
     _onDateChange = (nuevaFecha) => {
-        console.log(nuevaFecha);
-        
+        firebase.analytics().logEvent("edit_fecha_nacimiento");
         this.setState({
             valorActual: nuevaFecha
         });
@@ -71,7 +71,10 @@ export default class PerfilCampo extends Component {
                         onChangeText={this._onTextInputChange}
                         keyboardType="email-address"
                         textContentType="emailAddress"
-                        onEndEditing={() => this._onEndEditing("correoPersonal", "correo", this.state.valorActual)}
+                        onEndEditing={() => {
+                            firebase.analytics().logEvent("edit_email");
+                            this._onEndEditing("correoPersonal", "correo", this.state.valorActual);
+                        }}
                         editable={editable}>
                     </TextInput>
                 )
@@ -83,7 +86,10 @@ export default class PerfilCampo extends Component {
                         keyboardType="phone-pad"
                         textContentType="telephoneNumber"
                         onChangeText={this._onTextInputChange}
-                        onEndEditing={() => this._onEndEditing("telefonoMovil", "movil", parseInt(this.state.valorActual))}
+                        onEndEditing={() => {
+                            firebase.analytics().logEvent("edit_tel_movil");
+                            this._onEndEditing("telefonoMovil", "movil", parseInt(this.state.valorActual));
+                        }}
                         editable={editable}>
                     </TextInput>
                 )
@@ -95,7 +101,10 @@ export default class PerfilCampo extends Component {
                         keyboardType="phone-pad"
                         textContentType="telephoneNumber"
                         onChangeText={this._onTextInputChange}
-                        onEndEditing={() => this._onEndEditing("telefonoFijo", "fijo", parseInt(this.state.valorActual))}
+                        onEndEditing={() => {
+                            firebase.analytics().logEvent("edit_tel_fijo");
+                            this._onEndEditing("telefonoFijo", "fijo", parseInt(this.state.valorActual))
+                        }}
                         editable={editable}>
                     </TextInput>
                 )
@@ -106,7 +115,10 @@ export default class PerfilCampo extends Component {
                         value={this.state.valorActual}
                         textContentType="fullStreetAddress"
                         onChangeText={this._onTextInputChange}
-                        onEndEditing={() => this._onEndEditing("telefonoFijo", "fijo", parseInt(this.state.valorActual))}
+                        onEndEditing={() => {
+                            firebase.analytics().logEvent("edit_direccion");
+                            this._onEndEditing("direccion", "direccion", parseInt(this.state.valorActual))
+                        }}
                         editable={editable}>
                     </TextInput>
                 )
@@ -135,7 +147,6 @@ export default class PerfilCampo extends Component {
                                 textAlign: 'left'
                             }
                         }}
-                        onDateChange={(date) => {this.setState({valorActual: date})}}
                     />
                 )
             case "sexo":

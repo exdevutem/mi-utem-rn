@@ -4,6 +4,7 @@ import { AreaChart, Grid, YAxis } from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
 import { Circle, Defs, LinearGradient, Stop, Path } from 'react-native-svg'
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 
 import ApiUtem from '../ApiUtem';
@@ -99,6 +100,7 @@ export default class CarreraScreen extends Component {
 
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("CarreraScreen", "CarreraScreen");
         this.state = { 
             malla: null,
             boletinRendimiento: [],

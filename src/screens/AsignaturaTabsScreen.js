@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import firebase from 'react-native-firebase';
 
 import SeccionScreen from './SeccionScreen'
 import colors from '../colors';
@@ -13,6 +14,7 @@ const initialLayout = {
 export default class AsignaturaTabsScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("AsignaturaScreen", "AsignaturaTabsScreen");
         this.state = {
             index: 0,
             routes: this._renderRoutes()

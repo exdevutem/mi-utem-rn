@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Platform, SafeAreaView, AsyncStorage, View, FlatList, RefreshControl, StatusBar } from 'react-native';
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 import ApiUtem from '../ApiUtem';
 import AsignaturasItem from '../components/AsignaturasItem';
@@ -23,6 +24,7 @@ var apiUtem = new ApiUtem();
 export default class AsignaturasScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("AsignaturasScreen", "AsignaturasScreen");
         this.state = { 
             datos: [],
             estaCargando: true

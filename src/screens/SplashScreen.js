@@ -4,6 +4,7 @@ import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Cache } from "react-native-cache";
 import Orientation from 'react-native-orientation';
+import firebase from 'react-native-firebase';
 
 import ApiUtem from '../ApiUtem';
 
@@ -21,6 +22,8 @@ var apiUtem = new ApiUtem();
 export default class SplashScreen extends Component {
     constructor(props) {
         super(props);
+        
+        firebase.analytics().setCurrentScreen("SplashScreen", "SplashScreen");
         this.state = {
             progress: new Animated.Value(0),
             tokenEsValido: null,
@@ -112,6 +115,7 @@ export default class SplashScreen extends Component {
                     const parametros = await this._getDatos();
                     this.props.navigation.navigate('Main', parametros);
                 } catch (error) {
+                    firebase.crashlytics().recordError(2, "No se pudieron obtener los datos. " + JSON.stringify(error));
                     this.props.navigation.navigate('Login');
                 }
                 
@@ -135,6 +139,7 @@ export default class SplashScreen extends Component {
                 if (!ES_IOS) {
                     ToastAndroid.show('Volviendo a iniciar sesión', ToastAndroid.SHORT);
                 }
+                firebase.analytics().logEvent("refresh_token");
                 this.setState({
                     estaCargando: true
                 });
@@ -151,7 +156,7 @@ export default class SplashScreen extends Component {
             }
             this._terminoProceso();
         } catch (error) {
-            console.log(error)
+            firebase.crashlytics().recordError(1, "No se pudo checkear la token. " + JSON.stringify(error));
             this.setState({
                 tokenEsValido: false
             });

@@ -4,6 +4,7 @@ import { Cache } from "react-native-cache";
 
 import MallaItem from '../components/MallaItem';
 import MallaHeader from '../components/MallaHeader';
+import firebase from 'react-native-firebase';
 
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
@@ -23,6 +24,7 @@ var apiUtem = new ApiUtem();
 export default class MallaScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("MallaScreen", "MallaScreen");
         this.state = { 
             datos: [],
             estaCargando: true

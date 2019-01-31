@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ToastAndroid, Platform,Text, View, StyleSheet, Image, ScrollView, FlatList, AsyncStorage, StatusBar, RefreshControl, ActivityIndicator } from 'react-native';
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 import PerfilCampo from '../components/PerfilCampo';
 
@@ -22,6 +23,7 @@ var apiUtem = new ApiUtem();
 export default class PerfilScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("PerfilScreen", "PerfilScreen");
         this._getPerfil = this._getPerfil.bind(this);
         this.state = {
             campos: [],

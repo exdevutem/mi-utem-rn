@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ScrollView, RefreshControl, Image, AsyncStorage, ToastAndroid, ActivityIndicator, View, StyleSheet, Text, Button, FlatList, TouchableNativeFeedback } from 'react-native';
 import { Cache } from "react-native-cache";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import firebase from 'react-native-firebase';
 
 import NotasItem from '../components/NotasItem';
 
@@ -20,6 +21,7 @@ var cache = new Cache({
 export default class SeccionScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("SeccionScreen", "SeccionScreen");
         this.state = {
             notas: null,
             bitacora: [],

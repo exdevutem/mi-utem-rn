@@ -3,6 +3,7 @@ import { Platform, View, SafeAreaView, Text, TouchableNativeFeedback, ScrollView
 import { DrawerItems } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import firebase from 'react-native-firebase';
 
 import colors from '../colors';
 
@@ -14,6 +15,7 @@ export default class Drawer extends Component {
     }
 
     _onLogoutPress = async () => {
+        firebase.analytics().logEvent("logout");
         AsyncStorage.multiRemove(['token', 'rut', 'correo'], (err) => {
             if (err) console.error(err);
             this.props.items.navigation.navigate('Login');

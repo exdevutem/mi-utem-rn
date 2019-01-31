@@ -3,6 +3,10 @@ package cl.inndev.miutem;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.github.wuxudong.rncharts.MPAndroidChartPackage;
 import com.github.yamill.orientation.OrientationPackage;
@@ -35,15 +39,19 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SvgPackage(),
-            new MPAndroidChartPackage(),
-            new OrientationPackage(),
-            new LottiePackage(),
-            new ReactVideoPackage(),
-            new VectorIconsPackage(),
-            new LinearGradientPackage(),
-            new RNGestureHandlerPackage(),
-            new DirectedScrollViewPackage()
+          new RNFirebasePackage(),
+          new RNFirebaseAnalyticsPackage(),
+          new RNFirebaseMessagingPackage(),
+          new RNFirebaseCrashlyticsPackage(),
+          new SvgPackage(),
+          new MPAndroidChartPackage(),
+          new OrientationPackage(),
+          new LottiePackage(),
+          new ReactVideoPackage(),
+          new VectorIconsPackage(),
+          new LinearGradientPackage(),
+          new RNGestureHandlerPackage(),
+          new DirectedScrollViewPackage()
       );
     }
 

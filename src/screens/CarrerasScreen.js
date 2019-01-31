@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Platform, SafeAreaView, AsyncStorage, FlatList, RefreshControl, StatusBar } from 'react-native';
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 import ApiUtem from '../ApiUtem';
 import CarrerasItem from '../components/CarrerasItem';
@@ -23,6 +24,7 @@ var apiUtem = new ApiUtem();
 export default class CarrerasScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("CarrerasScreen", "CarrerasScreen");
         this.state = { 
             carreras: [],
             estaActualizando: false

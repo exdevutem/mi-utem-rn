@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, Platform, StatusBar, StyleSheet, SafeAreaView, AsyncStorage, CheckBox, ActivityIndicator, Button } from 'react-native';
 import StarRating from 'react-native-star-rating';
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 import moment from "moment";
 import 'moment/locale/es'
 
@@ -26,6 +27,7 @@ moment.locale('es');
 export default class CalificarScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("CalificarScreen", "CalificarScreen");
         this.state = {
             calificacionActual: this.props.navigation.getParam('estrellas'),
             anonimoSeleccionado: false,
@@ -53,7 +55,9 @@ export default class CalificarScreen extends Component {
                 asignatura: id
             }
             const respuesta = await apiUtem.sendCalificacion(rut, parametros);
-            
+            firebase.analytics().logEvent("califica_docente", {
+                docente: rut
+            });
             this.setState({
                 estaCargando: false
             });

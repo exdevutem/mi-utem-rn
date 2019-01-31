@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Platform, View, Text, TouchableNativeFeedback, TouchableHighlight, StyleSheet, Alert, ToastAndroid} from 'react-native';
+import firebase from 'react-native-firebase';
 
 import colors from '../colors';
 
@@ -10,7 +11,8 @@ export default class BoletinItem extends Component {
         super(props);
     }
 
-    _onPress = () => {
+    _onPress = (asignatura) => {
+        firebase.analytics().logEvent("press_asignatura_boletin", asignatura);
         if (ES_IOS) {
             Alert.alert('Esta función pronto estará diponible 💪 ');
         } else {
@@ -38,7 +40,7 @@ export default class BoletinItem extends Component {
         return Platform.select({
             android: (
                 <TouchableNativeFeedback
-                    onPress={this._onPress}
+                    onPress={() => this._onPress(asignatura)}
                     background={TouchableNativeFeedback.SelectableBackground()} >
                     {this._renderContent(asignatura)}
                 </TouchableNativeFeedback>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { AsyncStorage, SafeAreaView, StatusBar, FlatList, ScrollView, StyleSheet, View, Text, RefreshControl } from 'react-native';
 import NotaInput from '../components/NotaInput'
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 import colors from '../colors';
 import NotasItem from '../components/NotasItem';
@@ -38,6 +39,7 @@ var cache = new Cache({
 export default class NotasScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("NotasScreen", "NotasScreen");
         const seccion = this.props.navigation.getParam("seccion");
         this.state = this._setStateInicial(seccion);
     }
@@ -138,7 +140,7 @@ export default class NotasScreen extends Component {
     }
 
     _modificaNota = (i, nuevaNota, nuevoPonderador) => {
-
+        firebase.analytics().logEvent("calcula_nota");
         nuevaNota = this._notaAFloat(nuevaNota);
 
         let notasInputs = [ ...this.state.notasInputs ];
@@ -157,6 +159,7 @@ export default class NotasScreen extends Component {
     }
 
     _modificaExamen = (i, nuevaNota) => {
+        firebase.analytics().logEvent("calcula_examen");
         nuevaNota = this._notaAFloat(nuevaNota);
         if (i == 1) {
             this.setState({
@@ -222,8 +225,6 @@ export default class NotasScreen extends Component {
 
     render () {
         var finalCalc = this._notaAString(this.state.finalCalc);
-        console.log(this.state); 
-        console.log(this._notaAString(this.state.presentacionCalc));
         
         return (
             <SafeAreaView style={styles.container}>

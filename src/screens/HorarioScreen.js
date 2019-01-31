@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StatusBar, StyleSheet, View, AsyncStorage, ActivityIndicator } from 'react-native';
 import ScrollView, { ScrollViewChild } from 'react-native-directed-scrollview';
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 import HorarioCeldas from '../components/HorarioCeldas';
 import HorarioPeriodos from '../components/HorarioPeriodos';
@@ -24,6 +25,7 @@ var cache = new Cache({
 export default class HorarioScreen extends Component {
   constructor(props) {
     super(props);
+    firebase.analytics().setCurrentScreen("HorarioScreen", "HorarioScreen");
     this.horarioScroll;
     this.state = {
         datos: [],

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, Text, View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Alert, ToastAndroid } from 'react-native';
+import firebase from 'react-native-firebase';
 
 import colors from '../colors';
 
@@ -124,6 +125,7 @@ export default class HorarioCeldas extends Component {
   }
 
   _onCellPressed(celda, i, j) {
+    firebase.analytics().logEvent("press_asignatura_horario", celda);
     if (ES_IOS) {
       Alert.alert('Esta función pronto estará diponible 💪 ');
     } else {

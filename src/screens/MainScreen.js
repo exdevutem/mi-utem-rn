@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, Text, StyleSheet, StatusBar, View, SafeAreaView, Alert, ToastAndroid } from 'react-native';
+import { Platform, Text, StyleSheet, StatusBar, View, SafeAreaView, Linking } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Orientation from 'react-native-orientation';
 
 import NoticiaItem from '../components/NoticiaItem';
 import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
 import colors from '../colors';
+import firebase from 'react-native-firebase';
 
 const ES_IOS = Platform.OS === 'ios';
 
@@ -18,6 +19,7 @@ export default class MainScreen extends Component {
 
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("MainScreen", "MainScreen");
         this._renderNoticiaItem = this._renderNoticiaItem.bind(this);
         this.state = {
             datos: [],
@@ -66,6 +68,9 @@ export default class MainScreen extends Component {
 
     _onNoticiaPress = (id, titulo, url) => {
         //this.props.navigation.navigate('Noticia', {title: titulo, id: id});
+        firebase.analytics().logEvent("press_noticia", {id: id, titulo: titulo, url: url});
+        console.log(url);
+        
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
                 Linking.openURL(url);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, View, SafeAreaView, AsyncStorage, SectionList, StatusBar, ActivityIndicator } from 'react-native';
 import { Cache } from "react-native-cache";
+import firebase from 'react-native-firebase';
 
 import BoletinItem from '../components/BoletinItem';
 import BoletinHeader from '../components/BoletinHeader';
@@ -23,6 +24,7 @@ var apiUtem = new ApiUtem();
 export default class BoletinScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("BoletinScreen", "BoletinScreen");
         this.state = { 
             datos: [],
             estaCargando: true
@@ -64,8 +66,6 @@ export default class BoletinScreen extends Component {
     }
 
     _parseBoletin = (json) => {
-        console.log(json);
-        
         var boletin = [];
         json.forEach(semestre => {
             boletin.push({
@@ -99,7 +99,7 @@ export default class BoletinScreen extends Component {
                     <SectionList
                         sections={ this.state.datos }
                         stickySectionHeadersEnabled={ true }
-                        renderSectionHeader={({section: {titulo}}) => <BoletiniHeader nivel={titulo}/>}
+                        renderSectionHeader={({section: {titulo}}) => <BoletinHeader nivel={titulo}/>}
                         renderItem={({item, index, section}) => <BoletinItem asignatura={item} />}
                         SectionSeparatorComponent={({ trailingItem, section }) =>
                             trailingItem ? null : (<View style={{padding: 5}} />)

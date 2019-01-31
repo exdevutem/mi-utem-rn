@@ -5,6 +5,7 @@ import { Cache } from "react-native-cache";
 import { BarChart, YAxis } from 'react-native-svg-charts'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import firebase from 'react-native-firebase';
 import * as scale from 'd3-scale'
 
 import moment from "moment";
@@ -33,6 +34,7 @@ moment.locale('es');
 export default class CalificacionesScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("DocenteScreen", "CalificacionesScreen");
         this.state = {
             calificaciones: null,
             docente: null,

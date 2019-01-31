@@ -4,6 +4,7 @@ import Video from 'react-native-video';
 import { Cache } from "react-native-cache";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Orientation from 'react-native-orientation';
+import firebase from 'react-native-firebase';
 
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
@@ -22,6 +23,7 @@ const win = Dimensions.get('window');
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props);
+        firebase.analytics().setCurrentScreen("LoginScreen", "LoginScreen");
         this.state = {
             anchoMaximoBoton: 0,
             altoBoton: null,
@@ -38,6 +40,8 @@ export default class LoginScreen extends Component {
 
      _login = async function(correo, contrasenia) {
         apiUtem.getToken(correo, contrasenia).then(async (respuesta) => {
+            firebase.analytics().logEvent("login", {sign_up_method: "pasaporte_utem"});
+            //firebase.analytics().setUserId(respuesta.rut);
             const rut = respuesta.rut;
             const datos = await apiUtem.getPrincipales(rut);
             const perfil = datos[0];
