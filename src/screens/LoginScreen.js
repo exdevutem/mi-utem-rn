@@ -6,6 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Orientation from 'react-native-orientation';
 import firebase from 'react-native-firebase';
 
+import ErrorModal from '../components/ErrorModal';
 import ApiUtem from '../ApiUtem';
 import colors from '../colors';
 
@@ -34,7 +35,8 @@ export default class LoginScreen extends Component {
             correoEsValido: null,
             contraseniaEsValido: null,
             correo: "",
-            contrasenia: ""
+            contrasenia: "",
+            modalVisible: true
         };
     }
 
@@ -53,6 +55,7 @@ export default class LoginScreen extends Component {
             const fotoUrl = perfil.fotoUrl;
             const correoUtem = perfil.correoUtem;
             const navigation = this.props.navigation;
+
             cache.setItem(rut + "horarios", horarios, (err) => {
                 if (err) console.error(err);
                 cache.setItem(rut + "carreras", carreras, (err) => {
@@ -65,12 +68,9 @@ export default class LoginScreen extends Component {
                                 nombre: nombre,
                                 foto: fotoUrl,
                                 correo: correoUtem,
-                                carrerasN: carreras.length,
-                                carreraId: carreras.length == 1 ? carreras[0]._id : null,
-                                horariosN: horarios.length || null,
-                                horarioId: horarios.length == 1 ? horarios[0].carrera.codigo : null,
-                                asignaturasN: null,
-                                asignaturaId: null
+                                carreras: carreras,
+                                horarios: horarios,
+                                asignaturas: asignaturas
                             });
                         });
                     });
@@ -234,6 +234,8 @@ export default class LoginScreen extends Component {
                     style={StyleSheet.absoluteFill} />
                 
                 <View style={styles.overlay} />
+
+                <ErrorModal isVisible={this.state.modalVisible} />
                 
                 <SafeAreaView style={styles.contentContainer}>
                     <Image 
