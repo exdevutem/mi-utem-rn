@@ -1,5 +1,5 @@
 # [DEPRECATED] Mi UTEM para Android e iOS
-Este proyecto ya no será mantenido ni actualizado, por favor considera mirar el nuevo proyecto Mi UTEM que contempla un desarrollo multiplataforma en Flutter con la misma finalidad de este proyecto.
+Este proyecto ya no será mantenido ni actualizado, por favor considera mirar el nuevo proyecto [Mi UTEM](https://github.com/mapacheverdugo/mi-utem) que contempla un desarrollo multiplataforma en Flutter con la misma finalidad de este proyecto.
 
 Aplicación **no oficial** para estudiantes de la [Universidad Tecnológica Metropolitana de Chile](https://www.utem.cl/) enfocada en adaptar la plataforma académica de la institución a dispositivos móviles de forma nativa.
 
